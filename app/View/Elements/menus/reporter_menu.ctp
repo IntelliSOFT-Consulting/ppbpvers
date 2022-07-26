@@ -15,6 +15,7 @@
                     ?>
              </li>             
              <li class="<?php echo $this->fetch('AEFI') ?>">
+              <!-- Add Cancer Program -->
                 <?php
                 if($this->Session->read('Auth.User.health_program')!="Cancer/Oncology program"){
                     echo $this->Html->link('<i class="fa fa-child" aria-hidden="true"></i> AEFIs',

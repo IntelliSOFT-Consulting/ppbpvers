@@ -73,8 +73,10 @@
                       array('escape' => false));
         ?>
       </li> 
+      
       <?php
                 if($this->Session->read('Auth.User.health_program')!="Cancer/Oncology program"){?>
+                 <!-- Add Cancer Program -->
       <li class="nav-header"><i class="fa fa-child" aria-hidden="true"></i> ADVERSE EVENT FOLLOWING IMMUNIZATION</li>
       <li class="<?php echo $this->fetch('aefis-by-designation'); ?>">
         <?php
