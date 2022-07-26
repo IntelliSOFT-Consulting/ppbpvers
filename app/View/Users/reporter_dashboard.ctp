@@ -7,6 +7,8 @@
     <div class="row-fluid">
         <div class="span8">
             <h4 class="text-success">Reports</h4>
+
+            <!-- Add Cancer Program -->
             
       <?php  if($this->Session->read('Auth.User.health_program')=="Cancer/Oncology program"){?>
         <div class="row-fluid">

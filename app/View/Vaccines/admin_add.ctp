@@ -20,6 +20,7 @@
 			<fieldset>
 				<legend><?php echo __('Add Vaccine'); ?></legend>
 			<?php
+			// Add Cancer Program
 				echo $this->Form->input('vaccine_name');
 				echo $this->Form->input('description');				
 				echo $this->Form->input('health_program', array( 'type' => 'select', 'options' => ['Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program', 

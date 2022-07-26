@@ -70,6 +70,7 @@ $this->Html->script('user', array('inline' => false));
 							'empty' => true, 'options' => ['Market Authority' => 'Market Authority', 'County Pharmacist' => 'County Pharmacist', 'Public Health Program' => 'Public Health Program']
 						));
 						echo $this->Form->input('sponsor_email', array('type' => 'email', 'label' => array('class' => 'control-label', 'text' => 'Company email'),));
+					// Add Cancer Program
 						echo $this->Form->input('health_program', array(
 							'type' => 'select', 'options' => [
 								'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
