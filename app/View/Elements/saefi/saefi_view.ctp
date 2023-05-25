@@ -84,13 +84,7 @@
 					</tr>
 					<tr>
 						<td style="width: 25%;"><strong><?php echo $saefi['Saefi']['patient_name'] ?>	</strong></td>
-						<td style="width: 25%;"><strong><?php
-							$dob = ''; $bod = $saefi['Saefi']['date_of_birth'];
-							if(isset($bod['day'])) $dob.=$bod['day'].'-';
-							if(isset($bod['month'])) $dob.=$bod['month'].'-';
-							if(isset($bod['year'])) $dob.=$bod['year'];
-							echo $dob; ?></strong>
-						</td>
+						<td style="width: 25%;"><strong><?php echo $saefi['Saefi']['date_of_birth'] ?></strong></td>
 						<td style="width: 25%;"><strong><?php echo $saefi['Saefi']['patient_phone'] ?>		</strong></td>
 					</tr>
 				</table>

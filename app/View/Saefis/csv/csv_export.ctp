@@ -1,8 +1,8 @@
 <?php
 
-	$header = array('id' => '#', 'county_name' => 'County',  'district' => 'District','place_vaccination' => 'Place of vaccination',
+	$header = array('id' => '#', 'reference_no' => 'Reference No.', 'report_type' => 'Report type', 'county_name' => 'County',  'district' => 'District','place_vaccination' => 'Place of vaccination',
 		'vaccination_in' => 'Vaccination in ','reporter_name' => 'Reporters name','designations' => 'Reporter designation', 'report_date' => 'Date of report','start_date' => 'Report start date',
-		'report_type' => 'Report type','telephone' => 'Reporters telephone' , 'mobile' => 'Reporters mobile', 'reporter_email' => 'Reporters email',
+		'telephone' => 'Reporters telephone' , 'mobile' => 'Reporters mobile', 'reporter_email' => 'Reporters email',
 		'patient_name' => 'Patients name', 'date_of_birth' => 'date_of_birth','age_at_onset_months' => 'Age in months', 'age_at_onset_years' => 'Age in years', 
 		'age_at_onset_days' => 'Age in days', 'age_group' => 'Age group',
 		'gender' => 'Gender', 'patient_address' => 'Address','patient_phone' => 'Phone', 'patient_street_name' => 'Street name',
@@ -79,14 +79,6 @@
 	$header['description_of_reaction'] = 'Brief details on thDate:e event';
 	$header['medical_history'] = 'Past medical history';
 	$header['treatment_given'] = 'Treatment given';
-
-
-	// if header has patient_name then order it to follow the sub_counties
-	if(isset($header['patient_name'])) {
-		$patient_name = $header['patient_name'];
-		unset($header['patient_name']);
-		$header = array_slice($header, 0, 7, true) + array('patient_name' => $patient_name) + array_slice($header, 7, count($header) - 1, true);
-	}
 
 
 	echo implode(',', $header)."\n";

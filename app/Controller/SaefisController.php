@@ -155,7 +155,7 @@ class SaefisController extends AppController
         $this->set('saefis', $saefis);
     }
 
-    private function csv_export($csaefis = '')
+    private function csv_export($saefis = '')
     {
         //todo: check if data exists in $users
         $this->response->download('SAEFIs_' . date('Ymd_Hi') . '.csv'); // <= setting the file name

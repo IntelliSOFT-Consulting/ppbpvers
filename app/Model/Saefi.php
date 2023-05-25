@@ -346,6 +346,9 @@ class Saefi extends AppModel
 		if (!empty($this->data[$this->alias]['autopsy_done_date'])) {
 			$this->data[$this->alias]['autopsy_done_date'] = date('Y-m-d', strtotime($this->data[$this->alias]['autopsy_done_date']));
 		}
+		if (!empty($this->data[$this->alias]['autopsy_planned_date'])) {
+			$this->data[$this->alias]['autopsy_planned_date'] = date('Y-m-d', strtotime($this->data[$this->alias]['autopsy_planned_date']));
+		}
 
 		if (!empty($this->data[$this->alias]['reporter_date'])) {
 			$this->data[$this->alias]['reporter_date'] = date('Y-m-d', strtotime($this->data[$this->alias]['reporter_date']));

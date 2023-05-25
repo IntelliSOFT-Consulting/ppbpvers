@@ -67,7 +67,7 @@ echo $this->Form->create('Saefi', array(
 			</div>
 		</div>
 		<!--/row-->
-		<div class="row-fluid">
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<?php
 				echo $this->Form->input('province_id', [
@@ -85,7 +85,7 @@ echo $this->Form->create('Saefi', array(
 				)); ?>
 			</div>
 		</div>
-		<div class="row-fluid">
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<?= $this->Form->input('name_of_vaccination_site', array(
 					'div' => array('class' => 'control-group required'),
@@ -105,7 +105,7 @@ echo $this->Form->create('Saefi', array(
 			</div>
 
 		</div>
-		<div class="row-fluid">
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<?php
 				echo $this->Form->input('designation_id', [
@@ -125,7 +125,7 @@ echo $this->Form->create('Saefi', array(
 				?>
 			</div>
 		</div>
-		<div class="row-fluid">
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 
 				<?php
@@ -148,7 +148,7 @@ echo $this->Form->create('Saefi', array(
 			</div>
 
 		</div>
-		<div class="row-fluid">
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<p> <b>Place of vaccination <span style="color:red;">*</span><b></p>
 				<?php
@@ -426,11 +426,15 @@ echo $this->Form->create('Saefi', array(
 		</div>
 		<!-- Start of Row -->
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span4">
 				<?php
+				// echo $this->Form->input('symptom_date', array(
+				// 	'type' => 'datetime-local', 'class' => 'span11',
+				// 	'label' => array('class' => 'control-label required', 'text' => 'Date and time of first/key symptom <span style="color:red;">*</span>'),
+				// ));
 				echo $this->Form->input('symptom_date', array(
-					'type' => 'datetime-local', 'class' => 'span11',
-					'label' => array('class' => 'control-label required', 'text' => 'Date and time of first/key symptom <span style="color:red;">*</span>'),
+					'type' => 'text', 'class' => 'span9 date-pick-field',
+					'label' => array('class' => 'control-label required', 'text' => 'Date of first/key symptom <span style="color:red;">*</span>'),
 				));
 				echo $this->Form->input('status_on_date', array(
 					'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'status_on_date',
@@ -469,23 +473,37 @@ echo $this->Form->create('Saefi', array(
 
 				?>
 			</div>
-			<div class="span6">
+			<div class="span4">
+				<?php
+				echo $this->Form->input('symptom_time', array('type' => 'time', 'class' => 'span3', 'label' => array('class' => 'control-label required',
+                'text' => 'Time of first/key symptom <span style="color:red;">*</span>')));
+				echo $this->Form->input('died_date', array(
+					'type' => 'text', 'class' => 'span9 date-pick-field status_on',
+					'label' => array('class' => 'control-label required', 'text' => 'If died, date of death <span style="color:red;">*</span>'),
+				));
+				?>
+			</div>
+			<div class="span4">
 				<?php
 				echo $this->Form->input('hospitalization_date', array(
-					'type' => 'text', 'class' => 'span11 date-pick-field  ',
+					'type' => 'text', 'class' => 'span9 date-pick-field  ',
 					'label' => array('class' => 'control-label required', 'text' => 'Date of hospitalization <span style="color:red;">*</span>'),
 				));
-				echo $this->Form->input('died_date', array(
-					'type' => 'datetime-local', 'class' => 'span11 status_on',
-					'label' => array('class' => 'control-label required', 'text' => 'If died, date and time of death <span style="color:red;">*</span>'),
-				));
+				// echo $this->Form->input('died_date', array(
+				// 	'type' => 'datetime-local', 'class' => 'span11 status_on',
+				// 	'label' => array('class' => 'control-label required', 'text' => 'If died, date and time of death <span style="color:red;">*</span>'),
+				// ));
+				echo $this->Form->input('died_time', array('type' => 'time', 'class' => 'span3 status_on',
+				'label' => array('class' => 'control-label required', 'style' => 'margin-top: 20px;', 'text' => 'time of death <span style="color:red;">*</span>'),
+				'style' => 'margin-top: 20px;'
+			));
 				?>
 			</div>
 		</div>
 		<!-- End of Row -->
 		<!-- Start of Row -->
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span4">
 				<?php
 				echo $this->Form->input('autopsy_done', array(
 					'type' => 'radio',
@@ -514,9 +532,15 @@ echo $this->Form->create('Saefi', array(
 				));
 				?>
 			</div>
-			<div class="span6">
+			<div class="span4">
 				<?php
-				echo $this->Form->input('autopsy_done_date', array('type' => 'text', 'class' => 'span11 date-pick-field status_on', 'label' => array('class' => 'control-label required', 'text' => 'If yes, date:'),));
+				echo $this->Form->input('autopsy_done_date',
+				array('type' => 'text', 'class' => 'span9 date-pick-field status_on',
+				'label' => array('class' => 'control-label required', 'text' => 'If yes, date:'),));
+				?>
+			</div>
+			<div class="span4">
+				<?php
 				?>
 			</div>
 		</div>
@@ -524,7 +548,7 @@ echo $this->Form->create('Saefi', array(
 
 		<!-- Start of Row -->
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span4">
 				<?php
 				echo $this->Form->input('autopsy_planned', array(
 					'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'autopsy_planned status_on',
@@ -547,9 +571,23 @@ echo $this->Form->create('Saefi', array(
 				));
 				?>
 			</div>
-			<div class="span6">
+			<div class="span4">
 				<?php
-				echo $this->Form->input('autopsy_planned_date', array('type' => 'datetime-local', 'class' => 'span11 status_on', 'label' => array('class' => 'control-label required', 'text' => 'If yes, date:'),));
+				// echo $this->Form->input('autopsy_planned_date',
+				// array('type' => 'text', 'class' => 'span9 date-pick-field status_on',
+				// 'label' => array('class' => 'control-label required', 'text' => 'If yes, date:'),));
+				echo $this->Form->input('autopsy_planned_date', array(
+					'type' => 'text', 'class' => 'span9 date-pick-field status_on',
+					'label' => array('class' => 'control-label required', 'text' => 'If yes, date:'),
+				));
+				?>
+			</div>
+			<div class="span4">
+				<?php
+
+				echo $this->Form->input('autopsy_planned_time', array('type' => 'time', 'class' => 'span3 status_on',
+				'label' => array('class' => 'control-label required',
+				'text' => 'time')));
 				?>
 			</div>
 		</div>
@@ -573,7 +611,7 @@ echo $this->Form->create('Saefi', array(
 							<div class="col-xs-12">
 								<?php
 								echo $this->Form->input('past_history', array(
-									'type' => 'radio',  'label' => false, 
+									'type' => 'radio',  'label' => false,
 									'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'past_history',
 									'before' => '<label class="radio inline">',
 									'after' => '</label>',
@@ -1000,8 +1038,8 @@ echo $this->Form->create('Saefi', array(
 		</div>
 		<!-- End of Row -->
 		<!-- Start of Row -->
-		<p><b>For Adult Women:</b></p>
-		<div class="row-fluid">
+		<p style="margin-left: 5%; text-decoration:underline;"><b>For Adult Women:</b></p>
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<?php
 				echo $this->Form->input('pregnant', array(
@@ -1062,8 +1100,8 @@ echo $this->Form->create('Saefi', array(
 				<div class="col-xs-4" id="choice-pregnancy">
 					<?php
 					echo $this->Form->input('pregnant_weeks', [
-						'label' => 'Weeks', 
-						'type' => 'text', 
+						'label' => 'Weeks',
+						'type' => 'text',
 						'escape' => false,
 						'class' => 'ppregnant',
 						'div' => array('class' => 'control-group required'),
@@ -1076,8 +1114,8 @@ echo $this->Form->create('Saefi', array(
 		</div>
 		<!-- End of Row -->
 		<!-- Start of Row -->
-		<p><b>For Infants:</b></p>
-		<div class="row-fluid">
+		<p style="margin-left: 5%; text-decoration:underline;"><b>For Infants:</b></p>
+		<div class="row-fluid" style="margin-left: 5%;">
 			<div class="span6">
 				<?php
 				echo $this->Form->input('infant', array(
@@ -1166,7 +1204,7 @@ echo $this->Form->create('Saefi', array(
 		<hr>
 		<!-- Start of Row -->
 		<div class="row-fluid">
-			<div class="span6">
+			<div class="span6"  																																																																																					>
 				<h5>Source of information (✓ all that apply): <span style="color:red;">*</span></h5>
 				<?php
 				echo $this->Form->input('source_examination', array(
@@ -1189,8 +1227,8 @@ echo $this->Form->create('Saefi', array(
 					'type' => 'checkbox',   'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
 					'between' => '<label class="checkbox">',
 					'after' => 'Other   </label>',
-				)); 
-				 
+				));
+
 				?>
 			</div>
 			<div class="span6">
@@ -1239,22 +1277,37 @@ echo $this->Form->create('Saefi', array(
 				]);
 
 				?>
-				<?php
-				echo $this->Form->input('person_date', array(
-					'type' => 'datetime-local', 'class' => 'span11',
-					'label' => array('class' => 'control-label required', 'text' => 'Date <span style="color:red;">*</span>'),
-				));
-				?>
+				
 			</div>
 			<div class="span6">
 				<?php
-			 
+
 
 				echo $this->Form->input('person_designation', [
 					'label' => 'Designation ',  'div' => array('class' => 'control-group required'),
 					'label' => array('class' => 'control-label required', 'text' => 'Designation <span style="color:red;">*</span>'),
 					'after' => '<p class="help-block"> </p></div>', 'options' => $designations, 'empty' => true, 'escape' => false
 				]);
+				?>
+			</div>
+		</div>
+		<!-- End of Row -->
+		<!-- Start of Row -->
+		<div class="row-fluid">
+			<div class="span6">
+				<?php
+				echo $this->Form->input('person_date', array(
+					'type' => 'text', 'class' => 'span9 date-pick-field',
+					'label' => array('class' => 'control-label required', 'text' => 'Date <span style="color:red;">*</span>'),
+				));
+				?>
+				
+			</div>
+			<div class="span6">
+				<?php
+
+echo $this->Form->input('person_time', array('type' => 'time', 'class' => 'span3', 'label' => array('class' => 'control-label required',
+'text' => 'Time:')));
 				?>
 			</div>
 		</div>
@@ -1297,7 +1350,7 @@ echo $this->Form->create('Saefi', array(
 				?>
 			</div>
 			<!-- <p>Attachments!!</p> -->
-			<div class="col-xs-12"><?php 
+			<div class="col-xs-12"><?php
 			// echo $this->element('multi/attachments', ['model' => 'Saefi', 'group' => 'attachments']); ?>
 			</div>
 		</div>
@@ -1314,7 +1367,7 @@ echo $this->Form->create('Saefi', array(
 					?>
 					<!-- Original File -->
 				</div>
-				 
+
 
 			</div>
 		</div>
@@ -1326,7 +1379,7 @@ echo $this->Form->create('Saefi', array(
 		<div class="row-fluid">
 			<div class="col-xs-12">
 				<?php
-				//echo $this->element('multi/saefi_list_of_vaccines', ['editable' => $editable]); 
+				//echo $this->element('multi/saefi_list_of_vaccines', ['editable' => $editable]);
 				?>
 			</div>
 		</div>
@@ -2637,7 +2690,7 @@ echo $this->Form->create('Saefi', array(
 				//                                       The form will still be available for further editing.',
 				//     'div' => false,
 				// ));
-				 
+
 
 				?>
 				<br>
