@@ -1,4 +1,4 @@
-<?php
+                                                                                                                                                                                                                                            <?php
 $this->extend('/Reports/reports_manager');
 $this->assign('sadr-summary', 'active');
 $this->Html->css('summary', null, array('inline' => false));

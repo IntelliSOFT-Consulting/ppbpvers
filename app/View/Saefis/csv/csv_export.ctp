@@ -1,6 +1,6 @@
 <?php
 
-	$header = array('id' => '#', 'reference_no' => 'Reference No.', 'report_type' => 'Report type', 'county_name' => 'County',  'district' => 'District','place_vaccination' => 'Place of vaccination',
+	$header = array('id' => '#', 'reference_no' => 'Reference No.', 'report_type' => 'Report type', 'county_name' => 'County',  'district' => 'Sub-County','place_vaccination' => 'Place of vaccination',
 		'vaccination_in' => 'Vaccination in ','reporter_name' => 'Reporters name','designations' => 'Reporter designation', 'report_date' => 'Date of report','start_date' => 'Report start date',
 		'telephone' => 'Reporters telephone' , 'mobile' => 'Reporters mobile', 'reporter_email' => 'Reporters email',
 		'patient_name' => 'Patients name', 'date_of_birth' => 'date_of_birth','age_at_onset_months' => 'Age in months', 'age_at_onset_years' => 'Age in years', 
