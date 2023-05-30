@@ -1109,6 +1109,7 @@ echo $this->Form->create('Saefi', array(
 					echo $this->Form->input('pregnant_weeks', [
 						'label' => 'Weeks',
 						'type' => 'number',
+						'min' => 0,
 						'escape' => false,
 						'class' => 'ppregnant',
 						'div' => array('class' => 'control-group required'),
@@ -1765,6 +1766,7 @@ echo $this->Form->create('Saefi', array(
 								<?= $this->Form->input('vaccinated_vial', [
 									'label' => false,
 									'type' => 'number',
+									'min' => 0,
 									'div' => array('class' => 'span4 align-left'),
 									'style' => 'text-align: left;',
 									'after' => '<p class="help-block"> </p></div>',
@@ -1781,6 +1783,7 @@ echo $this->Form->create('Saefi', array(
 								<?= $this->Form->input('vaccinated_session', [
 									'label' => false,
 									'type' => 'number',
+									'min' => 0,
 									'div' => array('class' => 'control-group required'),
 									'after' => '<p class="help-block"> </p></div>',
 								]); ?>
@@ -1796,6 +1799,7 @@ echo $this->Form->create('Saefi', array(
 								<?= $this->Form->input('vaccinated_locations', [
 									'label' => false,
 									'type' => 'number',
+									'min' => 0,
 									'div' => array('class' => 'control-group required'),
 									'after' => '<p class="help-block"> </p></div>',
 								]); ?>
@@ -1851,6 +1855,7 @@ echo $this->Form->create('Saefi', array(
 								<?= $this->Form->input('vaccinated_cluster_number', [
 									'label' => false,
 									'type' => 'number',
+									'min' => 0,
 									'div' => array('class' => 'control-group required'),
 									'after' => '<p class="help-block"> </p></div>',
 								]); ?>
@@ -1902,6 +1907,7 @@ echo $this->Form->create('Saefi', array(
 								<?= $this->Form->input('vaccinated_cluster_vial_number', [
 									'label' => false,
 									'type' => 'number',
+									'min' => 0,
 									'div' => array('class' => 'control-group required'),
 									'after' => '<p class="help-block"> </p></div>',
 								]); ?>
@@ -2267,9 +2273,11 @@ echo $this->Form->create('Saefi', array(
 				<div class="span6">
 					<?php
 					echo $this->Form->input('injection_reported', [
+						'type'=>'number',
 						'label' => 'How many AEFI were reported from the centre that distributed the vaccine in the last 30 days?', 'style'=>'margin-top:10px;',
 						'div' => array('class' => 'control-group required'),
 						'label' => array('class' => 'control-label required span6', 'style'=>'padding:5px;', 'text' => 'How many AEFI were reported from the centre that distributed the vaccine in the last 30 days?'),
+						'min' => 0,
 						'after' => '<p class="help-block"> </p></div>',
 					]);
 					?>
@@ -2677,7 +2685,10 @@ echo $this->Form->create('Saefi', array(
 				<div class="span6">
 					<?php
 					echo $this->Form->input('similar_events_episodes', array(
-						'label' => array('class' => 'control-label required span5', 'style'=>'padding-right: 5px;', 'text' =>  'If yes, how many events/episodes?'),
+						'label' => array('class' => 'control-label required span5', 
+						'style'=>'padding-right: 5px;', 
+						'text' =>  'If yes, how many events/episodes?'),
+						'min' => 0,
 					));
 					?>
 				</div>
@@ -2692,6 +2703,7 @@ echo $this->Form->create('Saefi', array(
 				<?php
 				echo $this->Form->input('affected_vaccinated', array(
 					'label' => array('class' => 'control-label required', 'text' =>  '• Vaccinated:'),
+					'min' => 0, // Set the minimum value to 0
 				));
 				?>
 				     
@@ -2700,6 +2712,7 @@ echo $this->Form->create('Saefi', array(
 				<?php
 				echo $this->Form->input('affected_not_vaccinated', array(
 					'label' => array('class' => 'control-label required', 'text' =>  '• Not vaccinated:'),
+					'min' => 0,
 				));
 				?>
 			</div>
@@ -2708,6 +2721,7 @@ echo $this->Form->create('Saefi', array(
 				echo $this->Form->input('affected_unknown', array(
 					'type'=>'number',
 					'label' => array('class' => 'control-label required', 'text' =>  '• Unknown:'),
+					'min' => 0,
 				));
 				?>
 			</div>
