@@ -2923,6 +2923,12 @@ echo $this->Form->create('Saefi', array(
 				));
 				?>
 			</div>
+			
+		</div>
+		<div class="row-fluid">
+			<div class="span12">
+				<?php echo $this->element('multi/attachments', ['model' => 'Saefi', 'group' => 'attachment','examples'=>'(Autopsy Report, Lab Investigation results, Medical notes, Investigation report)']); ?>
+			</div>
 		</div>
 	<!-------Row End--------->
 
