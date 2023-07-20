@@ -23,6 +23,7 @@ class Padr extends AppModel {
         'product_specify' => array('type' => 'like', 'encode' => true),
         'patient_name' => array('type' => 'like', 'encode' => true),
         'report_type' => array('type' => 'value'),
+		'device' => array('type' => 'value'),
         'reaction_on' => array('type' => 'value'),
         'reporter' => array('type' => 'query', 'method' => 'reporterFilter', 'encode' => true),
         'designation_id' => array('type' => 'value'),
@@ -232,20 +233,37 @@ class Padr extends AppModel {
             ),
         ),
 		  //ensure reporter phone is numeric and 10 digits
-		  'reporter_phone' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'minLength' => array(
-                'rule' => array('minLength', 10),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'maxLength' => array(
-                'rule' => array('maxLength', 10),
-                'message' => 'Please provide a valid phone number',
+		//   'reporter_phone' => array(
+        //     'numeric' => array(
+        //         'rule' => array('numeric'),
+        //         'message' => 'Please provide a valid phone number',
+        //     ),
+        //     'minLength' => array(
+        //         'rule' => array('minLength', 10),
+        //         'message' => 'Please provide a valid phone number',
+        //     ),
+        //     'maxLength' => array(
+        //         'rule' => array('maxLength', 10),
+        //         'message' => 'Please provide a valid phone number',
+        //     ),
+        // ),
+		'outcome' => array(
+            'notBlank' => array(
+                'rule'     => 'notBlank',
+				'required' => true,
+                'message'  => 'Please provide outcome'
             ),
         ),
+		'consent' => array(
+            'notBlank' => array(
+                'rule'     => 'notBlank',
+				'required' => true,
+                'message'  => 'Please provide Consent'
+            ),
+        ),
+
+
+		
 	);
 
 	public function atLeastYear($field = null) {

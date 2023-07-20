@@ -53,10 +53,14 @@ class SaefisController extends AppController
 
         // Added criteria for reporter
         $criteria['Saefi.deleted'] = false;
-        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
-            $criteria['Saefi.submitted'] = array(0, 1);
-        } elseif (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 2) {
-            $criteria['Saefi.submitted'] = array(2, 3);
+        if (isset($this->request->query['submitted'])) {
+            if ($this->request->query['submitted'] == 1) {
+                $criteria['Saefi.submitted'] = array(0, 1);
+            } else {
+                $criteria['Saefi.submitted'] = array(2, 3);
+            }
+        } else {
+            $criteria['Saefi.submitted'] = array(0,1,2, 3);
         }
 
         $this->paginate['conditions'] = $criteria;
@@ -121,6 +125,7 @@ class SaefisController extends AppController
 
         $criteria = $this->Saefi->parseCriteria($this->passedArgs);
         $criteria['Saefi.deleted'] = false;
+        $criteria['Saefi.archived'] = false;
         $criteria['Saefi.copied !='] = '1';
         if (isset($this->request->query['submitted'])) {
             if ($this->request->query['submitted'] == 1) {
@@ -309,10 +314,12 @@ class SaefisController extends AppController
             $this->request->data = $this->Saefi->read(null, $id);
         }
         //county
-        $county = $this->Saefi->County->find('list', array('order' => array('County.county_name' => 'asc')));
-        $this->set('county', $county);
+        $counties = $this->Saefi->County->find('list', array('order' => array('County.county_name' => 'asc')));
+        $this->set('counties', $counties);
         $this->set('saefi', $saefi);
 
+        $sub_counties = $this->Saefi->SubCounty->find('list', array('order' => array('SubCounty.sub_county_name' => 'ASC')));
+        $this->set(compact('sub_counties'));
         //designation and vaccines
         $designations = $this->Saefi->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set('designations', $designations);
@@ -514,10 +521,12 @@ class SaefisController extends AppController
         ));
         $this->set('aefi', $aefi);
 
-        $county = $this->Saefi->County->find('list', array('order' => array('County.county_name' => 'ASC')));
-        $this->set(compact('county'));
+        $counties = $this->Saefi->County->find('list', array('order' => array('County.county_name' => 'ASC')));
+        $this->set(compact('counties'));
         $designations = $this->Saefi->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('designations'));
+        $sub_counties = $this->Saefi->SubCounty->find('list', array('order' => array('SubCounty.sub_county_name' => 'ASC')));
+        $this->set(compact('sub_counties'));
         $vaccines = $this->Saefi->AefiListOfVaccine->Vaccine->find('list');
         $this->set(compact('vaccines'));
     }
@@ -542,4 +551,20 @@ class SaefisController extends AppController
             return $this->redirect($this->referer());
         }
     }
+    public function manager_archive($id=null) {
+
+        $this->Saefi->id = $id;
+        if (!$this->Saefi->exists()) {
+            throw new NotFoundException(__('Invalid SAEFI'));
+        }
+        $report = $this->Saefi->read(null, $id);
+        $report['Saefi']['archived'] = true;
+        $report['Saefi']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Saefi->save($report, array('validate' => false))) {
+            $this->Session->setFlash(__('SAEFI Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('SAEFI was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
+	}
 }

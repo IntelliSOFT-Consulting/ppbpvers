@@ -25,6 +25,7 @@ class Aefi extends AppModel {
         'vaccine_name' => array('type' => 'query', 'method' => 'findByVaccineName', 'encode' => true),
         'health_program' => array('type' => 'query', 'method' => 'findByHealthProgram', 'encode' => true),
         'bcg' => array('type' => 'value'),
+        'device' => array('type' => 'value'),
         'convulsion' => array('type' => 'value'),
         'urticaria' => array('type' => 'value'),
         'high_fever' => array('type' => 'value'),
@@ -202,7 +203,16 @@ class Aefi extends AppModel {
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('ExternalComment.model' => 'Aefi', 'ExternalComment.category' => 'external' ),
+        ),
+        'ReviewComment' => array(
+            'className' => 'Comment',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => array('ReviewComment.model' => 'Aefi', 'ReviewComment.category' => 'review' ),
         )
+
+
+        
 	);
 
 	public $validate = array(

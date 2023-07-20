@@ -28,7 +28,7 @@ class MedicationsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('guest_add','guest_edit');
+        $this->Auth->allow('guest_add', 'guest_edit');
     }
     /**
      * index method
@@ -53,10 +53,16 @@ class MedicationsController extends AppController
         // $criteria['Medication.user_id'] = $this->Auth->User('id');
         //add deleted=false to criteria
         $criteria['Medication.deleted'] = false;
-        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
-            $criteria['Medication.submitted'] = array(0, 1);
+
+        if (isset($this->request->query['submitted'])) {
+
+            if ($this->request->query['submitted'] == 1) {
+                $criteria['Medication.submitted'] = array(0, 1);
+            } else {
+                $criteria['Medication.submitted'] = array(2, 3);
+            }
         } else {
-            $criteria['Medication.submitted'] = array(2, 3);
+            $criteria['Medication.submitted'] = array(0, 1, 2, 3);
         }
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Medication.created' => 'desc');
@@ -157,6 +163,7 @@ class MedicationsController extends AppController
         // $criteria['Medication.submitted'] = 2;
         //add deleted=false to criteria
         $criteria['Medication.deleted'] = false;
+        $criteria['Medication.archived'] = false;
         $criteria['Medication.copied !='] = '1';
         if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
             $criteria['Medication.submitted'] = array(0, 1);
@@ -370,8 +377,8 @@ class MedicationsController extends AppController
         $medication = $this->Medication->find('first', array(
             'conditions' => array('Medication.id' => $id),
             'contain' => array(
-                'MedicationProduct', 'County', 'Attachment', 'Designation', 'ExternalComment',
-                'MedicationOriginal.MedicationProduct', 'MedicationOriginal.County', 'MedicationOriginal.Attachment', 'MedicationOriginal.Designation', 'MedicationOriginal.ExternalComment'
+                'MedicationProduct', 'County', 'Attachment', 'Designation', 'ExternalComment','ReviewComment', 'ExternalComment.Attachment','ReviewComment.Attachment',
+                'MedicationOriginal.MedicationProduct', 'MedicationOriginal.County', 'MedicationOriginal.Attachment', 'MedicationOriginal.Designation', 'MedicationOriginal.ExternalComment','MedicationOriginal.ReviewComment'
             )
         ));
         $managers = $this->Medication->User->find('list', array(
@@ -597,10 +604,10 @@ class MedicationsController extends AppController
             throw new NotFoundException(__('Invalid MEDICATION'));
         }
         $medication = $this->Medication->read(null, $id);
-        if ($medication['Medication']['submitted'] > 1) {
-            $this->Session->setFlash(__('The medication has been submitted'), 'alerts/flash_info');
-            $this->redirect(array('action' => 'view', $this->Medication->id));
-        }
+        // if ($medication['Medication']['submitted'] > 1) {
+        //     $this->Session->setFlash(__('The medication has been submitted'), 'alerts/flash_info');
+        //     $this->redirect(array('action' => 'view', $this->Medication->id));
+        // }
         if ($medication['Medication']['user_id'] !== $this->Auth->user('id')) {
             $this->Session->setFlash(__('You don\'t have permission to edit this MEDICATION!!'), 'alerts/flash_error');
             $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -688,10 +695,19 @@ class MedicationsController extends AppController
                         // CakeResque::enqueue('default', 'GenericEmailShell', array('sendEmail', $datum));
                         // CakeResque::enqueue('default', 'GenericNotificationShell', array('sendNotification', $datum));
                     }
-                    //**********************************    END   *********************************
-
-                    $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
-                    $this->redirect(array('action' => 'view', $this->Medication->id));
+                    //**********************************    END   ********************************* Death
+                    $serious = $medication['Medication']['outcome'];
+                    if ($serious == "Treatment /intervention required-caused temporary harm" || $serious == "Initial/prolonged hospitalization-caused temporary harm" || $serious == "Caused permanent harm" || $serious == "Near death event" || $serious == "Death") {
+                        $this->notifyCountyPharmacist($medication);
+                    }
+                    $serious = $medication['Medication']['adverse_reaction'];
+                    if ($serious == "Yes") {
+                        $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB, please proceed to submit a SADR Form'), 'alerts/flash_success');
+                        $this->redirect(array('controller' => 'sadrs', 'action' => 'addme', $this->Medication->id, 'reporter' => true)); 
+                    } else {
+                        $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
+                        $this->redirect(array('action' => 'view', $this->Medication->id));
+                    }
                 }
                 // debug($this->request->data);
                 $this->Session->setFlash(__('The MEDICATION has been saved'), 'alerts/flash_success');
@@ -709,7 +725,61 @@ class MedicationsController extends AppController
         $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('counties', 'designations'));
     }
+    public function notifyCountyPharmacist($medication = null)
+    {
+        # code...
 
+        $this->loadModel('Message');
+        $html = new HtmlHelper(new ThemeView());
+        $message = $this->Message->find('first', array('conditions' => array('name' => 'serious_medication')));
+
+        $county_id = $medication['Medication']['county_id'];
+        $users = $this->Medication->User->find('all', array(
+            'contain' => array(),
+            'conditions' => array(
+                'OR' => array(
+                    'User.group_id' => 2,
+                    array(
+                        'User.county_id' => $county_id,
+                        'User.user_type' => 'County Pharmacist'
+                    )
+                )
+            ),
+            'order' => array(
+                'User.id' => 'DESC'
+            )
+        ));
+
+        foreach ($users as $user) {
+            $variables = array(
+                'name' => $user['User']['name'],
+                'reference_no' => $medication['Medication']['reference_no'],
+                'reference_link' => $html->link(
+                    $medication['Medication']['reference_no'],
+                    array(
+                        'controller' => 'medications',
+                        'action' => 'view', $medication['Medication']['id'],
+                        'manager' => true,
+                        'full_base' => true
+                    ),
+                    array('escape' => false)
+                ),
+                'modified' => $medication['Medication']['modified']
+            );
+            $datum = array(
+                'email' => $user['User']['email'],
+                'id' => $medication['Medication']['id'],
+                'user_id' => $user['User']['id'],
+                'type' => 'serious_medication',
+                'model' => 'Medication',
+                'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                'message' => CakeText::insert($message['Message']['content'], $variables)
+            );
+            $this->loadModel('Queue.QueuedTask');
+            $this->QueuedTask->createJob('GenericEmail', $datum);
+            $this->QueuedTask->createJob('GenericNotification', $datum);
+        }
+    }
     public function api_add($id = null)
     {
 
@@ -974,10 +1044,10 @@ class MedicationsController extends AppController
     public function guest_add($id = null)
     {
         $this->Medication->create();
-        $this->Medication->save(['Medication' => [ 
-            'reference_no' => 'new',  
+        $this->Medication->save(['Medication' => [
+            'reference_no' => 'new',
             'report_type' => 'Initial',
-            'pqmp_id' => $id, 
+            'pqmp_id' => $id,
         ]], false);
         $this->Session->setFlash(__('The MEDICATION has been created'), 'alerts/flash_success');
         $this->redirect(array('action' => 'guest_edit', $this->Medication->id));
@@ -989,7 +1059,7 @@ class MedicationsController extends AppController
             throw new NotFoundException(__('Invalid MEDICATION'));
         }
         $medication = $this->Medication->read(null, $id);
-        
+
         if ($this->request->is('post') || $this->request->is('put')) {
             $validate = false;
             if (isset($this->request->data['submitReport'])) {
@@ -1019,7 +1089,7 @@ class MedicationsController extends AppController
                     $html = new HtmlHelper(new ThemeView());
                     $message = $this->Message->find('first', array('conditions' => array('name' => 'reporter_medication_submit')));
                     $variables = array(
-                        'name' => 'Guest', 
+                        'name' => 'Guest',
                         'reference_no' => $medication['Medication']['reference_no'],
                         'reference_link' => $html->link(
                             $medication['Medication']['reference_no'],
@@ -1075,7 +1145,7 @@ class MedicationsController extends AppController
                     //**********************************    END   *********************************
 
                     $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
-                    $this->redirect(array('controller'=>'pages','action' => 'home'));
+                    $this->redirect(array('controller' => 'pages', 'action' => 'home'));
                 }
                 // debug($this->request->data);
                 $this->Session->setFlash(__('The MEDICATION has been saved'), 'alerts/flash_success');
@@ -1093,4 +1163,20 @@ class MedicationsController extends AppController
         $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('counties', 'designations'));
     }
+    public function manager_archive($id=null) {
+
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            throw new NotFoundException(__('Invalid MEDICATION'));
+        }
+        $report = $this->Medication->read(null, $id);
+        $report['Medication']['archived'] = true;
+        $report['Medication']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Medication->save($report, array('validate' => false))) {
+            $this->Session->setFlash(__('MEDICATION Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('MEDICATION was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
+	}
 }

@@ -260,7 +260,15 @@ $this->assign('Adverse Event Following Immunization', 'active');
                   'class' => 'input-xlarge'
                 ));  ?>
           </td>
-          <td></td>
+          <td><?php
+              echo $this->Form->input('device', array(
+                'type' => 'select', 'options' => [
+                  '0' => 'Web',
+                  '1' => 'Mobile', 
+                ], 'empty' => true,
+                'label' => array('class' => 'control-label', 'text' => 'Sending Device'),
+                'class' => 'input-xlarge'
+              ));  ?></td>
           <td></td>
           <td></td>
           <td></td>
@@ -419,6 +427,11 @@ $this->assign('Adverse Event Following Immunization', 'active');
                 );
                 echo "&nbsp;";
                 if (($redir == 'manager' || $redir == 'reviewer') && $aefi['Aefi']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'aefis', 'action' => 'copy', $aefi['Aefi']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                if (($redir == 'manager' || $redir == 'reviewer'))  echo $this->Html->link(
+                  '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
+                  array('controller' => 'aefis', 'action' => 'archive', $aefi['Aefi']['id']),
+                  array('escape' => false), __('Are you sure you want to archive the report?')
+                );
               } else {
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program') echo $this->Html->link(
                   '<span class="label label-success tooltipper" title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>',

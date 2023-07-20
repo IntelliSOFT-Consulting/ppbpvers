@@ -45,7 +45,7 @@ $this->Html->css('summary', null, array('inline' => false));
         </div>
     </div>
     <div class="span6">
-        <h4>Patient Sex Distribution</h4>
+        <h4>Gender Distribution</h4>
         <div class="tab">
             <button class="tablinks" onclick="sexTab(event, 'sexChart')" id="sexOpen">
                 <i class="fa fa-pie-chart"></i> Chart
@@ -166,6 +166,47 @@ $this->Html->css('summary', null, array('inline' => false));
 <hr>
 <div class="row-fluid">
     <div class="span12">
+        <h4>SADRs per Suspected Drug</h4>
+        <div class="tab">
+            <button class="tablinks" onclick="suspectedTab(event, 'suspectedChart')" id="suspectedOpen">
+                <i class="fa fa-pie-chart"></i> Chart
+            </button>
+
+            <button class="tablinkssuspected" onclick="suspectedTab(event, 'suspectedTable')">
+                <i class="fa fa-table"></i> Table
+            </button>
+        </div>
+
+        <div id="suspectedChart" class="tabcontentsuspected">
+            <div id="sadrs-suspected"></div>
+
+        </div>
+
+        <div id="suspectedTable" class="tabcontentsuspected">
+            <table class="table table-condensed table-bordered" id="datatablesuspected">
+                <thead>
+                    <tr>
+                        <th>Drug</th>
+                        <th>SADRs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($suspected as $key => $value) {
+                        echo "<tr>";
+                        echo "<th>" . $value['SadrListOfDrug']['drug_name'] . "</th>";
+                        echo "<td>" . $value[0]['cnt'] . "</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="row-fluid">
+    <div class="span12">
         <h4>SADRs per Month</h4>
         <div class="tab">
             <button class="tablinks" onclick="monthTab(event, 'monthChart')" id="monthOpen">
@@ -205,9 +246,6 @@ $this->Html->css('summary', null, array('inline' => false));
     </div>
 </div>
 <hr>
-<?php
-// if($this->Session->read('Auth.User.group_id') ==2){
-?>
 <div class="row-fluid">
     <div class="span12">
         <h4>SADRs per Reaction</h4>
@@ -621,7 +659,7 @@ $this->Html->css('summary', null, array('inline' => false));
         evt.currentTarget.className += " active";
     }
 
-    // Reason
+    // Reason 
     function reasonTab(evt, reasontabName) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontentreason");
@@ -664,7 +702,21 @@ $this->Html->css('summary', null, array('inline' => false));
         document.getElementById(facilitytabName).style.display = "block";
         evt.currentTarget.className += " active";
     }
-    // Get the element with id="defaultOpen" and click on it
+    // Suspected
+    function suspectedTab(evt, suspectedtabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontentsuspected");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinkssuspected");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(suspectedtabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+    // Get the element with id="defaultOpen" and click on it suspected
     document.getElementById("geoOpen").click();
     document.getElementById("sexOpen").click();
     document.getElementById("seriousOpen").click();
@@ -676,9 +728,33 @@ $this->Html->css('summary', null, array('inline' => false));
     document.getElementById("qualificationOpen").click();
     document.getElementById("reasonOpen").click();
     document.getElementById("outcomeOpen").click();
+
     document.getElementById("facilityOpen").click();
+    document.getElementById("suspectedOpen").click();
+    Highcharts.chart('sadrs-suspected', {
+        data: {
+            table: 'datatablesuspected'
+        },
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '',
 
-
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Units'
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>' + this.series.name + '</b><br/>' +
+                    this.point.y + ' ' + this.point.name.toLowerCase();
+            }
+        }
+    });
     Highcharts.chart('sadrs-geo', {
         data: {
             table: 'datatablegeo'
@@ -711,8 +787,7 @@ $this->Html->css('summary', null, array('inline' => false));
             type: 'pie'
         },
         title: {
-            text: '',
-
+            text: ''
         },
         yAxis: {
             allowDecimals: false,
@@ -720,13 +795,19 @@ $this->Html->css('summary', null, array('inline' => false));
                 text: 'Units'
             }
         },
-        tooltip: {
-            formatter: function() {
-                return '<b>' + this.series.name + '</b><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+                }
             }
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.y}</b><br/>Percentage: <b>{point.percentage:.1f}%</b>'
         }
     });
+
     Highcharts.chart('sadrs-age', {
         data: {
             table: 'datatableage'
@@ -888,10 +969,19 @@ $this->Html->css('summary', null, array('inline' => false));
                 text: 'Units'
             }
         },
+        plotOptions: {
+            pie: {
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f}%'
+                }
+            }
+        },
         tooltip: {
             formatter: function() {
                 return '<b>' + this.series.name + '</b><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
+                    this.point.y + ' ' + this.point.name.toLowerCase() +
+                    ' (' + Highcharts.numberFormat(this.point.percentage, 1) + '%)';
             }
         }
     });

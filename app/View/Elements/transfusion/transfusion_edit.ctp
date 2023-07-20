@@ -51,7 +51,7 @@
             
             <div class="row-fluid">
                 <div class="span12">
-                    <p style="text-warning">In the event of a severe reaction following transfusion of blood or blood products please complete this form and send it to the laboratory with the specimens listed below.</p>
+                    <p>In the event of a reaction following transfusion of blood or blood products please complete this form and send it to the laboratory with the specimens listed below.</p>
                 </div>
             </div>
             <hr>
@@ -192,7 +192,7 @@
                             'label' => array('class' => 'control-label required', 'text' => 'Reason for transfusion'),
                         ));
                         echo $this->Form->input('current_medications', array(
-                            'label' => array('class' => 'control-label required', 'text' => 'Current Medications'),
+                            'label' => array('class' => 'control-label required', 'text' => 'Current Medication'),
                         ));
                     ?>
                 </div>
@@ -471,7 +471,7 @@
                 <div class="span6">
                     <?php
                         echo $this->Form->input('nurse_name', array(
-                            'label' => array('class' => 'control-label required', 'text' => 'Name of Nurse/Doctor'),
+                            'label' => array('class' => 'control-label required', 'text' => 'Name of Nurse/Clinician attending'),
                         ));
                     ?>
                 </div>
@@ -530,14 +530,42 @@
             </div>
             <div class="row-fluid">
                 <div class="span12">
-                    <h5>Specimens required by the laboratory </h5>
-                    <ol>
-                        <li>10mls post-transfusion whole blood from patient from plain bottle </li>
-                        <li>2mls of blood in EDTA bottle </li>
-                        <li>10mls First Void Urine </li>
-                        <li>The blood that reacted together with the attached transfusion set </li>
-                        <li>All empty blood bags of already transfused unit </li>
-                    </ol>
+                    <h5>Specimens collected </h5>
+                    <?php
+                    
+                    echo $this->Form->input('specimens_post_transfusion', array(
+						'format' => array('error', 'before', 'label', 'between', 'input', 'after'),
+						'type' => 'checkbox',  'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
+						'between' => '<input type="hidden" value="0" id="Transfusion_specimens_post_transfusion_" name="data[Transfusion][specimens_post_transfusion]">
+                                                                    <label class="checkbox">',
+						'after' => '10mls post-transfusion whole blood from patient from plain bottle </label>',
+					));
+					echo $this->Form->input('specimens_edta_blood', array(
+						'type' => 'checkbox',   'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
+						'between' => '<input type="hidden" value="0" id="Transfusion_specimens_edta_blood_" name="data[Transfusion][specimens_edta_blood]">
+                                                                    <label class="checkbox">',
+						'after' => '2mls of blood in EDTA bottle  </label>',
+					));
+					echo $this->Form->input('specimens_void_urine', array(
+						'type' => 'checkbox',   'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
+						'between' => '<input type="hidden" value="0" id="Transfusion_specimens_void_urine_" name="data[Transfusion][specimens_void_urine]">
+                                                                    <label class="checkbox">',
+						'after' => '10mls First Void Urine </label>',
+					));
+                    echo $this->Form->input('specimens_blood_reacted', array(
+						'type' => 'checkbox',   'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
+						'between' => '<input type="hidden" value="0" id="Transfusion_specimens_blood_reacted_" name="data[Transfusion][specimens_blood_reacted]">
+                                                                    <label class="checkbox">',
+						'after' => 'The blood that reacted together with the attached transfusion set </label>',
+					));
+                    echo $this->Form->input('specimens_blood_bags', array(
+						'type' => 'checkbox',   'label' => false, 'div' => false, 'class' => false, 'hiddenField' => false,
+						'between' => '<input type="hidden" value="0" id="Transfusion_specimens_blood_bags_" name="data[Transfusion][specimens_blood_bags]">
+                                                                    <label class="checkbox">',
+						'after' => 'All empty blood bags of already transfused unit</label>',
+					));
+                    ?>
+                    
                 </div>
             </div>
             <hr>
@@ -545,7 +573,7 @@
             
             <div class="row-fluid">
                 <div class="span12">
-                    <h4 style="text-decoration: underline; color: #884805; text-align: center;">LAB INVESTIGATION: (Transfusion manager)</h4>
+                    <h4 style="text-decoration: underline; color: #884805; text-align: center;">LAB INVESTIGATION: (BTU)</h4>
                 </div>
             </div>
 
@@ -717,7 +745,7 @@
             </div>
             <hr>
 
-            <p style="padding-left: 15px;">8. Compatibility testing recipient serum (pretransfusion sample) and donor cells (pack) </p>
+            <p style="padding-left: 15px;">8. Compatibility testing recipient serum (pretransfusion sample) and donor cells (pack) (Attach print out if applicable)</p>
             <div class="row-fluid uliwahifadhi">
                 <div class="span4">
                     <h4 class="required controls">Compatible</h4>
@@ -748,6 +776,7 @@
                         ));
                     ?>
                 </div>
+ 
                 <div class="span4">
                     <h4 class="required controls">Incompatible</h4>
                     <?php
@@ -799,12 +828,14 @@
             <div class="row-fluid uliwahifadhi">
                 <div class="span6">
                     <?php 
-                        echo '<label class="required" style="padding-left: 15px;">If negative (inconclusive results in 8) set up compatibility with enzyme treated cells </label>';          
+                    //  (inconclusive results in 8) set up compatibility with 
+                        echo '<label class="required" style="padding-left: 15px;">If negative enzyme treated cells </label>';          
                         echo $this->Form->input('negative_result', array(
                             'rows' => 2, 'label' => array('class' => 'control-label required', 'text' => 'Result'), 'placeholder' => 'Result'
                         ));
-
-                        echo '<label class="required" style="padding-left: 15px;">In case of blood group O transfused to A or B or AB individual: Establish from the donor unit </label>';
+// Establish from the donor unit 
+                        echo '<label class="required" style="padding-left: 15px;">In case of blood group O transfused to A or B or AB individual:
+                            results of: </label>';
                         echo $this->Form->input('anti_a', array(
                             'label' => array('class' => 'control-label required', 'text' => 'Anti A titres')
                         ));
@@ -827,7 +858,7 @@
                           'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false,
                           'class' => 'adverse_reaction',
                           'before' => '<div class="control-group ">   <label class="control-label required">
-                            Was the adverse reaction related to transfusion?  </label>  <div class="controls">
+                            Was the medicine side effects related to transfusion?  </label>  <div class="controls">
                             <input type="hidden" value="" id="TransfusionReactionGeneral_" name="data[Transfusion][adverse_reaction]"> <label class="radio inline">',
                           'after' => '</label>',
                           'options' => array('Yes' => 'Yes'),
@@ -858,7 +889,7 @@
 
 
             
-            <?php echo $this->element('multi/attachments', ['model' => 'Transfusion', 'group' => 'attachment']); ?>
+            <?php echo $this->element('multi/attachments', ['model' => 'Transfusion', 'group' => 'attachment','examples'=>'']); ?>
 
             <div class="row-fluid">
                 <div class="span6">

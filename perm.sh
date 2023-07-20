@@ -10,6 +10,7 @@ app/Console/cake acl deny Group.2 controllers
 app/Console/cake acl grant Group.2 controllers/Users/manager_dashboard
 app/Console/cake acl grant Group.2 controllers/Sadrs
 app/Console/cake acl grant Group.2 controllers/Aefis
+app/Console/cake acl grant Group.2 controllers/Drugs
 app/Console/cake acl grant Group.2 controllers/SadrFollowups
 app/Console/cake acl grant Group.2 controllers/Pqmps
 app/Console/cake acl grant Group.2 controllers/Devices
@@ -57,6 +58,7 @@ app/Console/cake acl grant Group.3 controllers/Users/edit
 app/Console/cake acl grant Group.3 controllers/Sadrs/sadrIndex
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_index
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_add
+app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_addme
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_followup
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_edit
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_view
@@ -69,6 +71,7 @@ app/Console/cake acl grant Group.3 controllers/Aefis/reporter_index
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_add
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_followup
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_edit
+app/Console/cake acl grant Group.3 controllers/Aefis/reporter_sedit
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_view
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_delete 
 
@@ -101,8 +104,8 @@ app/Console/cake acl grant Group.3 controllers/Medications/reporter_delete
 
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_index
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_add
-app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_followup
-app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_edit
+app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_followup 
+app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_edit 
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_view
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_delete 
 

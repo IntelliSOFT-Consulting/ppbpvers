@@ -1,5 +1,5 @@
 <?php
-$this->extend('/Reports/reports_manager');
+$this->extend('/Reports/upgrade/menu/transfusions');
 $this->assign('transfusions-summary', 'active');
 $this->Html->css('summary', null, array('inline' => false));
 ?>
@@ -45,7 +45,7 @@ $this->Html->css('summary', null, array('inline' => false));
         </div>
     </div>
     <div class="span6">
-        <h4>Patient Sex Distribution</h4>
+        <h4>Gender Distribution</h4>
         <div class="tab">
             <button class="tablinks" onclick="sexTab(event, 'sexChart')" id="sexOpen">
                 <i class="fa fa-pie-chart"></i> Chart
@@ -66,7 +66,7 @@ $this->Html->css('summary', null, array('inline' => false));
                 <thead>
                     <tr>
                         <th>Sex</th>
-                        <th>ADRs</th>
+                        <th>Transfusions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -162,8 +162,48 @@ $this->Html->css('summary', null, array('inline' => false));
             </table>
         </div>
     </div>
+</div> 
+<hr> 
+<div class="row-fluid">
+    <div class="span12">
+        <h4>Transfusions per Month</h4>
+        <div class="tab">
+            <button class="tablinks" onclick="monthTab(event, 'monthChart')" id="monthOpen">
+                <i class="fa fa-pie-chart"></i> Chart
+            </button>
+
+            <button class="tablinksmonth" onclick="monthTab(event, 'monthTable')">
+                <i class="fa fa-table"></i> Table
+            </button>
+        </div>
+
+        <div id="monthChart" class="tabcontentmonth">
+            <div id="sadrs-month"></div>
+
+        </div>
+
+        <div id="monthTable" class="tabcontentmonth">
+            <table class="table table-condensed table-bordered" id="datatablemonth">
+                <thead>
+                    <tr>
+                        <th>Month</th>
+                        <th>Transfusions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($months as $key => $value) {
+                        echo "<tr>";
+                        echo "<th>".$value[0]['month']."</th>";
+                        echo "<td>".$value[0]['cnt']."</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<hr>
 
 <hr>
 <script type="text/javascript">
@@ -207,7 +247,7 @@ $this->Html->css('summary', null, array('inline' => false));
         }
         document.getElementById(agetabName).style.display = "block";
         evt.currentTarget.className += " active";
-    }
+    } 
 
     function yearTab(evt, yeartabName) {
         var i, tabcontent, tablinks;
@@ -222,13 +262,51 @@ $this->Html->css('summary', null, array('inline' => false));
         document.getElementById(yeartabName).style.display = "block";
         evt.currentTarget.className += " active";
     }
+ 
+    function monthTab(evt, monthtabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontentmonth");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinksmonth");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(monthtabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
     // Get the element with id="defaultOpen" and click on it
     document.getElementById("geoOpen").click();
     document.getElementById("sexOpen").click();
     document.getElementById("ageOpen").click();
-    document.getElementById("yearOpen").click();
+    document.getElementById("yearOpen").click(); 
+    document.getElementById("monthOpen").click();
 
+    Highcharts.chart('sadrs-month', {
+        data: {
+            table: 'datatablemonth'
+        },
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '',
 
+        },
+        yAxis: {
+            allowDecimals: false,
+            title: {
+                text: 'Units'
+            }
+        },
+        tooltip: {
+            formatter: function() {
+                return '<b>' + this.series.name + '</b><br/>' +
+                    this.point.y + ' ' + this.point.name.toLowerCase();
+            }
+        }
+    }); 
     Highcharts.chart('sadrs-geo', {
         data: {
             table: 'datatablegeo'
@@ -261,8 +339,7 @@ $this->Html->css('summary', null, array('inline' => false));
             type: 'pie'
         },
         title: {
-            text: '',
-
+            text: ''
         },
         yAxis: {
             allowDecimals: false,
@@ -270,12 +347,17 @@ $this->Html->css('summary', null, array('inline' => false));
                 text: 'Units'
             }
         },
-        tooltip: {
-            formatter: function() {
-                return '<b>' + this.series.name + '</b><br/>' +
-                    this.point.y + ' ' + this.point.name.toLowerCase();
+        plotOptions: {
+        pie: {
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f}%'
             }
         }
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.y}</b><br/>Percentage: <b>{point.percentage:.1f}%</b>'
+    }
     });
     Highcharts.chart('sadrs-age', {
         data: {

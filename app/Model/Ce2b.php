@@ -53,6 +53,15 @@ class Ce2b extends AppModel
 			'fields' => '',
 			'order' => ''
 		),
+		'FacilityCode' => array(
+			'className' => 'FacilityCode',
+			'foreignKey' => 'company_code',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+
+		// 
 	);
 	public $hasMany = array(
 		'Attachment' => array(
@@ -66,7 +75,15 @@ class Ce2b extends AppModel
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('ExternalComment.model' => 'Ce2b', 'ExternalComment.category' => 'external' ),
+        ),
+		'ReviewComment' => array(
+            'className' => 'Comment',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => array('ReviewComment.model' => 'Ce2b', 'ReviewComment.category' => 'review' ),
         )
+
+		
 	);
 	/**
 	 * Validation rules

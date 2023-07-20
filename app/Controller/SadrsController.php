@@ -27,9 +27,25 @@ class SadrsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('yellowcard','guest_add','guest_edit');
+        $this->Auth->allow('yellowcard', 'guest_add', 'guest_edit', 'manager_check_missing');
     }
-
+    public function manager_check_missing()
+    {
+        $data = $this->Sadr->find(
+            'all',
+            array(
+                'conditions' => array(
+                    'Sadr.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Sadr.reference_no !=' => 'new'
+                ),
+                'order' => array('Sadr.id' => 'DESC')
+            )
+        );
+        foreach($data as $dt){
+            debug($dt['Sadr']['reference_no']);
+            exit;
+        }
+       
+    }
     public function yellowcard($id = null)
     {
         $this->Sadr->id = $id;
@@ -139,7 +155,7 @@ class SadrsController extends AppController
             $criteria['Sadr.submitted'] = array(2);
         } else {
             if (isset($this->request->query['submitted'])) {
-                
+
                 if ($this->request->query['submitted'] == 1) {
                     $criteria['Sadr.submitted'] = array(0, 1);
                 } else {
@@ -247,10 +263,10 @@ class SadrsController extends AppController
         if (!empty($this->passedArgs['start_date']) || !empty($this->passedArgs['end_date'])) $this->passedArgs['range'] = true;
         if (!empty($this->request->query['pages'])) $this->paginate['limit'] = $this->request->query['pages'];
         else $this->paginate['limit'] = reset($this->page_options);
- 
+
 
         $criteria = $this->Sadr->parseCriteria($this->passedArgs);
-       
+
         $criteria['Sadr.copied !='] = '1';
         // check if the user has select unsubmited sadrs
         if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
@@ -260,6 +276,8 @@ class SadrsController extends AppController
         }
         // add deleted condition to criteria
         $criteria['Sadr.deleted'] = false;
+        $criteria['Sadr.archived'] = false;
+
         // if (!isset($this->passedArgs['submit'])) $criteria['Sadr.submitted'] = array(2, 3);
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Sadr.created' => 'desc');
@@ -448,8 +466,8 @@ class SadrsController extends AppController
         $sadr = $this->Sadr->find('first', array(
             'conditions' => array('Sadr.id' => $id),
             'contain' => array(
-                'SadrListOfDrug', 'SadrDescription', 'SadrListOfDrug.Route', 'SadrListOfDrug.Frequency', 'SadrListOfDrug.Dose', 'SadrListOfMedicine', 'SadrListOfMedicine.Route', 'SadrListOfMedicine.Frequency', 'SadrListOfMedicine.Dose', 'County', 'SubCounty', 'Attachment', 'Designation', 'ExternalComment',
-                'SadrOriginal', 'SadrOriginal.SadrDescription', 'SadrOriginal.SadrListOfDrug', 'SadrOriginal.SadrListOfDrug.Route', 'SadrOriginal.SadrListOfDrug.Frequency', 'SadrOriginal.SadrListOfDrug.Dose', 'SadrOriginal.SadrListOfMedicine', 'SadrOriginal.SadrListOfMedicine.Route', 'SadrOriginal.SadrListOfMedicine.Frequency', 'SadrOriginal.SadrListOfMedicine.Dose', 'SadrOriginal.County', 'SadrOriginal.SubCounty', 'SadrOriginal.Attachment', 'SadrOriginal.Designation', 'SadrOriginal.ExternalComment'
+                'SadrListOfDrug', 'SadrDescription', 'SadrListOfDrug.Route', 'SadrListOfDrug.Frequency', 'SadrListOfDrug.Dose', 'SadrListOfMedicine', 'SadrListOfMedicine.Route', 'SadrListOfMedicine.Frequency', 'SadrListOfMedicine.Dose', 'County', 'SubCounty', 'Attachment', 'Designation', 'ExternalComment','ExternalComment.Attachment','ReviewComment','ReviewComment.Attachment',
+                'SadrOriginal', 'SadrOriginal.SadrDescription', 'SadrOriginal.SadrListOfDrug', 'SadrOriginal.SadrListOfDrug.Route', 'SadrOriginal.SadrListOfDrug.Frequency', 'SadrOriginal.SadrListOfDrug.Dose', 'SadrOriginal.SadrListOfMedicine', 'SadrOriginal.SadrListOfMedicine.Route', 'SadrOriginal.SadrListOfMedicine.Frequency', 'SadrOriginal.SadrListOfMedicine.Dose', 'SadrOriginal.County', 'SadrOriginal.SubCounty', 'SadrOriginal.Attachment', 'SadrOriginal.Designation', 'SadrOriginal.ExternalComment','SadrOriginal.ReviewComment'
             )
         ));
         $managers = $this->Sadr->User->find('list', array(
@@ -459,6 +477,8 @@ class SadrsController extends AppController
             )
         ));
 
+        // debug($sadr);
+        // exit;
         $this->set(['sadr' => $sadr, 'managers' => $managers]);
 
 
@@ -695,6 +715,29 @@ class SadrsController extends AppController
             'reference_no' => 'new', //'SADR/'.date('Y').'/'.$count,
             'report_type' => 'Initial',
             'pqmp_id' => $id,
+            'medication_id' => $id,
+            'designation_id' => $this->Auth->User('designation_id'),
+            'county_id' => $this->Auth->User('county_id'),
+            'institution_code' => $this->Auth->User('institution_code'),
+            'address' => $this->Auth->User('institution_address'),
+            'reporter_name' => $this->Auth->User('name'),
+            'reporter_email' => $this->Auth->User('email'),
+            'reporter_phone' => $this->Auth->User('phone_no'),
+            'contact' => $this->Auth->User('institution_contact'),
+            'name_of_institution' => $this->Auth->User('name_of_institution')
+        ]], false);
+        $this->Session->setFlash(__('The SADR has been created'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'edit', $this->Sadr->id));
+    }
+
+    public function reporter_addme($id = null)
+    {
+        $this->Sadr->create();
+        $this->Sadr->save(['Sadr' => [
+            'user_id' => $this->Auth->User('id'),
+            'reference_no' => 'new', //'SADR/'.date('Y').'/'.$count,
+            'report_type' => 'Initial',
+            'medication_id' => $id,
             'designation_id' => $this->Auth->User('designation_id'),
             'county_id' => $this->Auth->User('county_id'),
             'institution_code' => $this->Auth->User('institution_code'),
@@ -831,6 +874,12 @@ class SadrsController extends AppController
                     }
                     //**********************************    END   *********************************
 
+                    // If the report is serious sent an alert:
+                    $serious = $sadr['Sadr']['serious'];
+                    if ($serious == "Yes") {
+                        $this->notifyCountyPharmacist($sadr);
+                    }
+
                     $this->Session->setFlash(__('The SADR has been submitted to PPB'), 'alerts/flash_success');
                     $this->redirect(array('action' => 'view', $this->Sadr->id));
                 }
@@ -859,7 +908,60 @@ class SadrsController extends AppController
         $dose = $this->Sadr->SadrListOfDrug->Dose->find('list');
         $this->set(compact('dose'));
     }
+    public function notifyCountyPharmacist($sadr = null)
+    {
+        # code...
 
+        $this->loadModel('Message');
+        $html = new HtmlHelper(new ThemeView());
+        $message = $this->Message->find('first', array('conditions' => array('name' => 'serious_sadr')));
+
+        $county_id = $sadr['Sadr']['county_id'];
+        $users = $this->Sadr->User->find('all', array(
+            'contain' => array(),
+            'conditions' => array(
+                'OR' => array(
+                    'User.group_id' => 2,
+                    array(
+                        'User.county_id' => $county_id,
+                        'User.user_type' => 'County Pharmacist'
+                    )
+                )
+            ),
+            'order' => array(
+                'User.id' => 'DESC'
+            )
+        ));
+
+        foreach ($users as $user) {
+            $variables = array(
+                'name' => $user['User']['name'], 'reference_no' => $sadr['Sadr']['reference_no'],
+                'reference_link' => $html->link(
+                    $sadr['Sadr']['reference_no'],
+                    array(
+                        'controller' => 'sadrs',
+                        'action' => 'view', $sadr['Sadr']['id'],
+                        'manager' => true,
+                        'full_base' => true
+                    ),
+                    array('escape' => false)
+                ),
+                'modified' => $sadr['Sadr']['modified']
+            );
+            $datum = array(
+                'email' => $user['User']['email'],
+                'id' => $sadr['Sadr']['id'],
+                'user_id' => $user['User']['id'],
+                'type' => 'serious_sadr',
+                'model' => 'Sadr',
+                'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                'message' => CakeText::insert($message['Message']['content'], $variables)
+            );
+            $this->loadModel('Queue.QueuedTask');
+            $this->QueuedTask->createJob('GenericEmail', $datum);
+            $this->QueuedTask->createJob('GenericNotification', $datum);
+        }
+    }
     public function api_add()
     {
 
@@ -1137,10 +1239,10 @@ class SadrsController extends AppController
     public function guest_add($id = null)
     {
         $this->Sadr->create();
-        $this->Sadr->save(['Sadr' => [ 
-            'reference_no' => 'new', 
+        $this->Sadr->save(['Sadr' => [
+            'reference_no' => 'new',
             'report_type' => 'Initial',
-            'pqmp_id' => $id, 
+            'pqmp_id' => $id,
         ]], false);
         $this->Session->setFlash(__('The SADR has been created'), 'alerts/flash_success');
         $this->redirect(array('action' => 'guest_edit', $this->Sadr->id));
@@ -1152,7 +1254,7 @@ class SadrsController extends AppController
             throw new NotFoundException(__('Invalid SADR'));
         }
         $sadr = $this->Sadr->read(null, $id);
-        
+
         if ($this->request->is('post') || $this->request->is('put')) {
             $validate = false;
             if (isset($this->request->data['submitReport'])) {
@@ -1176,7 +1278,7 @@ class SadrsController extends AppController
                     $html = new HtmlHelper(new ThemeView());
                     $message = $this->Message->find('first', array('conditions' => array('name' => 'reporter_sadr_submit')));
                     $variables = array(
-                        'name' => 'Guest', 
+                        'name' => 'Guest',
                         'reference_no' => $sadr['Sadr']['reference_no'],
                         'reference_link' => $html->link(
                             $sadr['Sadr']['reference_no'],
@@ -1233,7 +1335,7 @@ class SadrsController extends AppController
                     //**********************************    END   *********************************
 
                     $this->Session->setFlash(__('The SADR has been submitted to PPB'), 'alerts/flash_success');
-                    $this->redirect(array('controller'=>'pages','action' => 'home'));
+                    $this->redirect(array('controller' => 'pages', 'action' => 'home'));
                 }
                 // debug($this->request->data);
                 $this->Session->setFlash(__('The SADR has been saved'), 'alerts/flash_success');
@@ -1259,5 +1361,21 @@ class SadrsController extends AppController
         $this->set(compact('frequency'));
         $dose = $this->Sadr->SadrListOfDrug->Dose->find('list');
         $this->set(compact('dose'));
+    }
+    public function manager_archive($id = null)
+    {
+        $this->Sadr->id = $id;
+        if (!$this->Sadr->exists()) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+        $sadr = $this->Sadr->read(null, $id);
+        $sadr['Sadr']['archived'] = true;
+        $sadr['Sadr']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Sadr->save($sadr, array('validate' => false))) {
+            $this->Session->setFlash(__('SADR Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('SADR was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
     }
 }

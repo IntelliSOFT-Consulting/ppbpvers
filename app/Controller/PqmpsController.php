@@ -172,6 +172,8 @@ class PqmpsController extends AppController
         }
         // add deleted to criteria
         $criteria['Pqmp.deleted'] = false;
+        $criteria['Pqmp.archived'] = false;
+        
         // if (!isset($this->passedArgs['submit'])) $criteria['Pqmp.submitted'] = array(2, 3);
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Pqmp.created' => 'desc');
@@ -377,15 +379,14 @@ class PqmpsController extends AppController
     {
         # code...
         if (strpos($this->request->url, 'pdf') !== false) {
-            $this->pdfConfig = array('filename' => 'PQMP_' . $id . '.pdf',  'orientation' => 'portrait');
-            // $this->response->download('PQMP_'.$pqmp['Pqmp']['id'].'.pdf');
+            $this->pdfConfig = array('filename' => 'PQMP_' . $id . '.pdf',  'orientation' => 'portrait'); 
         }
 
         $pqmp = $this->Pqmp->find('first', array(
             'conditions' => array('Pqmp.id' => $id),
             'contain' => array(
-                'Country', 'County', 'SubCounty', 'Attachment', 'Designation', 'ExternalComment',
-                'PqmpOriginal', 'PqmpOriginal.Country', 'PqmpOriginal.County', 'PqmpOriginal.SubCounty', 'PqmpOriginal.Attachment', 'PqmpOriginal.Designation', 'PqmpOriginal.ExternalComment'
+                'Country', 'County', 'SubCounty', 'Attachment', 'Designation', 'ExternalComment','ReviewComment','ExternalComment.Attachment','ReviewComment.Attachment',
+                'PqmpOriginal', 'PqmpOriginal.Country', 'PqmpOriginal.County', 'PqmpOriginal.SubCounty', 'PqmpOriginal.Attachment', 'PqmpOriginal.Designation', 'PqmpOriginal.ExternalComment','PqmpOriginal.ReviewComment','PqmpOriginal.ReviewComment.Attachment'
             )
         ));
         $managers = $this->Pqmp->User->find('list', array(
@@ -393,6 +394,8 @@ class PqmpsController extends AppController
                 'User.group_id' => 6
             )
         ));
+        // debug($pqmp);
+        // exit;
         $this->set(['pqmp' => $pqmp, 'managers' => $managers]);
 
         if (strpos($this->request->url, 'pdf') !== false) {
@@ -1234,4 +1237,20 @@ class PqmpsController extends AppController
         $countries = $this->Pqmp->Country->find('list');
         $this->set('countries', $countries);
     }
+    public function manager_archive($id=null) {
+
+        $this->Pqmp->id = $id;
+        if (!$this->Pqmp->exists()) {
+            throw new NotFoundException(__('Invalid PQHTP'));
+        }
+        $report = $this->Pqmp->read(null, $id);
+        $report['Pqmp']['archived'] = true;
+        $report['Pqmp']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Pqmp->save($report, array('validate' => false))) {
+            $this->Session->setFlash(__('PQHTP Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('PQHTP was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
+	}
 }

@@ -1,5 +1,5 @@
 <?php
-$this->assign('CE2B', 'active');
+$this->assign('E2B', 'active');
 $this->Html->script('jquery/combobox', array('inline' => false));
 $this->Html->script('ce2b', array('inline' => false));
 ?>
@@ -45,7 +45,7 @@ $this->Html->script('ce2b', array('inline' => false));
                         <h5>P.O. Box 27663-00506 NAIROBI</h5>
                         <h5>Tel: +254795743049</h5>
                         <h5><b>Email:</b> pv@pharmacyboardkenya.org</h5>
-                        <h5 style="color: red;">CE2B FORM</h5>
+                        <h5 style="color: red;">E2B FORM</h5>
                     </div>
                 </div>
             </div>
@@ -56,10 +56,12 @@ $this->Html->script('ce2b', array('inline' => false));
                     <?php
                     echo $this->Form->input('company_name', array(
                         'label' => array('class' => 'control-label required', 'text' => 'Company Name<span style="color:red;">*</span>'),
-                        'placeholder' => ' ', 'title' => 'Company Name',
-                        'data-content' => '',
+                        'placeholder' => ' ', 'title' => 'Company Name', 
                         'after' => '<p class="help-block"> </p></div>',
                         'class' => 'span9',
+                    ));
+                    echo $this->Form->input('company_code', array(
+                        'type'=>'hidden'
                     ));
                     echo $this->Form->input('comment', array(
                         'class' => 'span9',
@@ -80,7 +82,7 @@ $this->Html->script('ce2b', array('inline' => false));
                 </div>
             </div>
             <hr> 
-            <?php echo $this->element('multi/attachments', ['model' => 'Ce2b', 'group' => 'attachment']); ?>
+            <?php echo $this->element('multi/attachments', ['model' => 'Ce2b', 'group' => 'attachment','examples'=>'']); ?>
 
             <div class="row-fluid">
                 <div class="span6">
