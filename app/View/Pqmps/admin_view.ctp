@@ -1,6 +1,6 @@
 <?php
 	$this->Html->script('jqprint.0.3', array('inline' => false));
-	$this->assign('PQMP', 'active');
+	$this->assign('Poor-Quality Health Products and Technologies', 'active');
  ?>
 
 
@@ -46,7 +46,7 @@
 	   <div id="pqmpPrintArea">
 			<div class="vformbackp">
 				<?php
-					echo $this->Html->image('pqmp_header.gif', array('alt' => 'PQMP'));
+					echo $this->Html->image('pqmp_header.gif', array('alt' => 'Poor-Quality Health Products and Technologies'));
 				?>
 				<br>
 				<br>

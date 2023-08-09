@@ -16,9 +16,10 @@
                 <?php 
                     echo $this->Form->input('AefiDescription.'.$i.'.id');
                     echo $this->Form->input('AefiDescription.'.$i.'.description',
-                                array('label' => false, 'rows' => 3));
-                    
-          
+                    // make if fit the entire width of the form
+                    // ['templates' => 'table_form', 'label' => false, 'div' => false, 'class' => 'span12']);
+                                array('label' => false, 'rows' => 3,'class' => 'span12 autocomplete'));
+
                 ?>
               
                 </div> 

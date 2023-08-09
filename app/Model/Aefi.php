@@ -19,13 +19,19 @@ class Aefi extends AppModel
         'report_title' => array('type' => 'like', 'encode' => true),
         'name_of_institution' => array('type' => 'like', 'encode' => true),
         'serious' => array('type' => 'like', 'encode' => true),
-        'range' => array('type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'CAST(Aefi.reporter_date as DATE) BETWEEN ? AND ?'),
+        'range' => array('type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'CAST(Aefi.reporter_date as DATE) BETWEEN ? AND ?'), 
         'start_date' => array('type' => 'query', 'method' => 'dummy'),
         'end_date' => array('type' => 'query', 'method' => 'dummy'),
-        'county_id' => array('type' => 'value'),
-        'vaccine_name' => array('type' => 'query', 'method' => 'findByVaccineName', 'encode' => true),
+        'month' => array('type' => 'query', 'method' => 'dummy'),
+        'year' => array('type' => 'query', 'method' => 'dummy'),
+        'category' => array('type' => 'query', 'method' => 'dummy'),
+        'county' => array('type' => 'query', 'method' => 'dummy'),
+        'sub_county' => array('type' => 'query', 'method' => 'dummy'),
+        'county_id' => array('type' => 'value'), 
+        'vaccine_name' => array('type' => 'query', 'method' => 'findByVaccineName', 'encode' => true), 
         'health_program' => array('type' => 'query', 'method' => 'findByHealthProgram', 'encode' => true),
         'bcg' => array('type' => 'value'),
+        'device' => array('type' => 'value'),
         'convulsion' => array('type' => 'value'),
         'urticaria' => array('type' => 'value'),
         'high_fever' => array('type' => 'value'),
@@ -43,12 +49,43 @@ class Aefi extends AppModel
         'reporter' => array('type' => 'query', 'method' => 'reporterFilter', 'encode' => true),
         'designation_id' => array('type' => 'value'),
         'gender' => array('type' => 'value'),
+        'submitted' => array('type' => 'value'),
         'submit' => array('type' => 'query', 'method' => 'orConditions', 'encode' => true),
     );
 
     public function dummy($data = array())
     {
         return array('1' => '1');
+    }
+    public function findByCategory($data = array())
+    {
+        $category = $data['category'];
+
+        // debug($category);
+    }
+    public function findByMonthYear($data = array())
+    {
+        $month = $data['month'];
+        $year = $data['year'];
+        $startDate = date('Y-m-01', strtotime($month . ' ' . $year));
+        $endDate = date('Y-m-t', strtotime($month . ' ' . $year));
+        return array($startDate, $endDate);
+        // debug($startDate);
+        // debug($endDate);
+        // $records = $this->find('all', array(
+        //     'conditions' => array(
+        //         $this->alias . '.submitted_date >=' => $startDate,
+        //         $this->alias . '.submitted_date <=' => $endDate
+        //     )
+        // ));
+        // return $records;
+        // if (!empty($data['month'])) $start_date =date('Y-m-01', strtotime($month . ' ' . $year));
+        // else $start_date = date('Y-m-d', strtotime('2012-05-01'));
+
+        // if (!empty($data['end_date'])) $end_date = date('Y-m-d', strtotime($data['end_date']));
+        // else $end_date = date('Y-m-d');
+
+        // return array($start_date, $end_date);
     }
 
     public function findByVaccineName($data = array())
@@ -110,6 +147,7 @@ class Aefi extends AppModel
         }
         return $cond;
     }
+
 
     public function makeRangeCondition($data = array())
     {
@@ -219,7 +257,16 @@ class Aefi extends AppModel
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('ExternalComment.model' => 'Aefi', 'ExternalComment.category' => 'external'),
+        ),
+        'ReviewComment' => array(
+            'className' => 'Comment',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => array('ReviewComment.model' => 'Aefi', 'ReviewComment.category' => 'review'),
         )
+
+
+
     );
 
     public $validate = array(
@@ -262,7 +309,7 @@ class Aefi extends AppModel
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
-                'message'  => 'Please describe the AEFI'
+                'message'  => 'Please describe the Adverse Event Following Immunization'
             ),
         ),
         'date_of_birth' => array(
@@ -270,7 +317,7 @@ class Aefi extends AppModel
                 'rule'     => 'ageOrDate',
                 // 'required' => false,
                 'allowEmpty' => true,
-                'message'  => 'Please specify the patient\'s date / Year of birth or age in months / Age Group'
+                'message'  => 'Please specify the patient\'s date / Year of birth or age in months'
             ),
         ),
         'county_id' => array(
@@ -321,7 +368,7 @@ class Aefi extends AppModel
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
-                'message'  => 'Please specify the AEFI outcome'
+                'message'  => 'Please specify the Adverse Event Following Immunization outcome'
             ),
         ),
         'serious' => array(
@@ -377,6 +424,29 @@ class Aefi extends AppModel
                 'rule'     => 'email',
                 'required' => true,
                 'message'  => 'Please provide a valid email address'
+            ),
+        ),
+        'reporter_phone' => array(
+            'notBlank' => array(
+                'rule'     => 'notBlank',
+                'required' => true,
+                'message'  => 'Please provide a valid phone number'
+            ),
+        ),
+
+        //ensure reporter phone is numeric and 10 digits
+        'reporter_phone' => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
+                'message' => 'Please provide a valid phone number',
+            ),
+            'minLength' => array(
+                'rule' => array('minLength', 10),
+                'message' => 'Please provide a valid phone number',
+            ),
+            'maxLength' => array(
+                'rule' => array('maxLength', 10),
+                'message' => 'Please provide a valid phone number',
             ),
         ),
     );

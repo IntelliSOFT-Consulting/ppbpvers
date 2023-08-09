@@ -9,13 +9,13 @@ $nchecked = "&#x2610;";
 			<tr>
 				<td>
 					<?php
-					echo ($this->Html->image('header-object.png', array('alt' => 'AEFI', 'fullBase' => true)));
+					echo ($this->Html->image('header-object.png', array('alt' => 'Adverse Event Following Immunization', 'fullBase' => true)));
 					?>
 				</td>
 				<td style="text-align: center;">
 					<h2>MINISTRY OF HEALTH</h2>
 					<p class="lead">UNIT OF VACCINES AND IMMUNIZATION SERVICES</p>
-					<h3>AEFI Reporting Form</h3>
+					<h3>Adverse Event Following Immunization Reporting Form</h3>
 				</td>
 				<td>
 					<?php
@@ -115,7 +115,7 @@ $nchecked = "&#x2610;";
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4">
-					<h5 style="text-align: center; color: #884805;">TYPE OF AEFI</h5>
+					<h5 style="text-align: center; color: #884805;">TYPE OF Adverse Event Following Immunization</h5>
 				</td>
 			</tr>
 			<tr>
@@ -138,7 +138,7 @@ $nchecked = "&#x2610;";
 					<table>
 						<tbody>
 							<tr>
-								<td style="width: 50%;">DATE AEFI STARTED </td>
+								<td style="width: 50%;">DATE Adverse Event Following Immunization STARTED </td>
 								<td><strong><?php echo $aefi['Aefi']['date_aefi_started'] ?> </strong></td>
 							</tr>
 							<tr>
@@ -152,7 +152,7 @@ $nchecked = "&#x2610;";
 							</tr>
 							<tr>
 								<td colspan="2">
-									Describe AEFI (Signs & Symptoms) <br>
+									Describe Adverse Event Following Immunization (Signs & Symptoms) <br>
 									<strong><?php echo $aefi['Aefi']['aefi_symptoms'] ?> </strong><br>
 									<?php
 									foreach ($aefi['AefiDescription'] as $aefiDescription) :
@@ -168,55 +168,9 @@ $nchecked = "&#x2610;";
 					<strong><?php echo $aefi['Aefi']['description_of_reaction'] ?> </strong>
 				</td>
 			</tr>
-		</table>
-		<hr>
 
-		<table id="change_order_items" style="width: 100%;" class="table table-bordered table-condensed table-pvborder">
-			<thead>
-				<tr>
-					<th colspan="7" style="width: 60%"><label class="required">Details of Vaccines</label></th>
-					<th colspan="4"><label class="required">Details of Diluents</label></th>
-				</tr>
-				<tr>
-					<th style="width: 1%;"><label>#</label></th>
-					<th style="width: 10%;"> <label class="required">Name of Vaccine <span style="color:red;">*</span></label><small class="help-block">(e.g. BCG, DPT-Hib-HeB)</small></th>
-					<th style="width: 7%"> <label class="required">Dose No.</label></th>
-					<th> <label class="required"> Date vaccinated <span style="color:red;">*</span><br><small class="help-block">(dd-mm-yyyy)</small></label></th>
-					<th> <label> Route,site of vaccination <br><small class="help-block">(i.m.,s.c., i.d.)</small></label></th>
-					<th style="width: 5%"> <label class="required">Batch/Lot number <span style="color:red;">*</span></label></th>
-					<th> <label class="required">Manufacturer's Name <span style="color:red;">*</span></label></th>
-					<th> <label class="required">Expiry date <span style="color:red;">*</span></label></th>
-					<th style="width: 7%"> <label class="required">Batch/ Lot Number <span style="color:red;">*</span></label></th>
-					<th style="width: 10%"><label>Manufacturer's Name</label></th>
-					<th> <label>Expiry date</label> </th>
-				</tr>
-			</thead>
-			<tbody>
-				<?php
-				$i = 0;
-				foreach ($aefi['AefiListOfVaccine'] as $aefiListOfVaccine) :
-				?>
-					<tr>
-						<td><?= $i + 1; ?></td>
-						<td><?php
-							echo (!empty($aefiListOfVaccine['Vaccine']['vaccine_name'])) ? $aefiListOfVaccine['Vaccine']['vaccine_name'] : '';
-							echo (!empty($aefiListOfVaccine['vaccine_name'])) ? $aefiListOfVaccine['vaccine_name'] : '';
-							?></td>
-						<td><?php echo $aefiListOfVaccine['dosage']; ?></td>
-						<td><?php echo $aefiListOfVaccine['vaccination_date'] . ' ';
-							if (isset($aefiListOfVaccine['vaccination_time']['hour'])) echo $aefiListOfVaccine['vaccination_time']['hour'] . ':';
-							if (isset($aefiListOfVaccine['vaccination_time']['min'])) echo $aefiListOfVaccine['vaccination_time']['min'];
-							?></td>
-						<td><?php echo $aefiListOfVaccine['vaccination_route']; ?></td>
-						<td><?php echo $aefiListOfVaccine['batch_number']; ?></td>
-						<td><?php echo $aefiListOfVaccine['vaccine_manufacturer']; ?></td>
-						<td><?php echo $aefiListOfVaccine['expiry_date']; ?></td>
-						<td><?php echo $aefiListOfVaccine['diluent_batch_number']; ?></td>
-						<td><?php echo $aefiListOfVaccine['diluent_manufacturer']; ?></td>
-						<td><?php echo $aefiListOfVaccine['diluent_expiry_date']; ?></td>
-					</tr>
-
-				<?php endforeach; ?>
+			<?php // endforeach; 
+			?>
 
 			</tbody>
 		</table>
@@ -252,7 +206,7 @@ $nchecked = "&#x2610;";
 					<p style="text-align: center;">Action Taken:</p>
 				</td>
 				<td colspan="2">
-					<p style="text-align: center;">AEFI Outcome:</p>
+					<p style="text-align: center;">Adverse Event Following Immunization Outcome:</p>
 				</td>
 			</tr>
 			<tr>

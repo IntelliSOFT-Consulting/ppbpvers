@@ -1,6 +1,7 @@
+<?= $this->Html->css('menu.css') ?>
     <div class="menu text-center">
 
-        <ul class="nav nav-pills center-pills">
+        <ul class="nav nav-pills center-pills responsive-menu">
             <li class="<?php echo $this->fetch('Dashboard') ?>">
                 <?php
                     echo $this->Html->link('<i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard',
@@ -19,18 +20,30 @@
                         array('controller' => 'padrs', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                     ?>
              </li>            
-             <li class="<?php echo $this->fetch('AEFI') ?>">
+             <li class="<?php echo $this->fetch('Adverse Event Following Immunization') ?>">
                 <?php
                     echo $this->Html->link('<i class="fa fa-child" aria-hidden="true"></i> AEFIs',
                         array('controller' => 'aefis', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                     ?>
              </li>
-             <li class="<?php echo $this->fetch('PQMP') ?>">
+             <li class="<?php echo $this->fetch('Serious Adverse Event Following Immunization') ?>">
                 <?php
-                    echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> PQMPs',
+                    echo $this->Html->link('<i class="fa fa-child" aria-hidden="true"></i> SAEFIs',
+                        array('controller' => 'saefis', 'action'=>'index', 'manager' => true ), array('escape' => false ));
+                    ?>
+             </li>
+             <li class="<?php echo $this->fetch('Poor-Quality Health Products and Technologies') ?>">
+                <?php
+                    echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> PQHPTs',
                         array('controller' => 'pqmps', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                     ?>
              </li>
+             <li class="<?php echo $this->fetch('E2B') ?>">
+        <?php
+             echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> E2Bs',
+             array('controller' => 'ce2bs', 'action'=>'index', 'manager' => true ), array('escape' => false ));
+            ?>
+     </li>
              <li class="<?php echo $this->fetch('DEV') ?>">
                 <?php
                     echo $this->Html->link('<i class="fa fa-stethoscope" aria-hidden="true"></i> Devices',
@@ -39,13 +52,13 @@
              </li>
              <li class="<?php echo $this->fetch('MED') ?>">
                 <?php
-                    echo $this->Html->link('<i class="fa fa-chain-broken" aria-hidden="true"></i> Medications',
+                    echo $this->Html->link('<i class="fa fa-chain-broken" aria-hidden="true"></i> Medications Errors',
                         array('controller' => 'medications', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                     ?>
              </li>
              <li class="<?php echo $this->fetch('TRN') ?>">
                 <?php
-                    echo $this->Html->link('<i class="fa fa-eyedropper" aria-hidden="true"></i> Transfusions',
+                    echo $this->Html->link('<i class="fa fa-eyedropper" aria-hidden="true"></i> Transfusion Reaction',
                         array('controller' => 'transfusions', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                     ?>
              </li>
@@ -75,10 +88,10 @@
                         array('controller' => 'feedbacks', 'action'=>'add', 'manager' => false ), array('escape' => false ));
                     ?>
              </li>
-             <li class="dropdown <?php echo $this->fetch('Profile') ?>">
+             <li class="dropdown <?php echo $this->fetch('Registry') ?>">
                 <?php
-                    // echo $this->Html->link('<i class="icon-user"></i> My Profile',
-                        // array('controller' => 'users', 'action'=>'profile', 'admin' => false ), array('escape' => false ));
+                    echo $this->Html->link('<i class="icon-cog"></i> Registry',
+                        array('controller' => 'drugs', 'action'=>'index', 'manager' => true ), array('escape' => false ));
                 ?>
              </li>
         </ul>

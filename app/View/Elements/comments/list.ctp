@@ -36,8 +36,7 @@
                          echo $this->Html->link(__($value['basename']),
                            array('controller' => 'comments',  'action' => 'comment_file_download', $value['id'],
                              'admin' => false),
-                           array('class' => 'btn btn-link'));
-                        // echo $this->Html->link($value['basename'], substr($value['file'], 24), ['fullBase' => true]);
+                           array('class' => 'btn btn-link')); 
                          echo '</p>';
                         }
                     }
@@ -48,6 +47,4 @@
                 </tbody>
               </table> 
         </div><br>
-        <?php } ?>
-    <!-- </div> -->
-<!-- </div> -->
+        <?php } ?> 

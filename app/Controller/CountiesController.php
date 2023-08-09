@@ -15,7 +15,20 @@ class CountiesController extends AppController {
 
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('index', 'api_index');
+		$this->Auth->allow('index', 'api_index','autocomplete');
+	}
+
+	public function autocomplete()
+	{
+		$counties = $this->County->find('list',   
+			array(
+				'fields' => array('County.id', 'County.county_name'),
+				// 'limit' => 47,
+				'order' => array('County.county_name' => 'asc')
+			)
+		); 
+		$this->set('counties', $counties);
+		$this->set('_serialize', 'counties'); 
 	}
 /**
  * index method
@@ -29,7 +42,9 @@ class CountiesController extends AppController {
 
 	public function api_index() {
 		$this->County->recursive = -1;
-		$this->set('counties', $this->County->find('list', array('order' => array('County.county_name' => 'asc'))));
+		$this->set('counties', $this->County->find('list'
+		// , array('order' => array('County.county_name' => 'asc'))
+	));
 		$this->set('_serialize', array('counties'));
 	}
 
