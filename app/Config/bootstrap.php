@@ -67,7 +67,7 @@ Cache::config('default', array('engine' => 'File'));
  * CakePlugin::load('DebugKit'); // Loads a single plugin named DebugKit
  */
 
-CakePlugin::load('DebugKit');
+CakePlugin::load('DebugKit', ['bootstrap' => false]);
 CakePlugin::load('AclExtras');
 CakePlugin::load('Utils');
 CakePlugin::load('Search');
@@ -130,6 +130,9 @@ Configure::write('vigiflow_api', 'https://api.who-umc.org/vigiflow/icsrs'); //'h
 Configure::write('vigiflow_key', '5ab835c4-3179-4590-bcd2-ff3c27d6b8ff'); //'https://api.who-umc.org/demo/vigiflow/icsrs'
 Configure::write('API.token.pepper', 'touch2d34asdfpad'); //'https://api.who-umc.org/demo/vigiflow/icsrs'
 
+// Drug Registry
+Configure::write('drug_registry_api', 'https://rhris.pharmacyboardkenya.org/api_version/getProducts'); 
+Configure::write('drug_registry_header', '9nhJZKq1aeuwe13asloe[13d950XdZudqEmRWCarPacTdeAyMzuchz1rPQBeom4ivAEd'); 
 
 // Configure Yellow Card 
 Configure::write('mhra_auth_api', 'https://med-safety-hub-api.redant.cloud/v1/login'); 
@@ -143,10 +146,10 @@ Configure::write('mhra_username', 'gmurimi@pharmacyboardkenya.org');
 
 // usernameAT=afyamoja
 // apiKey=6347d9066545048e3d0ec2cc11034186861dc47c96c4bc268f9bac61899a357c
-Configure::write('africastalking_api', 'https://api.africastalking.com/version1/messaging'); 
-Configure::write('africastalking_username', 'ppb'); 
-Configure::write('africastalking_from', 'PPB'); 
-Configure::write('africastalking_key', 'f5b353d8c1b7aff4ddc0a3bab96c5dc184b5c711e8ce529531083538507dbbc8'); 
+// Configure::write('africastalking_api', 'https://api.africastalking.com/version1/messaging'); 
+// Configure::write('africastalking_username', 'ppb'); 
+// Configure::write('africastalking_from', 'PPB'); 
+// Configure::write('africastalking_key', 'f5b353d8c1b7aff4ddc0a3bab96c5dc184b5c711e8ce529531083538507dbbc8'); 
 
 spl_autoload_register(function ($class) {
     foreach (App::path('Vendor') as $base) {

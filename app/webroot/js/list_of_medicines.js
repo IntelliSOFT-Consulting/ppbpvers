@@ -39,7 +39,7 @@ $(function() {
       if ($('#listOfMedicinesTable tbody tr').length < 10) {            
           trVar = $.parseHTML(constructLODTr(intId));
           // trVar = constructLODTr(intId);
-          $(trVar).find('[name*="dose_id"]').append($("#SadrListOfDrug0DoseId > option").clone()).val('');
+          // $(trVar).find('[name*="dose_id"]').append($("#SadrListOfDrug0DoseId > option").clone()).val('');
           $(trVar).find('[name*="route_id"]').append($("#SadrListOfDrug0RouteId > option").clone()).val('');
           $(trVar).find('[name*="frequency_id"]').append($("#SadrListOfDrug0FrequencyId > option").clone()).val('');
 
@@ -69,7 +69,9 @@ $(function() {
             <td>\
                  <select class="span11" name="data[SadrListOfMedicine][{i}][dose_id]" id="SadrListOfMedicine{i}DoseId"></select>    </td>\
             <td> <select class="span11" name="data[SadrListOfMedicine][{i}][route_id]" id="SadrListOfMedicine{i}RouteId"></select>  </td>\
-            <td> <select class="span11" name="data[SadrListOfMedicine][{i}][frequency_id]" id="SadrListOfMedicine{i}FrequencyId"></select>     </td>\
+            <td> <select class="span11" name="data[SadrListOfMedicine][{i}][frequency_id]" id="SadrListOfMedicine{i}FrequencyId"></select> \
+                <small class="help-block">If Other specify</small>\
+                <input class="span11" style="margin-top: 10px;" name="data[SadrListOfMedicine][{i}][frequency_other]" id="SadrListOfMedicine{i}FrequencyOther" type="text"></td>\
             <td>\
               <input class="span11 date-pick-from" name="data[SadrListOfMedicine][{i}][start_date]" id="SadrListOfMedicine{i}StartDate" type="text">   </td>\
             <td>\

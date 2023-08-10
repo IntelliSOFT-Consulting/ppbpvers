@@ -24,17 +24,17 @@ class MedicationsController extends AppController
     public $presetVars = true;
     public $page_options = array('25' => '25', '50' => '50', '100' => '100');
 
+
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow('guest_add', 'guest_edit');
+    }
     /**
-     * index method reset_reference_numbers
+     * index method
      *
      * @return void
      */
-
-     public function beforeFilter()
-     {
-         parent::beforeFilter(); 
-         $this->Auth->allow('manager_reset_reference_numbers','reset_reference_numbers');
-     }
     public function reporter_index()
     {
         $this->Prg->commonProcess();
@@ -51,9 +51,22 @@ class MedicationsController extends AppController
         if ($this->Session->read('Auth.User.user_type') != 'Public Health Program') $criteria['Medication.user_id'] = $this->Auth->User('id');
         if ($this->Session->read('Auth.User.user_type') == 'Public Health Program') $criteria['Medication.submitted'] = array(2);
         // $criteria['Medication.user_id'] = $this->Auth->User('id');
+        //add deleted=false to criteria
+        $criteria['Medication.deleted'] = false;
+
+        if (isset($this->request->query['submitted'])) {
+
+            if ($this->request->query['submitted'] == 1) {
+                $criteria['Medication.submitted'] = array(0, 1);
+            } else {
+                $criteria['Medication.submitted'] = array(2, 3);
+            }
+        } else {
+            $criteria['Medication.submitted'] = array(0, 1, 2, 3);
+        }
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Medication.created' => 'desc');
-        $this->paginate['contain'] = array('County', 'Designation');
+        $this->paginate['contain'] = array('County', 'Designation', 'MedicationProduct');
 
         //in case of csv export
         if (isset($this->request->params['ext']) && $this->request->params['ext'] == 'csv') {
@@ -82,7 +95,8 @@ class MedicationsController extends AppController
 
         $criteria = $this->Medication->parseCriteria($this->passedArgs);
         $criteria['Medication.user_id'] = $this->Auth->User('id');
-
+        //add deleted=false to criteria
+        $criteria['Medication.deleted'] = false;
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Medication.created' => 'desc');
         $this->paginate['contain'] = array('County', 'Designation', 'MedicationProduct');
@@ -115,9 +129,11 @@ class MedicationsController extends AppController
         $criteria = $this->Medication->parseCriteria($this->passedArgs);
         $criteria['Medication.name_of_institution'] = $this->Auth->User('name_of_institution');
         $criteria['Medication.submitted'] = array(1, 2);
+        //add deleted=false to criteria
+        $criteria['Medication.deleted'] = false;
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Medication.created' => 'desc');
-        $this->paginate['contain'] = array('County', 'Designation');
+        $this->paginate['contain'] = array('County', 'Designation', 'MedicationProduct');
 
         //in case of csv export
         if (isset($this->request->params['ext']) && $this->request->params['ext'] == 'csv') {
@@ -145,20 +161,66 @@ class MedicationsController extends AppController
 
         $criteria = $this->Medication->parseCriteria($this->passedArgs);
         // $criteria['Medication.submitted'] = 2;
+        //add deleted=false to criteria
+        $criteria['Medication.deleted'] = false;
+        $criteria['Medication.archived'] = false;
         $criteria['Medication.copied !='] = '1';
-        if (!isset($this->passedArgs['submit'])) $criteria['Medication.submitted'] = array(2, 3);
+        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
+            $criteria['Medication.submitted'] = array(0, 1);
+        } else {
+            $criteria['Medication.submitted'] = array(2, 3);
+        }
+        // if (!isset($this->passedArgs['submit'])) $criteria['Medication.submitted'] = array(2, 3);
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Medication.created' => 'desc');
-        $this->paginate['contain'] = array('County', 'Designation');
+        $this->paginate['contain'] = array('County', 'Designation', 'MedicationProduct');
 
         //in case of csv export
         if (isset($this->request->params['ext']) && $this->request->params['ext'] == 'csv') {
             $this->csv_export($this->Medication->find(
                 'all',
-                array(
-                    'conditions' => $this->paginate['conditions'], 'order' => $this->paginate['order'],
-                    'contain' => $this->paginate['contain']
-                )
+                array('conditions' => $this->paginate['conditions'], 'order' => $this->paginate['order'], 'contain' => $this->paginate['contain'])
+            ));
+        }
+        //end pdf export
+        $this->set('page_options', $page_options);
+        $counties = $this->Medication->County->find('list', array('order' => array('County.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
+        $this->set(compact('designations'));
+        $this->set('medications', Sanitize::clean($this->paginate(), array('encode' => false)));
+    }
+
+
+    public function reviewer_index()
+    {
+        # code...
+        $this->Prg->commonProcess();
+        $page_options = array('25' => '25', '20' => '20');
+        if (!empty($this->passedArgs['start_date']) || !empty($this->passedArgs['end_date'])) $this->passedArgs['range'] = true;
+        if (isset($this->passedArgs['pages']) && !empty($this->passedArgs['pages'])) $this->paginate['limit'] = $this->passedArgs['pages'];
+        else $this->paginate['limit'] = reset($page_options);
+
+        $criteria = $this->Medication->parseCriteria($this->passedArgs);
+        //add deleted=false to criteria
+        $criteria['Medication.deleted'] = false;
+        $criteria['Medication.copied !='] = '1';
+        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
+            $criteria['Medication.submitted'] = array(0, 1);
+        } else {
+            $criteria['Medication.submitted'] = array(2, 3);
+        }
+
+        $criteria['Medication.assigned_to'] = $this->Auth->User('id');
+        $this->paginate['conditions'] = $criteria;
+        $this->paginate['order'] = array('Medication.created' => 'desc');
+        $this->paginate['contain'] = array('County', 'Designation', 'MedicationProduct');
+
+        //in case of csv export
+        if (isset($this->request->params['ext']) && $this->request->params['ext'] == 'csv') {
+            $this->csv_export($this->Medication->find(
+                'all',
+                array('conditions' => $this->paginate['conditions'], 'order' => $this->paginate['order'], 'contain' => $this->paginate['contain'])
             ));
         }
         //end pdf export
@@ -295,6 +357,12 @@ class MedicationsController extends AppController
 
     public function manager_view($id = null)
     {
+        $this->general_view($id);
+    }
+
+    public function general_view($id = null)
+    {
+        # code...
         $this->Medication->id = $id;
         if (!$this->Medication->exists()) {
             $this->Session->setFlash(__('Could not verify the MEDICATION report ID. Please ensure the ID is correct.'), 'flash_error');
@@ -309,11 +377,17 @@ class MedicationsController extends AppController
         $medication = $this->Medication->find('first', array(
             'conditions' => array('Medication.id' => $id),
             'contain' => array(
-                'MedicationProduct', 'County', 'Attachment', 'Designation', 'ExternalComment',
-                'MedicationOriginal.MedicationProduct', 'MedicationOriginal.County', 'MedicationOriginal.Attachment', 'MedicationOriginal.Designation', 'MedicationOriginal.ExternalComment'
+                'MedicationProduct', 'County', 'Attachment', 'Designation', 'ExternalComment','ReviewComment', 'ExternalComment.Attachment','ReviewComment.Attachment',
+                'MedicationOriginal.MedicationProduct', 'MedicationOriginal.County', 'MedicationOriginal.Attachment', 'MedicationOriginal.Designation', 'MedicationOriginal.ExternalComment','MedicationOriginal.ReviewComment'
             )
         ));
-        $this->set('medication', $medication);
+        $managers = $this->Medication->User->find('list', array(
+            'conditions' => array(
+                'User.group_id' => 6
+            )
+        ));
+        $this->set(['medication' => $medication, 'managers' => $managers]);
+
         // $this->render('pdf/view');
 
         if (strpos($this->request->url, 'pdf') !== false) {
@@ -322,6 +396,61 @@ class MedicationsController extends AppController
         }
     }
 
+    // Assign the report to the evaluator
+    public function manager_assign()
+    {
+        # code...
+        $id = $this->request->data['Medication']['report_id'];
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            $this->Session->setFlash(__('Could not verify the Medication report ID. Please ensure the ID is correct.'), 'flash_error');
+            $this->redirect('/');
+        }
+        $this->Medication->saveField('assigned_by', $this->request->data['Medication']['assigned_by']);
+        $this->Medication->saveField('assigned_to', $this->request->data['Medication']['assigned_to']);
+        $this->Medication->saveField('assigned_date', date("Y-m-d H:i:s"));
+
+        // Send an asignment alert::::
+
+
+        $this->Session->setFlash(__('The Medication has been assigned successfully'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'view', $id));
+    }
+
+    public function manager_unassign($id = null)
+    {
+        # code...
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            $this->Session->setFlash(__('Could not verify the Medication report ID. Please ensure the ID is correct.'), 'flash_error');
+            $this->redirect('/');
+        }
+        $this->Medication->saveField('assigned_by', '');
+        $this->Medication->saveField('assigned_to', '');
+        $this->Medication->saveField('assigned_date', '');
+
+        $this->Session->setFlash(__('The Medication has been unassigned successfully'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'view', $id));
+    }
+
+    // Evaluator Functions:::
+    public function reviewer_view($id = null)
+    {
+        # code...
+        $this->general_view($id);
+    }
+
+    public function reviewer_copy($id = null)
+    {
+        # code...
+        $this->general_copy($id);
+    }
+
+    public function reviewer_edit($id = null)
+    {
+        # code...
+        $this->general_edit($id);
+    }
 
     /**
      * download methods
@@ -379,7 +508,7 @@ class MedicationsController extends AppController
             $this->Medication->saveField('vigiflow_message', $body);
             $resp = json_decode($body, true);
             if (json_last_error() == JSON_ERROR_NONE) {
-                $this->Medication->saveField('vigiflow_ref', $resp['MessageId']);
+                $this->Medication->saveField('vigiflow_ref', $resp);
             }
             $this->Flash->success('Vigiflow integration success!!');
             $this->Flash->success($body);
@@ -438,17 +567,14 @@ class MedicationsController extends AppController
         }
     }
 
-    public function reporter_add()
+    public function reporter_add($id = null)
     {
-        // $count = $this->Medication->find('count',  array('conditions' => array(
-        //     'Medication.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")))));
-        // $count++;
-        // $count = ($count < 10) ? "0$count" : $count;
         $this->Medication->create();
         $this->Medication->save(['Medication' => [
             'user_id' => $this->Auth->User('id'),
             'reference_no' => 'new', //'ME/'.date('Y').'/'.$count,
             'report_type' => 'Initial',
+            'pqmp_id' => $id,
             'designation_id' => $this->Auth->User('designation_id'),
             'county_id' => $this->Auth->User('county_id'),
             'institution_code' => $this->Auth->User('institution_code'),
@@ -471,56 +597,6 @@ class MedicationsController extends AppController
      * @return void
      */
 
-    public function generate_reference()
-    {
-        # code...
-        $count = $this->Medication->find('count',  array(
-            'fields' => 'Medication.reference_no',
-            'conditions' => array(
-                'Medication.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Medication.reference_no !=' => 'new'
-            )
-        ));
-        $count++;
-        $count = ($count < 10) ? "0$count" : $count;
-        $reference_no = 'ME/' . date('Y') . '/' . $count;
-        $existing = $this->Medication->find('count', ['conditions' => ['Medication.reference_no' => $reference_no]]);
-
-        if ($existing > 0) {
-            return  $this->generate_reference();
-        } else {
-            return $reference_no;
-        }
-    }
-    public function manager_reset_reference_numbers($id = null)
-    {
-        # code...
-        $this->Medication->id = $id;
-        if (!$this->Medication->exists()) {
-            throw new NotFoundException(__('Invalid Medication'));
-        }
-        // $this->Medication->saveField('submitted', 2);
-        // $this->Medication->saveField('submitted_date', date("Y-m-d H:i:s"));
-        //lucian
-        $medication = $this->Medication->read(null, $id);
-         
-        if (!empty($medication['Medication']['reference_no']) && $medication['Medication']['reference_no'] == 'new') {
-            
-            $count = $this->Medication->find('count',  array(
-                'fields' => 'Medication.reference_no',
-                'conditions' => array(
-                    'Medication.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Medication.reference_no !=' => 'new'
-                )
-            ));
-            $count++;
-            $count = ($count < 10) ? "0$count" : $count;
-            $reference_no = 'ME/' . date('Y') . '/' . $count;
-            $this->Medication->saveField('reference_no', $reference_no); 
-        }
-        //bokelo
-        $medication = $this->Medication->read(null, $id); 
-        debug($medication);
-        exit;
-    }
     public function reporter_edit($id = null)
     {
         $this->Medication->id = $id;
@@ -528,10 +604,10 @@ class MedicationsController extends AppController
             throw new NotFoundException(__('Invalid MEDICATION'));
         }
         $medication = $this->Medication->read(null, $id);
-        if ($medication['Medication']['submitted'] > 1) {
-            $this->Session->setFlash(__('The medication has been submitted'), 'alerts/flash_info');
-            $this->redirect(array('action' => 'view', $this->Medication->id));
-        }
+        // if ($medication['Medication']['submitted'] > 1) {
+        //     $this->Session->setFlash(__('The medication has been submitted'), 'alerts/flash_info');
+        //     $this->redirect(array('action' => 'view', $this->Medication->id));
+        // }
         if ($medication['Medication']['user_id'] !== $this->Auth->user('id')) {
             $this->Session->setFlash(__('You don\'t have permission to edit this MEDICATION!!'), 'alerts/flash_error');
             $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -547,7 +623,6 @@ class MedicationsController extends AppController
                     $this->Medication->saveField('submitted_date', date("Y-m-d H:i:s"));
                     //lucian
                     if (!empty($medication['Medication']['reference_no']) && $medication['Medication']['reference_no'] == 'new') {
-                        // $reference_no = $this->generate_reference();
                         $count = $this->Medication->find('count',  array(
                             'fields' => 'Medication.reference_no',
                             'conditions' => array(
@@ -556,8 +631,7 @@ class MedicationsController extends AppController
                         ));
                         $count++;
                         $count = ($count < 10) ? "0$count" : $count;
-                        $reference_no = 'ME/' . date('Y') . '/' . $count;
-                        $this->Medication->saveField('reference_no', $reference_no);
+                        $this->Medication->saveField('reference_no', 'ME/' . date('Y') . '/' . $count);
                     }
                     //bokelo
                     $medication = $this->Medication->read(null, $id);
@@ -621,10 +695,19 @@ class MedicationsController extends AppController
                         // CakeResque::enqueue('default', 'GenericEmailShell', array('sendEmail', $datum));
                         // CakeResque::enqueue('default', 'GenericNotificationShell', array('sendNotification', $datum));
                     }
-                    //**********************************    END   *********************************
-
-                    $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
-                    $this->redirect(array('action' => 'view', $this->Medication->id));
+                    //**********************************    END   ********************************* Death
+                    $serious = $medication['Medication']['outcome'];
+                    if ($serious == "Treatment /intervention required-caused temporary harm" || $serious == "Initial/prolonged hospitalization-caused temporary harm" || $serious == "Caused permanent harm" || $serious == "Near death event" || $serious == "Death") {
+                        $this->notifyCountyPharmacist($medication);
+                    }
+                    $serious = $medication['Medication']['adverse_reaction'];
+                    if ($serious == "Yes") {
+                        $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB, please proceed to submit a SADR Form'), 'alerts/flash_success');
+                        $this->redirect(array('controller' => 'sadrs', 'action' => 'addme', $this->Medication->id, 'reporter' => true)); 
+                    } else {
+                        $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
+                        $this->redirect(array('action' => 'view', $this->Medication->id));
+                    }
                 }
                 // debug($this->request->data);
                 $this->Session->setFlash(__('The MEDICATION has been saved'), 'alerts/flash_success');
@@ -639,10 +722,64 @@ class MedicationsController extends AppController
         //$medication = $this->request->data;
 
         $counties = $this->Medication->County->find('list');
-        $designations = $this->Medication->Designation->find('list');
+        $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('counties', 'designations'));
     }
+    public function notifyCountyPharmacist($medication = null)
+    {
+        # code...
 
+        $this->loadModel('Message');
+        $html = new HtmlHelper(new ThemeView());
+        $message = $this->Message->find('first', array('conditions' => array('name' => 'serious_medication')));
+
+        $county_id = $medication['Medication']['county_id'];
+        $users = $this->Medication->User->find('all', array(
+            'contain' => array(),
+            'conditions' => array(
+                'OR' => array(
+                    'User.group_id' => 2,
+                    array(
+                        'User.county_id' => $county_id,
+                        'User.user_type' => 'County Pharmacist'
+                    )
+                )
+            ),
+            'order' => array(
+                'User.id' => 'DESC'
+            )
+        ));
+
+        foreach ($users as $user) {
+            $variables = array(
+                'name' => $user['User']['name'],
+                'reference_no' => $medication['Medication']['reference_no'],
+                'reference_link' => $html->link(
+                    $medication['Medication']['reference_no'],
+                    array(
+                        'controller' => 'medications',
+                        'action' => 'view', $medication['Medication']['id'],
+                        'manager' => true,
+                        'full_base' => true
+                    ),
+                    array('escape' => false)
+                ),
+                'modified' => $medication['Medication']['modified']
+            );
+            $datum = array(
+                'email' => $user['User']['email'],
+                'id' => $medication['Medication']['id'],
+                'user_id' => $user['User']['id'],
+                'type' => 'serious_medication',
+                'model' => 'Medication',
+                'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                'message' => CakeText::insert($message['Message']['content'], $variables)
+            );
+            $this->loadModel('Queue.QueuedTask');
+            $this->QueuedTask->createJob('GenericEmail', $datum);
+            $this->QueuedTask->createJob('GenericNotification', $datum);
+        }
+    }
     public function api_add($id = null)
     {
 
@@ -759,6 +896,12 @@ class MedicationsController extends AppController
 
     public function manager_copy($id = null)
     {
+        $this->general_copy($id);
+    }
+
+    public function general_copy($id = null)
+    {
+        # code...
         if ($this->request->is('post')) {
             $this->Medication->id = $id;
             if (!$this->Medication->exists()) {
@@ -793,9 +936,14 @@ class MedicationsController extends AppController
             }
         }
     }
-
     public function manager_edit($id = null)
     {
+        $this->general_edit($id);
+    }
+
+    public function general_edit($id = null)
+    {
+        # code...
         $this->Medication->id = $id;
         if (!$this->Medication->exists()) {
             throw new NotFoundException(__('Invalid MEDICATION'));
@@ -833,9 +981,10 @@ class MedicationsController extends AppController
         $this->set('medication', $medication);
 
         $counties = $this->Medication->County->find('list');
-        $designations = $this->Medication->Designation->find('list');
+        $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('counties', 'designations'));
     }
+
     /**
      * delete method
      *
@@ -856,4 +1005,178 @@ class MedicationsController extends AppController
         }
         return $this->redirect(array('action' => 'index'));
     }
+
+    // function to delete a report
+
+    public function manager_delete($id = null)
+    {
+        # code...
+        $this->common_delete($id);
+    }
+    public function reporter_delete($id = null)
+    {
+        $this->common_delete($id);
+    }
+
+    public function common_delete($id = null)
+    {
+        # code...
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            throw new NotFoundException(__('Invalid report'));
+        }
+        $this->request->onlyAllow('post', 'delete');
+        //read the report
+        $report = $this->Medication->read(null, $id);
+        //update the report status to deleted
+        $report['Medication']['deleted'] = true;
+        $report['Medication']['deleted_date'] = date('Y-m-d H:i:s');
+        //save the report withouth validation
+        if ($this->Medication->save($report, array('validate' => false, 'deep' => true))) {
+            $this->Session->setFlash(__('The report has been deleted'), 'flash_success');
+            $this->redirect($this->referer());
+        } else {
+            $this->Session->setFlash(__('The report could not be deleted. Please, try again.'), 'flash_error');
+            $this->redirect($this->referer());
+        }
+    }
+
+    public function guest_add($id = null)
+    {
+        $this->Medication->create();
+        $this->Medication->save(['Medication' => [
+            'reference_no' => 'new',
+            'report_type' => 'Initial',
+            'pqmp_id' => $id,
+        ]], false);
+        $this->Session->setFlash(__('The MEDICATION has been created'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'guest_edit', $this->Medication->id));
+    }
+    public function guest_edit($id = null)
+    {
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            throw new NotFoundException(__('Invalid MEDICATION'));
+        }
+        $medication = $this->Medication->read(null, $id);
+
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $validate = false;
+            if (isset($this->request->data['submitReport'])) {
+                $validate = 'first';
+            }
+            if ($this->Medication->saveAssociated($this->request->data, array('validate' => $validate, 'deep' => true))) {
+                if (isset($this->request->data['submitReport'])) {
+                    $this->Medication->saveField('submitted', 2);
+                    $this->Medication->saveField('submitted_date', date("Y-m-d H:i:s"));
+                    //lucian
+                    if (!empty($medication['Medication']['reference_no']) && $medication['Medication']['reference_no'] == 'new') {
+                        $count = $this->Medication->find('count',  array(
+                            'fields' => 'Medication.reference_no',
+                            'conditions' => array(
+                                'Medication.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Medication.reference_no !=' => 'new'
+                            )
+                        ));
+                        $count++;
+                        $count = ($count < 10) ? "0$count" : $count;
+                        $this->Medication->saveField('reference_no', 'ME/' . date('Y') . '/' . $count);
+                    }
+                    //bokelo
+                    $medication = $this->Medication->read(null, $id);
+
+                    //******************       Send Email and Notifications to Applicant and Managers          *****************************
+                    $this->loadModel('Message');
+                    $html = new HtmlHelper(new ThemeView());
+                    $message = $this->Message->find('first', array('conditions' => array('name' => 'reporter_medication_submit')));
+                    $variables = array(
+                        'name' => 'Guest',
+                        'reference_no' => $medication['Medication']['reference_no'],
+                        'reference_link' => $html->link(
+                            $medication['Medication']['reference_no'],
+                            array('controller' => 'medications', 'action' => 'view', $medication['Medication']['id'], 'reporter' => true, 'full_base' => true),
+                            array('escape' => false)
+                        ),
+                        'modified' => $medication['Medication']['modified']
+                    );
+                    $datum = array(
+                        'email' => $medication['Medication']['reporter_email'],
+                        'id' => $id, 'user_id' => $this->Auth->User('id'), 'type' => 'reporter_medication_submit', 'model' => 'Medication',
+                        'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                        'message' => CakeText::insert($message['Message']['content'], $variables)
+                    );
+
+                    $this->loadModel('Queue.QueuedTask');
+                    $this->QueuedTask->createJob('GenericEmail', $datum);
+                    $this->QueuedTask->createJob('GenericNotification', $datum);
+
+                    //Send SMS
+                    if (!empty($medication['Medication']['reporter_phone']) && strlen(substr($medication['Medication']['reporter_phone'], -9)) == 9 && is_numeric(substr($medication['Medication']['reporter_phone'], -9))) {
+                        $datum['phone'] = '254' . substr($medication['Medication']['reporter_phone'], -9);
+                        $variables['reference_url'] = Router::url(['controller' => 'medications', 'action' => 'view', $medication['Medication']['id'], 'reporter' => true, 'full_base' => true]);
+                        $datum['sms'] = CakeText::insert($message['Message']['sms'], $variables);
+                        $this->QueuedTask->createJob('GenericSms', $datum);
+                    }
+
+                    //Notify managers
+                    $users = $this->Medication->User->find('all', array(
+                        'contain' => array(),
+                        'conditions' => array('User.group_id' => 2)
+                    ));
+                    foreach ($users as $user) {
+                        $variables = array(
+                            'name' => $user['User']['name'], 'reference_no' => $medication['Medication']['reference_no'],
+                            'reference_link' => $html->link(
+                                $medication['Medication']['reference_no'],
+                                array('controller' => 'medications', 'action' => 'view', $medication['Medication']['id'], 'manager' => true, 'full_base' => true),
+                                array('escape' => false)
+                            ),
+                            'modified' => $medication['Medication']['modified']
+                        );
+                        $datum = array(
+                            'email' => $user['User']['email'],
+                            'id' => $id, 'user_id' => $user['User']['id'], 'type' => 'reporter_medication_submit', 'model' => 'Medication',
+                            'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                            'message' => CakeText::insert($message['Message']['content'], $variables)
+                        );
+
+                        $this->QueuedTask->createJob('GenericEmail', $datum);
+                        $this->QueuedTask->createJob('GenericNotification', $datum);
+                    }
+                    //**********************************    END   *********************************
+
+                    $this->Session->setFlash(__('The Medication Error Report has been submitted to PPB'), 'alerts/flash_success');
+                    $this->redirect(array('controller' => 'pages', 'action' => 'home'));
+                }
+                // debug($this->request->data);
+                $this->Session->setFlash(__('The MEDICATION has been saved'), 'alerts/flash_success');
+                $this->redirect($this->referer());
+            } else {
+                $this->Session->setFlash(__('The MEDICATION could not be saved. Please, try again.'), 'alerts/flash_error');
+            }
+        } else {
+            $this->request->data = $this->Medication->read(null, $id);
+        }
+
+        //$medication = $this->request->data;
+
+        $counties = $this->Medication->County->find('list');
+        $designations = $this->Medication->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
+        $this->set(compact('counties', 'designations'));
+    }
+    public function manager_archive($id=null) {
+
+        $this->Medication->id = $id;
+        if (!$this->Medication->exists()) {
+            throw new NotFoundException(__('Invalid MEDICATION'));
+        }
+        $report = $this->Medication->read(null, $id);
+        $report['Medication']['archived'] = true;
+        $report['Medication']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Medication->save($report, array('validate' => false))) {
+            $this->Session->setFlash(__('MEDICATION Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('MEDICATION was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
+	}
 }

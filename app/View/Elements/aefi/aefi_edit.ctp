@@ -1,11 +1,10 @@
 <?php
-$this->assign('AEFI', 'active');
+$this->assign('Adverse Event Following Immunization', 'active');
 $this->Html->script('jquery/combobox', array('inline' => false));
 // $this->Html->script('jquery/jquery.datetimepicker.full', array('inline' => false));
 $this->Html->script('aefi', array('inline' => false));
 $this->Html->css('jquery.datetimepicker', false, array('inline' => false));
 $this->Html->script('jquery/jquery.datetimepicker.full', array('inline' => false));
-
 ?>
 
 <?php
@@ -36,19 +35,19 @@ echo $this->Form->create('Aefi', array(
         <div class="row-fluid">
             <div class="span2">
                 <?php
-                echo $this->Html->image('header-object.png', array('alt' => 'AEFI'));
+                echo $this->Html->image('header-object.png', array('alt' => 'Adverse Event Following Immunization'));
                 ?>
             </div>
             <div class="span8" style="text-align: center;">
                 <h2>MINISTRY OF HEALTH</h2>
                 <p class="lead">National Vaccines and Immunization Program</p>
-                <h3>AEFI Reporting Form</h3>
+                <h3>Adverse Event Following Immunization Reporting Form</h3>
             </div>
             <div class="span2">
                 <?php
-                echo $this->Html->image('vaccinate2.png', array('alt' => 'AEFI'));
+                echo $this->Html->image('vaccinate2.png', array('alt' => 'Adverse Event Following Immunization'));
                 echo "<br>";
-                echo $this->Html->image('confidence.png', array('alt' => 'AEFI'));
+                echo $this->Html->image('confidence.png', array('alt' => 'Adverse Event Following Immunization'));
                 ?>
             </div>
         </div><br>
@@ -68,7 +67,8 @@ echo $this->Form->create('Aefi', array(
                 <h5> <?php echo  'Form ID: ' . $this->data['Aefi']['reference_no']; ?></h5>
                 <h6><span class="label label-important">Important</span> Unique Form ID</h6>
             </div>
-        </div><!--/row-->
+        </div>
+        <!--/row-->
 
         <div class="row-fluid">
             <div class="span6">
@@ -90,7 +90,8 @@ echo $this->Form->create('Aefi', array(
                 ));
 
                 ?>
-            </div><!--/span-->
+            </div>
+            <!--/span-->
             <div class="span6">
                 <?php
                 echo $this->Form->input('county_id', array(
@@ -106,8 +107,10 @@ echo $this->Form->create('Aefi', array(
                     'empty' => true, 'between' => '<div class="controls ui-widget">',
                 ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
         <hr class="darker">
 
         <h4 style="text-align: center;">PATIENT DETAILS</h4>
@@ -139,23 +142,6 @@ echo $this->Form->create('Aefi', array(
                     echo $this->Form->input('age_months', array('label' => array('class' => 'control-label required', 'text' => 'Age in months'),));
 
                     ?>
-                    <h5 class="controls">--OR--</h5>
-                    <?php
-                    echo $this->Form->input('age_group', array(
-                        'type' => 'select',
-                        'empty' => true,
-                        'options' => array(
-                            'neonate' => 'neonate [0-1 month]',
-                            'infant' => 'infant [1 month-1 year]',
-                            'child' => 'child [1 year - 11 years]',
-                            'adolescent' => 'adolescent [12-17 years]',
-                            'adult' => 'adult [18-64 years]',
-                            'elderly' => 'elderly [>65 years]',
-                        ),
-                        'label' => array('class' => 'control-label required', 'text' => 'AGE GROUP'),
-                        'after' => '</div>',
-                    ));
-                    ?>
                 </div>
 
                 <?php
@@ -175,7 +161,8 @@ echo $this->Form->create('Aefi', array(
                     'after' => '<p class="help-block">    (static, mass, outreach) </p></div>'
                 ));
                 ?>
-            </div><!--/span-->
+            </div>
+            <!--/span-->
             <div class="span6">
                 <?php
                 echo $this->Form->input('guardian_name', array(
@@ -224,23 +211,24 @@ echo $this->Form->create('Aefi', array(
                     'options' => array('Unknown' => 'Unknown'),
                 ));
 
-                echo $this->Form->input('patient_sub_county', array(
-                    'options' => $sub_counties,
-                    'label' => array('class' => 'control-label required', 'text' => 'SUB-COUNTY'),
-                    'empty' => true,
-                ));
-
                 echo $this->Form->input('vaccination_county', array(
                     'options' => $counties,
                     'label' => array('class' => 'control-label required', 'text' => 'COUNTY OF VACCINATION CENTRE'),
                     'empty' => true,
                 ));
+                echo $this->Form->input('patient_sub_county', array(
+                    'options' => $sub_counties,
+                    'label' => array('class' => 'control-label required', 'text' => 'SUB-COUNTY'),
+                    'empty' => true,
+                ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
         <hr class="darker">
 
-        <h4 style="text-align: center;">TYPE OF AEFI</h4>
+        <h4 style="text-align: center;">TYPE OF Adverse Event Following Immunization</h4>
         <div class="row-fluid">
             <div class="span4">
                 <div style="padding-left: 30px;">
@@ -324,26 +312,26 @@ echo $this->Form->create('Aefi', array(
                     ));
 
                     ?>
-                </div><!--/padding-->
-            </div><!--/span-->
+                </div>
+                <!--/padding-->
+            </div>
+            <!--/span-->
             <div class="span4">
                 <?php
-                echo $this->Form->input('date_aefi_started', array('type' => 'text', 'class' => 'required', 'class' => 'span11 date-pick-field', 'label' => array('class' => 'control-label required', 'text' => 'DATE AEFI STARTED'),));
+                echo $this->Form->input('date_aefi_started', array('type' => 'text', 'class' => 'span11 date-pick-field', 'label' => array('class' => 'control-label required', 'text' => 'DATE Adverse Event Following Immunization STARTED'),));
                 echo $this->Form->input('time_aefi_started', array(
                     'type' => 'time', 'timeFormat' => 24, 'interval' => 5, 'class' => 'span4', 'style' => 'display: inline;',
                     'label' => array('class' => 'control-label required', 'text' => 'TIME'),
                 ));
+                // echo $this->Form->input('aefi_symptoms', array('label' => array('class' => 'control-label required', 'text' => 'Describe Adverse Event Following Immunization (Signs & Symptoms)'),));
                 echo $this->Form->input('aefi_symptoms', array(
-                    'label' => array('class' => 'required', 'text' => 'Describe AEFI <span style="color:red;">*</span>'),
+                    'label' => array('class' => 'required', 'text' => 'Describe Adverse Event Following Immunization <span style="color:red;">*</span>'),
                     'between' => false, 'div' => false,
                     'after' => '<p class="help-block">  (Signs & Symptoms) </p>',
                     'class' => 'span12', 'rows' => '1'
                 ));
                 echo $this->element('multi/aefi_descriptions');
-
-
                 ?>
-
             </div>
             <div class="span4">
                 <div style="padding-left: 10px;">
@@ -360,11 +348,11 @@ echo $this->Form->create('Aefi', array(
                     ?>
                 </div>
             </div>
-        </div><!--/row-->
+        </div>
+        <!--/row-->
         <hr>
 
         <?php echo $this->element('multi/list_of_vaccines'); ?>
-
 
         <div class="row-fluid">
             <div class="span12">
@@ -375,8 +363,10 @@ echo $this->Form->create('Aefi', array(
                     'after' => '<p>Including history of similar reaction or other allergies, concomitant medication/vaccine,concomitant illness, other cases,pregnacy status and other relevant information </p></div>'
                 ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
         <hr class="darker">
 
         <div class="row-fluid">
@@ -475,9 +465,10 @@ echo $this->Form->create('Aefi', array(
                 ));
 
                 ?>
-            </div><!--/span-->
+            </div>
+            <!--/span-->
             <div class="span6">
-                <div class="required"><label class="required"><strong>AEFI Outcome:</strong><span style="color:red;">*</span></label></div> <br />
+                <div class="required"><label class="required"><strong>Adverse Event Following Immunization Outcome:</strong><span style="color:red;">*</span></label></div> <br />
                 <!-- <h5>OUTCOME:</h5>  <br> -->
                 <?php
                 //Recovered/Resolved, Recovering/Resolving, Not recovered/Not resolved/Ongoing, Recovered/Resolved with sequelae, Fatal, unknown
@@ -520,10 +511,12 @@ echo $this->Form->create('Aefi', array(
                     'options' => array('Unknown' => 'Unknown'),
                 ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
 
-        <?php echo $this->element('multi/attachments', ['model' => 'Aefi', 'group' => 'attachment']); ?>
+        <?php echo $this->element('multi/attachments', ['model' => 'Aefi', 'group' => 'attachment','examples'=>'']); ?>
 
         <div class="row-fluid">
             <div class="span6">
@@ -539,7 +532,8 @@ echo $this->Form->create('Aefi', array(
                 ));
 
                 ?>
-            </div><!--/span-->
+            </div>
+            <!--/span-->
             <div class="span6">
                 <?php
                 echo $this->Form->input(
@@ -548,7 +542,7 @@ echo $this->Form->create('Aefi', array(
                 );
                 echo $this->Form->input('reporter_phone', array(
                     'div' => array('class' => 'control-group'),
-                    'label' => array('class' => 'control-label required', 'text' => 'PHONE NO.')
+                    'label' => array('class' => 'control-label required', 'text' => 'PHONE NO.' . ' <span style="color:red;">*</span>')
                 ));
 
 
@@ -557,8 +551,10 @@ echo $this->Form->create('Aefi', array(
                     'label' => array('class' => 'control-label required', 'text' => 'Date <span style="color:red;">*</span>'),
                 ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
 
         <table class="table table-bordered  table-condensed table-pvborderless">
             <tbody>
@@ -601,7 +597,8 @@ echo $this->Form->create('Aefi', array(
                     'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS <span style="color:red;">*</span>')
                 ));
                 ?>
-            </div><!--/span-->
+            </div>
+            <!--/span-->
             <div class="span6">
                 <?php
                 echo $this->Form->input('reporter_designation_diff', array(
@@ -617,8 +614,10 @@ echo $this->Form->create('Aefi', array(
                     'label' => array('class' => 'control-label required', 'text' => 'Date'),
                 ));
                 ?>
-            </div><!--/span-->
-        </div><!--/row-->
+            </div>
+            <!--/span-->
+        </div>
+        <!--/row-->
 
     </div>
     <div class="span2">

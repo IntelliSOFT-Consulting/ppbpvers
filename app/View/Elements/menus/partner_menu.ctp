@@ -1,6 +1,7 @@
-    <div class="menu ">
+<?= $this->Html->css('menu.css') ?>
+<div class="menu ">
 
-        <ul class="nav nav-pills center-pills">
+        <ul class="nav nav-pills center-pills responsive-menu">
             <li class="<?php echo $this->fetch('Dashboard') ?>">
                 <?php
                     echo $this->Html->link('<i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard',
@@ -13,15 +14,15 @@
                         array('controller' => 'sadrs', 'action'=>'index', 'partner' => true ), array('escape' => false ));
                     ?>
              </li>             
-             <li class="<?php echo $this->fetch('AEFI') ?>">
+             <li class="<?php echo $this->fetch('Adverse Event Following Immunization') ?>">
                 <?php
                     echo $this->Html->link('<i class="fa fa-child" aria-hidden="true"></i> AEFIs',
                         array('controller' => 'aefis', 'action'=>'index', 'partner' => true ), array('escape' => false ));
                     ?>
              </li>
-             <li class="<?php echo $this->fetch('PQMP') ?>">
+             <li class="<?php echo $this->fetch('Poor-Quality Health Products and Technologies') ?>">
                 <?php
-                    echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> PQMPs',
+                    echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> PQHPTs',
                         array('controller' => 'pqmps', 'action'=>'index', 'partner' => true ), array('escape' => false ));
                     ?>
              </li>
@@ -39,7 +40,7 @@
              </li>
              <li class="<?php echo $this->fetch('TRN') ?>">
                 <?php
-                    echo $this->Html->link('<i class="fa fa-eyedropper" aria-hidden="true"></i> Transfusion Reactions',
+                    echo $this->Html->link('<i class="fa fa-eyedropper" aria-hidden="true"></i> Transfusion Reaction',
                         array('controller' => 'transfusions', 'action'=>'index', 'partner' => true ), array('escape' => false ));
                     ?>
              </li>

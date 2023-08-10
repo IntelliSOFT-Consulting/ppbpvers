@@ -28,49 +28,13 @@ class UsersController extends AppController
 
     public $helpers = array('Tools.Captcha' => array('type' => 'active'));
 
-    
-
     public function beforeFilter()
     {
         parent::beforeFilter();
         // remove initDb
-        $this->_clear_cache();
-        //  $this->initDb();
-        $this->Auth->allow('register', 'login', 'api_auth', 'api_register', 'api_token', 'api_forgotPassword', 'activate_account', 'forgotPassword', 'resetPassword', 'logout', 'initDB');
+        // $this->initDB();
+        $this->Auth->allow('register', 'login', 'api_auth', 'api_register', 'api_token', 'api_forgotPassword', 'activate_account', 'forgotPassword', 'resetPassword', 'logout', 'mpublic', 'provider', 'holder');
     }
-
-
-    function _clear_cache()
-    {
-
-        Cache::clear();
-        clearCache();
-
-        $files = array();
-        $files = array_merge($files, glob(CACHE . '*')); // remove cached css
-        $files = array_merge($files, glob(CACHE . 'css' . DS . '*')); // remove cached css
-        $files = array_merge($files, glob(CACHE . 'js' . DS . '*'));  // remove cached js
-        $files = array_merge($files, glob(CACHE . 'models' . DS . '*'));  // remove cached models
-        $files = array_merge($files, glob(CACHE . 'persistent' . DS . '*'));  // remove cached persistent
-
-        foreach ($files as $f) {
-            if (is_file($f)) {
-                try {
-                    @unlink($f);
-                } catch (Exception $ex) {
-                    $files['errors'][] = $ex->getMessage();
-                }
-            }
-        }
-
-        if (function_exists('apc_clear_cache')) :
-            apc_clear_cache();
-            apc_clear_cache('user');
-        endif;
-
-        return $files;
-    }
-
     public function api_auth()
     {
         # code...
@@ -93,10 +57,10 @@ class UsersController extends AppController
             if ($this->Auth->login()) {
                 $user = $this->Auth->User();
                 $token = JWT::encode($user['id'], Configure::read('Security.salt'));
-                                
+
                 if ($user) {
                     // only add the neccessary fields from the user 
-                    $datum=array('id'=>$user['id'],'name'=>$user['name'],'created'=>$user['created']);
+                    $datum = array('id' => $user['id'], 'name' => $user['name'], 'created' => $user['created']);
                     $this->set('user', $datum);
                     $this->set('token', $token);
                     $this->set('_serialize', array('user', 'token'));
@@ -120,10 +84,23 @@ class UsersController extends AppController
             ]);
         }
     }
+    public function mpublic()
+    {
+        $this->render('mpublic');
+    }
+    public function provider()
+    {
+        $this->render('provider');
+    }
+
+    public function holder()
+    {
+        $this->render('holder');
+    }
+
+
     public function login()
     {
-      
-
         if ($this->Session->read('Auth.User')) {
             $this->Session->setFlash('You are logged in!', 'alerts/flash_success');
             $this->redirect('/', null, false);
@@ -150,19 +127,31 @@ class UsersController extends AppController
                     $this->redirect($this->Auth->logout());
                 }
 
+                // Check if it's the mini manager::: Check active date
+                if ($this->Auth->User('group_id') == '5') {
+                    $active_date = $this->Auth->User('active_date');
+                    if (!empty($active_date)) {
+                        $today = date('Y-m-d');
+                        $active_date_obj = date('Y-m-d', strtotime($active_date));
 
-                // $this->redirect($this->Auth->redirect());
-                // if(strlen($this->Auth->redirect()) > 12) {
-                //     return $this->redirect($this->Auth->redirect());           
-                // }
-                $user = $this->Auth->User();
-                $token = JWT::encode($user['id'], Configure::read('Security.salt'));
-                // debug($token);
-                // exit;
+                        if ($active_date_obj < $today) {
+                            // $active_date is earlier than today, return an error
+                            $this->Session->setFlash('Your account has expired! Please contact PPB.', 'alerts/flash_error');
+                            $this->redirect($this->Auth->logout());
+                        }
+                    } else {
+                        // do something if $active_date is null or empty
+                        $this->Session->setFlash('Your account has expired! Please contact PPB.', 'alerts/flash_error');
+                        $this->redirect($this->Auth->logout());
+                    }
+                }
+
+
                 if ($this->Auth->User('group_id') == '1') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'admin' => true));
                 if ($this->Auth->User('group_id') == '2') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'manager' => true));
                 if ($this->Auth->User('group_id') == '3') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'reporter' => true));
                 if ($this->Auth->User('group_id') == '4') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'partner' => true));
+                if ($this->Auth->User('group_id') == '5') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'reviewer' => true));
             } else {
                 $this->Session->setFlash('Your username or password is incorrect.', 'alerts/flash_error');
             }
@@ -181,7 +170,9 @@ class UsersController extends AppController
 
     public function api_login()
     {
-         
+        // if (!class_exists('JWT')) {
+        //     throw new RuntimeException('Your desired vendor library cannot be found');
+        // }
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
                 $user = $this->Auth->User();
@@ -291,7 +282,6 @@ class UsersController extends AppController
 
     public function logout()
     {
-        // $this->initDb();
         $this->Session->setFlash('Good-Bye', 'flash_info');
         $this->redirect($this->Auth->logout());
     }
@@ -314,10 +304,14 @@ class UsersController extends AppController
                 // pr($this->request->data);
             }
         }
+        $user = $this->Auth->User();
+        // debug($user['id']);
+        // exit;
         $this->User->Designation->recursive = -1;
         $this->set('designation', $this->User->Designation->findById($this->Auth->user('designation_id'), array('name')));
         $this->User->County->recursive = -1;
         $this->set('county', $this->User->County->findById($this->Auth->user('county_id'), array('county_name')));
+        $this->set('user', $user);
     }
 
     public function api_changePassword()
@@ -451,31 +445,6 @@ class UsersController extends AppController
         }
     }
 
-    /*public function resetPassword($id) {
-        //confirm user id hash for authenticity
-        //reset password to autogenerated string (e.g use luhn checksum (5) of id with simple replace e.g 2=>eh)
-        $this->User->id = $this->User->Luhn_Verify($id, 7);
-        if (!$this->User->exists()) {
-            $this->Session->setFlash(__('Could not verify the user ID. Please ensure the ID is correct.'), 'flash_error');
-            $this->redirect('/');
-        } else {
-            // $this->User->save('forgot_password', 0);
-            $user = $this->User->read(null);
-            if ($user['User']['forgot_password'] != 2) {
-                $this->Session->setFlash(__('The password has not been reset.'), 'flash_error');
-                $this->redirect('/');
-            }
-            if($this->User->save(
-                                array('User' => array('password' =>  $id, 'confirm_password' => $id))
-                                , array('fieldList' =>  array('password', 'confirm_password'))
-            )) {
-                $this->Session->setFlash(__('The password has been reset. You may now login using your new password.'), 'flash_success');
-            } else {
-                $this->Session->setFlash(__('The password has not been reset. Please contact PPB for further help'), 'flash_error');
-            }
-            $this->redirect('/');
-        }
-    }*/
 
     public function resetPassword($id = null)
     {
@@ -513,8 +482,6 @@ class UsersController extends AppController
      */
     public function index()
     {
-
-        $this->initDb();
         $this->User->recursive = 0;
         $this->set('users', $this->paginate());
     }
@@ -605,7 +572,9 @@ class UsersController extends AppController
         }
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
-        $designations = $this->User->Designation->find('list');
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
+        ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
         $this->set(compact('counties'));
@@ -692,7 +661,9 @@ class UsersController extends AppController
         }
         $counties = $this->User->County->find('list', array('order' => 'County.county_name ASC'));
         $this->set(compact('counties'));
-        $designations = $this->User->Designation->find('list');
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
+        ));
         $this->set(compact('designations'));
     }
 
@@ -773,7 +744,9 @@ class UsersController extends AppController
         }
         $counties = $this->User->County->find('list', array('order' => 'County.county_name ASC'));
         $this->set(compact('counties'));
-        $designations = $this->User->Designation->find('list');
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
+        ));
         $this->set(compact('designations'));
     }
 
@@ -811,24 +784,85 @@ class UsersController extends AppController
             'limit' => 7, 'contain' => array(),
             'fields' => array('Sadr.id', 'Sadr.user_id', 'Sadr.created', 'Sadr.report_title', 'Sadr.submitted', 'Sadr.reference_no', 'Sadr.created', 'Sadr.serious'),
             'order' => array('Sadr.created' => 'desc'),
-            'conditions' => array('Sadr.user_id' => $this->Auth->User('id')),
+            'conditions' => array(
+                // only show SADRs that have been not been deleted 
+                'Sadr.deleted' => false,
+                'Sadr.user_id' => $this->Auth->User(
+                    'id'
+                )
+            ),
         ));
         $this->set('sadrs', $sadrs);
+        $user_id = $this->Auth->User('id');
+        $user_type = $this->Auth->User('user_type');
+
+        $conditions = array(
+            'Aefi.deleted' => false,
+            'Aefi.user_id' => $user_id
+        );
+
+
 
         $aefis = $this->User->Aefi->find('all', array(
             'limit' => 7, 'contain' => array(),
             'fields' => array('Aefi.id', 'Aefi.user_id', 'Aefi.created', 'Aefi.submitted', 'Aefi.reference_no', 'Aefi.created', 'Aefi.serious'),
             'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
             'order' => array('Aefi.created' => 'desc'),
-            'conditions' => array('Aefi.user_id' => $this->Auth->User('id')),
+            'conditions' => $conditions,
+
         ));
         $this->set('aefis', $aefis);
+
+
+        if ($user_type === 'County Pharmacist') {
+            $conditions = array(
+                'Aefi.deleted' => false,
+                'Aefi.serious' => "Yes",
+                'Aefi.submitted' => 2,
+                'Aefi.county_id' => $this->Auth->User('county_id')
+            );
+        }
+        $serious_aefis = $this->User->Aefi->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Aefi.id', 'Aefi.user_id', 'Aefi.created', 'Aefi.submitted', 'Aefi.reference_no', 'Aefi.created', 'Aefi.serious'),
+            'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
+            'order' => array('Aefi.created' => 'desc'),
+            'conditions' => $conditions,
+
+        ));
+        $this->set('serious_aefis', $serious_aefis);
+
+        // SAEFIs Reports
+        $saefis = $this->User->Saefi->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Saefi.id', 'Saefi.user_id', 'Saefi.created', 'Saefi.submitted', 'Saefi.reference_no', 'Saefi.created'),
+            'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
+            'order' => array('Saefi.created' => 'desc'),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Saefi.deleted' => false,
+                'OR' => array(
+                    array('Saefi.user_id' => $this->Auth->User('id')),
+                    array('Saefi.province_id' =>  $this->Auth->User('county_id')),
+                )
+
+            ),
+        ));
+        $this->set('saefis', $saefis);
+
+
 
         $pqmps = $this->User->Pqmp->find('all', array(
             'limit' => 7, 'contain' => array(),
             'fields' => array('Pqmp.id', 'Pqmp.user_id', 'Pqmp.created', 'Pqmp.submitted', 'Pqmp.brand_name', 'Pqmp.reference_no', 'Pqmp.created', 'Pqmp.product_formulation', 'Pqmp.therapeutic_ineffectiveness', 'Pqmp.particulate_matter'),
             'order' => array('Pqmp.created' => 'desc'),
-            'conditions' => array('Pqmp.user_id' => $this->Auth->User('id')),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Pqmp.deleted' => false,
+                'Pqmp.user_id' => $this->Auth->User(
+                    'id'
+                )
+            ),
         ));
         $this->set('pqmps', $pqmps);
 
@@ -836,7 +870,13 @@ class UsersController extends AppController
             'limit' => 7, 'contain' => array(),
             'fields' => array('Device.id', 'Device.user_id', 'Device.created', 'Device.submitted', 'Device.report_title', 'Device.reference_no', 'Device.created', 'Device.serious'),
             'order' => array('Device.created' => 'desc'),
-            'conditions' => array('Device.user_id' => $this->Auth->User('id')),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Device.deleted' => false,
+                'Device.user_id' => $this->Auth->User(
+                    'id'
+                )
+            ),
         ));
         $this->set('devices', $devices);
 
@@ -844,7 +884,13 @@ class UsersController extends AppController
             'limit' => 7, 'contain' => array('MedicationProduct'),
             'fields' => array('Medication.id', 'Medication.user_id', 'Medication.submitted', 'Medication.created', 'Medication.reference_no', 'Medication.created'),
             'order' => array('Medication.created' => 'desc'),
-            'conditions' => array('Medication.user_id' => $this->Auth->User('id')),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Medication.deleted' => false,
+                'Medication.user_id' => $this->Auth->User(
+                    'id'
+                )
+            ),
         ));
         $this->set('medications', $medications);
 
@@ -852,9 +898,28 @@ class UsersController extends AppController
             'limit' => 7, 'contain' => array(),
             'fields' => array('Transfusion.id', 'Transfusion.user_id', 'Transfusion.reference_no', 'Transfusion.diagnosis', 'Transfusion.submitted', 'Transfusion.created', 'Transfusion.created'),
             'order' => array('Transfusion.created' => 'desc'),
-            'conditions' => array('Transfusion.user_id' => $this->Auth->User('id')),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Transfusion.deleted' => false,
+                'Transfusion.user_id' => $this->Auth->User(
+                    'id'
+                )
+            ),
         ));
         $this->set('transfusions', $transfusions);
+
+        // CE2Bs
+        $ce2bs = $this->User->Ce2b->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Ce2b.id', 'Ce2b.user_id', 'Ce2b.created', 'Ce2b.submitted', 'Ce2b.reference_no'),
+            'order' => array('Ce2b.created' => 'desc'),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Ce2b.deleted' => false,
+                'Ce2b.user_id' => $this->Auth->User('id')
+            ),
+        ));
+        $this->set('ce2bs', $ce2bs);
 
         $this->set('notifications', $this->User->Notification->find('all', array(
             'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 12
@@ -928,11 +993,82 @@ class UsersController extends AppController
         $this->set('saes', $saes);
 
         $this->set('notifications', $this->User->Notification->find('all', array(
+            'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 6
+        )));
+        $this->set('messages', $this->Message->find('list', array('fields' => array('name', 'style'))));
+    }
+    public function reviewer_dashboard()
+    {
+        $sadrs = $this->User->Sadr->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Sadr.id', 'Sadr.user_id', 'Sadr.report_title', 'Sadr.submitted', 'Sadr.reference_no', 'Sadr.created', 'Sadr.serious'),
+            'order' => array('Sadr.created' => 'desc'),
+            'conditions' => array('Sadr.submitted >' => 1, 'Sadr.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('sadrs', $sadrs);
+
+        $aefis = $this->User->Aefi->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Aefi.id', 'Aefi.user_id', 'Aefi.submitted', 'Aefi.reference_no', 'Aefi.created', 'Aefi.serious'),
+            'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
+            'order' => array('Aefi.created' => 'desc'),
+            'conditions' => array('Aefi.submitted >' => 1, 'Aefi.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('aefis', $aefis);
+
+        $pqmps = $this->User->Pqmp->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Pqmp.id', 'Pqmp.user_id', 'Pqmp.submitted', 'Pqmp.brand_name', 'Pqmp.reference_no', 'Pqmp.created', 'Pqmp.product_formulation', 'Pqmp.therapeutic_ineffectiveness', 'Pqmp.particulate_matter'),
+            'order' => array('Pqmp.created' => 'desc'),
+            'conditions' => array('Pqmp.submitted >' => 1, 'Pqmp.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('pqmps', $pqmps);
+
+        $devices = $this->User->Device->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Device.id', 'Device.user_id', 'Device.submitted', 'Device.report_title', 'Device.reference_no', 'Device.created', 'Device.serious'),
+            'order' => array('Device.created' => 'desc'),
+            'conditions' => array('Device.submitted >' => 1, 'Device.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('devices', $devices);
+
+        $medications = $this->User->Medication->find('all', array(
+            'limit' => 7, 'contain' => array('MedicationProduct'),
+            'fields' => array('Medication.id', 'Medication.user_id', 'Medication.submitted', 'Medication.reference_no', 'Medication.created'),
+            'order' => array('Medication.created' => 'desc'),
+            'conditions' => array('Medication.submitted >' => 1, 'Medication.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('medications', $medications);
+
+        $transfusions = $this->User->Transfusion->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Transfusion.id', 'Transfusion.user_id', 'Transfusion.reference_no', 'Transfusion.diagnosis', 'Transfusion.submitted', 'Transfusion.created', 'Transfusion.created'),
+            'order' => array('Transfusion.created' => 'desc'),
+            'conditions' => array('Transfusion.submitted >' => 1, 'Transfusion.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('transfusions', $transfusions);
+
+        $padrs = $this->User->Padr->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Padr.id', 'Padr.reporter_name', 'Padr.patient_name', 'Padr.reference_no', 'Padr.created', 'Padr.assigned_to'),
+            'order' => array('Padr.created' => 'desc'),
+            'conditions' => array('Padr.assigned_to' => $this->Auth->User('id')),
+        ));
+        $this->set('padrs', $padrs);
+
+        $saes = $this->User->Sae->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Sae.id', 'Sae.form_type', 'Sae.reference_no', 'Sae.created'),
+            'order' => array('Sae.created' => 'desc'),
+            'conditions' => array('Sae.assigned_to' => $this->Auth->User('id'))
+        ));
+        $this->set('saes', $saes);
+
+        $this->set('notifications', $this->User->Notification->find('all', array(
             'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 12
         )));
         $this->set('messages', $this->Message->find('list', array('fields' => array('name', 'style'))));
     }
-
     public function partner_dashboard()
     {
         $sadrs = $this->User->Sadr->find('all', array(
@@ -1004,9 +1140,6 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        // debug(';manager');
-        // debug($id);
-        // exit;
         $this->User->id = $id;
         if (!$this->User->exists()) {
             $this->Session->setFlash(__('The user does not exist.'), 'flash_info');
@@ -1030,7 +1163,9 @@ class UsersController extends AppController
         else {
             $this->request->data = $this->User->read(null, $id);
         }
-        $designations = $this->User->Designation->find('list');
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
+        ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
         $this->set(compact('counties'));
@@ -1108,7 +1243,9 @@ class UsersController extends AppController
         }
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
-        $designations = $this->User->Designation->find('list');
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
+        ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
         $this->set(compact('counties'));
@@ -1203,12 +1340,14 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Notifications');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
         //Allow reporters to some
         $group->id = 3;
         $this->Acl->deny($group, 'controllers');
         $this->Acl->allow($group, 'controllers/Users/reporter_dashboard');
         $this->Acl->allow($group, 'controllers/Users/edit');
+
         $this->Acl->allow($group, 'controllers/Sadrs/sadrIndex');
         $this->Acl->allow($group, 'controllers/Sadrs/reporter_index');
         $this->Acl->allow($group, 'controllers/Sadrs/reporter_add');
@@ -1216,6 +1355,9 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Sadrs/reporter_edit');
         $this->Acl->allow($group, 'controllers/Sadrs/reporter_view');
         $this->Acl->allow($group, 'controllers/Sadrs/institutionCodes');
+        $this->Acl->allow($group, 'controllers/Sadrs/reporter_delete');
+        $this->Acl->allow($group, 'controllers/Sadrs/reporter_addfrompqmp');
+
         $this->Acl->allow($group, 'controllers/Aefis/aefiIndex');
         $this->Acl->allow($group, 'controllers/Aefis/institutionCodes');
         $this->Acl->allow($group, 'controllers/Aefis/reporter_index');
@@ -1223,39 +1365,52 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Aefis/reporter_followup');
         $this->Acl->allow($group, 'controllers/Aefis/reporter_edit');
         $this->Acl->allow($group, 'controllers/Aefis/reporter_view');
+        $this->Acl->allow($group, 'controllers/Aefis/reporter_delete');
+
         $this->Acl->allow($group, 'controllers/Pqmps/reporter_index');
         $this->Acl->allow($group, 'controllers/Pqmps/reporter_add');
         $this->Acl->allow($group, 'controllers/Pqmps/reporter_edit');
         $this->Acl->allow($group, 'controllers/Pqmps/reporter_view');
+        $this->Acl->allow($group, 'controllers/Pqmps/reporter_delete');
+
         $this->Acl->allow($group, 'controllers/Devices/reporter_index');
         $this->Acl->allow($group, 'controllers/Devices/reporter_add');
         $this->Acl->allow($group, 'controllers/Devices/reporter_followup');
         $this->Acl->allow($group, 'controllers/Devices/reporter_edit');
         $this->Acl->allow($group, 'controllers/Devices/reporter_view');
+
         $this->Acl->allow($group, 'controllers/Medications/reporter_index');
         $this->Acl->allow($group, 'controllers/Medications/reporter_add');
         $this->Acl->allow($group, 'controllers/Medications/reporter_followup');
         $this->Acl->allow($group, 'controllers/Medications/reporter_edit');
         $this->Acl->allow($group, 'controllers/Medications/reporter_view');
+
         $this->Acl->allow($group, 'controllers/Transfusions/reporter_index');
         $this->Acl->allow($group, 'controllers/Transfusions/reporter_add');
         $this->Acl->allow($group, 'controllers/Transfusions/reporter_followup');
         $this->Acl->allow($group, 'controllers/Transfusions/reporter_edit');
         $this->Acl->allow($group, 'controllers/Transfusions/reporter_view');
+
         $this->Acl->allow($group, 'controllers/SadrFollowups/sadrIndex');
         $this->Acl->allow($group, 'controllers/SadrFollowups/followupIndex');
+
         $this->Acl->allow($group, 'controllers/Pqmps/pqmpIndex');
         $this->Acl->allow($group, 'controllers/Users/changePassword');
+
         $this->Acl->allow($group, 'controllers/Notifications/reporter_index');
         $this->Acl->allow($group, 'controllers/Notifications/delete');
+
         $this->Acl->allow($group, 'controllers/SadrListOfDrugs/delete');
         $this->Acl->allow($group, 'controllers/SadrListOfMedicines/delete');
+
+
         $this->Acl->allow($group, 'controllers/AefiListOfVaccines/delete');
         $this->Acl->allow($group, 'controllers/ListOfDevices/delete');
         $this->Acl->allow($group, 'controllers/MedicationProducts/delete');
         $this->Acl->allow($group, 'controllers/Pints/delete');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
         //Allow institution administrators to some
         $group->id = 4;
@@ -1288,6 +1443,51 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Notifications/delete');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
+
+
+
+        // Allow mini manager roles 
+        $group->id = 6;
+        $this->Acl->deny($group, 'controllers');
+        $this->Acl->allow($group, 'controllers/Users/mini_dashboard');
+        $this->Acl->allow($group, 'controllers/Sadrs');
+        $this->Acl->allow($group, 'controllers/Aefis');
+        $this->Acl->allow($group, 'controllers/SadrFollowups');
+        $this->Acl->allow($group, 'controllers/Pqmps');
+        $this->Acl->allow($group, 'controllers/Devices');
+        $this->Acl->allow($group, 'controllers/Medications');
+        $this->Acl->allow($group, 'controllers/Transfusions');
+        $this->Acl->allow($group, 'controllers/Padrs');
+        $this->Acl->allow($group, 'controllers/Saes');
+        $this->Acl->allow($group, 'controllers/Attachments');
+        $this->Acl->allow($group, 'controllers/Counties');
+        $this->Acl->allow($group, 'controllers/Countries');
+        $this->Acl->allow($group, 'controllers/Designations');
+        $this->Acl->allow($group, 'controllers/Doses');
+        $this->Acl->allow($group, 'controllers/DrugDictionaries');
+        $this->Acl->allow($group, 'controllers/FacilityCodes');
+        $this->Acl->allow($group, 'controllers/Feedbacks');
+        $this->Acl->allow($group, 'controllers/Frequencies');
+        $this->Acl->allow($group, 'controllers/HelpInfos');
+        $this->Acl->allow($group, 'controllers/Messages');
+        $this->Acl->allow($group, 'controllers/Routes');
+        $this->Acl->allow($group, 'controllers/SadrListOfDrugs');
+        $this->Acl->allow($group, 'controllers/SadrListOfMedicines');
+        $this->Acl->allow($group, 'controllers/AefiListOfVaccines');
+        $this->Acl->allow($group, 'controllers/ListOfDevices');
+        $this->Acl->allow($group, 'controllers/MedicationProducts');
+        $this->Acl->allow($group, 'controllers/Pints');
+        $this->Acl->allow($group, 'controllers/WhoDrugs');
+        $this->Acl->allow($group, 'controllers/Pages');
+        $this->Acl->allow($group, 'controllers/Users/changePassword');
+        $this->Acl->allow($group, 'controllers/Users/edit');
+        $this->Acl->allow($group, 'controllers/Users/admin_index');
+        $this->Acl->allow($group, 'controllers/Users/admin_add');
+        $this->Acl->allow($group, 'controllers/Notifications');
+        $this->Acl->allow($group, 'controllers/Comments');
+        $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
         echo "all done";
         exit;

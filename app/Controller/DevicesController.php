@@ -17,6 +17,12 @@ class DevicesController extends AppController
     public $presetVars = true;
     public $page_options = array('25' => '25', '50' => '50', '100' => '100');
 
+
+    public function beforeFilter()
+    {
+        parent::beforeFilter();
+        $this->Auth->allow('guest_add','guest_edit');
+    }
     /**
      * index method
      */
@@ -29,6 +35,19 @@ class DevicesController extends AppController
 
         $criteria = $this->Device->parseCriteria($this->passedArgs);
         $criteria['Device.user_id'] = $this->Auth->User('id');
+        //add deleted = 0 to criteria
+        $criteria['Device.deleted'] = false;
+        
+        if (isset($this->request->query['submitted'])) {
+
+            if ($this->request->query['submitted'] == 1) {
+                $criteria['Device.submitted'] = array(0, 1);
+            } else {
+                $criteria['Device.submitted'] = array(2, 3);
+            }
+        } else {
+            $criteria['Device.submitted'] = array(0, 1, 2, 3);
+        }
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Device.created' => 'desc');
         $this->paginate['contain'] = array('County', 'Designation', 'ListOfDevice');
@@ -92,6 +111,8 @@ class DevicesController extends AppController
         $criteria = $this->Device->parseCriteria($this->passedArgs);
         $criteria['Device.name_of_institution'] = $this->Auth->User('name_of_institution');
         $criteria['Device.submitted'] = array(1, 2);
+        //add deleted = 0 to criteria
+        $criteria['Device.deleted'] = false;
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Device.created' => 'desc');
         $this->paginate['contain'] = array('County', 'Designation', 'ListOfDevice');
@@ -121,7 +142,49 @@ class DevicesController extends AppController
 
         $criteria = $this->Device->parseCriteria($this->passedArgs);
         $criteria['Device.copied !='] = '1';
-        if (!isset($this->passedArgs['submit'])) $criteria['Device.submitted'] = array(2, 3);
+        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
+            $criteria['Device.submitted'] = array(0, 1);
+        } else {
+            $criteria['Device.submitted'] = array(2, 3);
+        }
+        //add deleted = 0 to criteria
+        $criteria['Device.deleted'] = false;
+        $criteria['Device.archived'] = false;
+        
+        // if (!isset($this->passedArgs['submit'])) $criteria['Device.submitted'] = array(2, 3);
+        $this->paginate['conditions'] = $criteria;
+        $this->paginate['order'] = array('Device.created' => 'desc');
+        $this->paginate['contain'] = array('County', 'Designation');
+
+        //in case of csv export
+        if (isset($this->request->params['ext']) && $this->request->params['ext'] == 'csv') {
+            $this->csv_export($this->Device->find(
+                'all',
+                array('conditions' => $this->paginate['conditions'], 'order' => $this->paginate['order'], 'contain' => $this->paginate['contain'])
+            ));
+        }
+        //end pdf export
+        $this->set('page_options', $this->page_options);
+        $this->set('devices', Sanitize::clean($this->paginate(), array('encode' => false)));
+    }
+
+    public function reviewer_index()
+    {
+        # code...
+        $this->Prg->commonProcess();
+        if (!empty($this->passedArgs['start_date']) || !empty($this->passedArgs['end_date'])) $this->passedArgs['range'] = true;
+        if (isset($this->passedArgs['pages']) && !empty($this->passedArgs['pages'])) $this->paginate['limit'] = $this->passedArgs['pages'];
+        else $this->paginate['limit'] = reset($this->page_options);
+
+        $criteria = $this->Device->parseCriteria($this->passedArgs);
+        $criteria['Device.copied !='] = '1';
+        if (isset($this->request->query['submitted']) && $this->request->query['submitted'] == 1) {
+            $criteria['Device.submitted'] = array(0, 1);
+        } else {
+            $criteria['Device.submitted'] = array(2, 3);
+        }
+
+        $criteria['Device.assigned_to'] = $this->Auth->User('id');
         $this->paginate['conditions'] = $criteria;
         $this->paginate['order'] = array('Device.created' => 'desc');
         $this->paginate['contain'] = array('County', 'Designation', 'ListOfDevice');
@@ -141,8 +204,6 @@ class DevicesController extends AppController
     private function csv_export($cdevices = '')
     {
         //todo: check if data exists in $users
-        // debug($cdevices);
-        // exit;
         $this->response->download('DEVICES_' . date('Ymd_Hi') . '.csv'); // <= setting the file name
         $this->set(compact('cdevices'));
         $this->layout = false;
@@ -240,19 +301,29 @@ class DevicesController extends AppController
             $this->redirect('/');
         }
 
+        $this->general_view($id);
+    }
+
+    public function general_view($id = null)
+    {
+        # code...
         if (strpos($this->request->url, 'pdf') !== false) {
-            $this->pdfConfig = array('filename' => 'DEVICE_' . $id . '.pdf',  'orientation' => 'portrait');
-            // $this->response->download('DEVICE_'.$device['Device']['id'].'.pdf');
+            $this->pdfConfig = array('filename' => 'DEVICE_' . $id . '.pdf',  'orientation' => 'portrait'); 
         }
 
         $device = $this->Device->find('first', array(
             'conditions' => array('Device.id' => $id),
             'contain' => array(
-                'ListOfDevice', 'County', 'Attachment', 'Designation', 'ExternalComment',
-                'DeviceOriginal', 'DeviceOriginal.ListOfDevice', 'DeviceOriginal.County',  'DeviceOriginal.Attachment', 'DeviceOriginal.Designation', 'DeviceOriginal.ExternalComment'
+                'ListOfDevice', 'County', 'Attachment', 'Designation', 'ExternalComment', 'ReviewComment', 'ExternalComment.Attachment', 'ReviewComment.Attachment',
+                'DeviceOriginal', 'DeviceOriginal.ListOfDevice', 'DeviceOriginal.County',  'DeviceOriginal.Attachment', 'DeviceOriginal.Designation', 'DeviceOriginal.ExternalComment','DeviceOriginal.ReviewComment','DeviceOriginal.ExternalComment.Attachment','DeviceOriginal.ReviewComment.Attachment'
             )
         ));
-        $this->set('device', $device);
+        $managers = $this->Device->User->find('list', array(
+            'conditions' => array(
+                'User.group_id' => 6
+            )
+        ));
+        $this->set(['device' => $device, 'managers' => $managers]);
         // $this->render('pdf/view');
 
         if (strpos($this->request->url, 'pdf') !== false) {
@@ -290,23 +361,83 @@ class DevicesController extends AppController
         }
     }
 
+
+
+    // Assign the report to the evaluator
+    public function manager_assign()
+    {
+        # code...
+        $id = $this->request->data['Device']['report_id'];
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            $this->Session->setFlash(__('Could not verify the Device report ID. Please ensure the ID is correct.'), 'flash_error');
+            $this->redirect('/');
+        }
+        $this->Device->saveField('assigned_by', $this->request->data['Device']['assigned_by']);
+        $this->Device->saveField('assigned_to', $this->request->data['Device']['assigned_to']);
+        $this->Device->saveField('assigned_date', date("Y-m-d H:i:s"));
+
+        // Send an asignment alert::::
+
+
+        $this->Session->setFlash(__('The Device has been assigned successfully'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'view', $id));
+    }
+
+    public function manager_unassign($id = null)
+    {
+        # code...
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            $this->Session->setFlash(__('Could not verify the Device report ID. Please ensure the ID is correct.'), 'flash_error');
+            $this->redirect('/');
+        }
+        $this->Device->saveField('assigned_by', '');
+        $this->Device->saveField('assigned_to', '');
+        $this->Device->saveField('assigned_date', '');
+
+        $this->Session->setFlash(__('The Device has been unassigned successfully'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'view', $id));
+    }
+
+
+    // Evaluator Functions::::
+    public function reviewer_view($id = null)
+    {
+        # code...
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            $this->Session->setFlash(__('Could not verify the DEVICE report ID. Please ensure the ID is correct.'), 'flash_error');
+            $this->redirect('/');
+        }
+
+        $this->general_view($id);
+    }
+    public function reviewer_copy($id = null)
+    {
+        # code...
+        $this->general_copy($id);
+    }
+    public function reviewer_edit($id = null)
+    {
+        # code...
+        $this->general_edit($id);
+    }
+
     /**
      * add method
      *
      * @return void
      */
 
-    public function reporter_add()
+    public function reporter_add($id = null)
     {
-        // $count = $this->Device->find('count',  array('conditions' => array(
-        //     'Device.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")))));
-        // $count++;
-        // $count = ($count < 10) ? "0$count" : $count;
         $this->Device->create();
         $this->Device->save(['Device' => [
             'user_id' => $this->Auth->User('id'),
             'reference_no' => 'new', //'MD/'.date('Y').'/'.$count,
             'report_type' => 'Initial',
+            'pqmp_id' => $id,
             'designation_id' => $this->Auth->User('designation_id'),
             'county_id' => $this->Auth->User('county_id'),
             'institution_code' => $this->Auth->User('institution_code'),
@@ -368,9 +499,8 @@ class DevicesController extends AppController
      * @return void
      */
 
-    public function generate_reference()
+    public function generateReferenceNumber()
     {
-        # code...
         $count = $this->Device->find('count',  array(
             'fields' => 'Device.reference_no',
             'conditions' => array(
@@ -379,14 +509,17 @@ class DevicesController extends AppController
         ));
         $count++;
         $count = ($count < 10) ? "0$count" : $count;
-        $reference_no = 'MD/' . date('Y') . '/' . $count;
-        $existing = $this->Device->find('count', ['conditions' => ['Device.reference_no' => $reference_no]]);
 
-        if ($existing > 0) {
-            return  $this->generate_reference();
-        } else {
-            return $reference_no;
-        }
+        $reference_no = 'MD/' . date('Y') . '/' . $count;
+
+        //ensure the reference number is unique
+        $exists = $this->Device->find('count',  array(
+            'fields' => 'Device.reference_no',
+            'conditions' => array('Device.reference_no' => $reference_no)
+        ));
+        if ($exists > 0) $reference_no = $this->generateReferenceNumber();
+
+        return $reference_no;
     }
 
     public function reporter_edit($id = null)
@@ -396,10 +529,10 @@ class DevicesController extends AppController
             throw new NotFoundException(__('Invalid DEVICE'));
         }
         $device = $this->Device->read(null, $id);
-        // if ($device['Device']['submitted'] > 1) {
-        //     $this->Session->setFlash(__('The medical device incident has been submitted'), 'alerts/flash_info');
-        //     $this->redirect(array('action' => 'view', $this->Device->id));
-        // }
+        if ($device['Device']['submitted'] > 1) {
+            $this->Session->setFlash(__('The medical device incident has been submitted'), 'alerts/flash_info');
+            $this->redirect(array('action' => 'view', $this->Device->id));
+        }
         if ($device['Device']['user_id'] !== $this->Auth->user('id')) {
             $this->Session->setFlash(__('You don\'t have permission to edit this DEVICE!!'), 'alerts/flash_error');
             $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -409,34 +542,17 @@ class DevicesController extends AppController
             if (isset($this->request->data['submitReport'])) {
                 $validate = 'first';
             }
-            $data = $this->request->data;
-            if (isset($data['ListOfDevice'])) {
-                $device = $data['ListOfDevice'];
-                //check if $device array is not empty
-                if (!empty($device)) {
-                    //loop through the array
-                    foreach ($device as $key => $value) {
-                        //check if the value is empty
-                        if (!empty($value['expiry_date'])) {
-                            //convert this date to datetime
-                            $device[$key]['expiry_date'] = date('Y-m-d H:i:s', strtotime($value['expiry_date']));
-
-                            //add it back to the origin array
-                            $data['ListOfDevice'] = $device;
-                            $this->request->data = $data;
-                        }
-                    }
-                }
-            }
 
             if ($this->Device->saveAssociated($this->request->data, array('validate' => $validate, 'deep' => true))) {
                 if (isset($this->request->data['submitReport'])) {
                     $this->Device->saveField('submitted', 2);
                     $this->Device->saveField('submitted_date', date("Y-m-d H:i:s"));
                     //lucian
+                    // debug($device);
+                    // exit;
                     if (!empty($device['Device']['reference_no']) && $device['Device']['reference_no'] == 'new') {
+                        $reference = $this->generateReferenceNumber();
 
-                        $reference = $this->generate_reference();
                         $this->Device->saveField('reference_no', $reference);
                     }
                     //bokelo
@@ -503,6 +619,11 @@ class DevicesController extends AppController
                     }
                     //**********************************    END   *********************************
 
+
+                    $serious = $device['Device']['serious'];
+                    if ($serious == "Serious") {
+                        $this->notifyCountyPharmacist($device);
+                    }
                     $this->Session->setFlash(__('The DEVICE has been submitted to PPB'), 'alerts/flash_success');
                     $this->redirect(array('action' => 'view', $this->Device->id));
                 }
@@ -519,10 +640,64 @@ class DevicesController extends AppController
         //$device = $this->request->data;
         $counties = $this->Device->County->find('list', array('order' => array('County.county_name' => 'ASC')));
         $this->set(compact('counties'));
-        $designations = $this->Device->Designation->find('list');
+        $designations = $this->Device->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('designations'));
     }
-
+    public function notifyCountyPharmacist($device = null)
+    {
+        # code...
+        
+        $this->loadModel('Message');
+        $html = new HtmlHelper(new ThemeView());
+        $message = $this->Message->find('first', array('conditions' => array('name' => 'serious_device')));
+                    
+        $county_id = $device['Device']['county_id'];
+        $users = $this->Device->User->find('all', array(
+            'contain' => array(),
+            'conditions' => array(
+                'OR' => array(
+                    'User.group_id' => 2,
+                    array(
+                        'User.county_id' => $county_id,
+                        'User.user_type' => 'County Pharmacist'
+                    )
+                )
+            ),
+            'order' => array(
+                'User.id' => 'DESC'
+            )
+        ));
+       
+        foreach ($users as $user) {
+            $variables = array(
+                'name' => $user['User']['name'], 
+                'reference_no' => $device['Device']['reference_no'],
+                'reference_link' => $html->link(
+                    $device['Device']['reference_no'],
+                    array(
+                        'controller' => 'devices',
+                        'action' => 'view', $device['Device']['id'], 
+                        'manager' => true, 
+                        'full_base' => true),
+                    array('escape' => false)
+                ),
+                'modified' => $device['Device']['modified']
+            );
+            $datum = array(
+                'email' => $user['User']['email'],
+                'id' => $device['Device']['id'], 
+                'user_id' => $user['User']['id'], 
+                'type' => 'serious_device', 
+                'model' => 'Device',
+                'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                'message' => CakeText::insert($message['Message']['content'], $variables)
+            );
+            $this->loadModel('Queue.QueuedTask');
+            $this->QueuedTask->createJob('GenericEmail', $datum);
+            $this->QueuedTask->createJob('GenericNotification', $datum);
+        }
+        
+    }
     public function api_add()
     {
 
@@ -637,6 +812,11 @@ class DevicesController extends AppController
 
     public function manager_copy($id = null)
     {
+        $this->general_copy($id);
+    }
+    public function general_copy($id = null)
+    {
+        # code...
         if ($this->request->is('post')) {
             $this->Device->id = $id;
             if (!$this->Device->exists()) {
@@ -675,6 +855,12 @@ class DevicesController extends AppController
         if (!$this->Device->exists()) {
             throw new NotFoundException(__('Invalid DEVICE'));
         }
+        $this->general_edit($id);
+    }
+
+    public function general_edit($id = null)
+    {
+        # code...
         $device = $this->Device->read(null, $id);
         if ($this->request->is('post') || $this->request->is('put')) {
             $validate = false;
@@ -709,10 +895,9 @@ class DevicesController extends AppController
 
         $counties = $this->Device->County->find('list', array('order' => array('County.county_name' => 'ASC')));
         $this->set(compact('counties'));
-        $designations = $this->Device->Designation->find('list');
+        $designations = $this->Device->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('designations'));
     }
-
     public function admin_edit($id = null)
     {
         $this->set('title_for_layout', 'Edit Device ' . $id);
@@ -758,7 +943,7 @@ class DevicesController extends AppController
         $this->set('attachments', $device['Attachment']);
         $counties = $this->Device->County->find('list', array('order' => array('County.county_name' => 'ASC')));
         $this->set(compact('counties'));
-        $designations = $this->Device->Designation->find('list');
+        $designations = $this->Device->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
         $this->set(compact('designations'));
     }
     /**
@@ -822,4 +1007,169 @@ class DevicesController extends AppController
             $this->request->data['Device']['reporter_phone'] = $this->Auth->User('phone_no');
         }
     }
+
+    // function to delete a report
+
+    public function manager_delete($id = null)
+    {
+        # code...
+        $this->common_delete($id);
+    }
+    public function reporter_delete($id = null)
+    {
+        $this->common_delete($id);
+    }
+    public function common_delete($id = null)
+    {
+        # code...
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            throw new NotFoundException(__('Invalid report'));
+        }
+        $this->request->onlyAllow('post', 'delete');
+        //read the report
+        $report = $this->Device->read(null, $id);
+        //update the report status to deleted
+        $report['Device']['deleted'] = true;
+        $report['Device']['deleted_date'] = date('Y-m-d H:i:s');
+        //save the report withouth validation
+        if ($this->Device->save($report, array('validate' => false, 'deep' => true))) {
+            $this->Session->setFlash(__('The report has been deleted'), 'flash_success');
+            $this->redirect($this->referer());
+        } else {
+            $this->Session->setFlash(__('The report could not be deleted. Please, try again.'), 'flash_error');
+            $this->redirect($this->referer());
+        }
+    }
+    public function guest_add($id = null)
+    {
+        $this->Device->create();
+        $this->Device->save(['Device' => [ 
+            'reference_no' => 'new',  
+            'report_type' => 'Initial', 
+        ]], false);
+        $this->Session->setFlash(__('The Medical Device Incident has been created'), 'alerts/flash_success');
+        $this->redirect(array('action' => 'guest_edit', $this->Device->id));
+    }
+    public function guest_edit($id = null)
+    {
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            throw new NotFoundException(__('Invalid DEVICE'));
+        }
+        $device = $this->Device->read(null, $id);
+       
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $validate = false;
+            if (isset($this->request->data['submitReport'])) {
+                $validate = 'first';
+            }
+
+
+            if ($this->Device->saveAssociated($this->request->data, array('validate' => $validate, 'deep' => true))) {
+                if (isset($this->request->data['submitReport'])) {
+                    $this->Device->saveField('submitted', 2);
+                    $this->Device->saveField('submitted_date', date("Y-m-d H:i:s"));
+                     
+                    if (!empty($device['Device']['reference_no']) && $device['Device']['reference_no'] == 'new') {
+                        $reference = $this->generateReferenceNumber();
+
+                        $this->Device->saveField('reference_no', $reference);
+                    }
+                    //bokelo
+                    $device = $this->Device->read(null, $id);
+
+                    //******************       Send Email and Notifications to Applicant and Managers          *****************************
+                    $this->loadModel('Message');
+                    $html = new HtmlHelper(new ThemeView());
+                    $message = $this->Message->find('first', array('conditions' => array('name' => 'reporter_device_submit')));
+                    $variables = array(
+                        'name' =>'Guest', 
+                        'reference_no' => $device['Device']['reference_no'],
+                        'reference_link' => $html->link(
+                            $device['Device']['reference_no'],
+                            array('controller' => 'devices', 'action' => 'view', $device['Device']['id'], 'reporter' => true, 'full_base' => true),
+                            array('escape' => false)
+                        ),
+                        'modified' => $device['Device']['modified']
+                    );
+                    $datum = array(
+                        'email' => $device['Device']['reporter_email'],
+                        'id' => $id, 'user_id' => $this->Auth->User('id'), 'type' => 'reporter_device_submit', 'model' => 'Device',
+                        'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                        'message' => CakeText::insert($message['Message']['content'], $variables)
+                    );
+
+                    $this->loadModel('Queue.QueuedTask');
+                    $this->QueuedTask->createJob('GenericEmail', $datum);
+                    $this->QueuedTask->createJob('GenericNotification', $datum);
+
+                    //Send SMS
+                    if (!empty($device['Device']['reporter_phone']) && strlen(substr($device['Device']['reporter_phone'], -9)) == 9 && is_numeric(substr($device['Device']['reporter_phone'], -9))) {
+                        $datum['phone'] = '254' . substr($device['Device']['reporter_phone'], -9);
+                        $variables['reference_url'] = Router::url(['controller' => 'devices', 'action' => 'view', $device['Device']['id'], 'reporter' => true, 'full_base' => true]);
+                        $datum['sms'] = CakeText::insert($message['Message']['sms'], $variables);
+                        $this->QueuedTask->createJob('GenericSms', $datum);
+                    }
+
+                    //Notify managers
+                    $users = $this->Device->User->find('all', array(
+                        'contain' => array(),
+                        'conditions' => array('User.group_id' => 2)
+                    ));
+                    foreach ($users as $user) {
+                        $variables = array(
+                            'name' => $user['User']['name'], 'reference_no' => $device['Device']['reference_no'],
+                            'reference_link' => $html->link(
+                                $device['Device']['reference_no'],
+                                array('controller' => 'devices', 'action' => 'view', $device['Device']['id'], 'manager' => true, 'full_base' => true),
+                                array('escape' => false)
+                            ),
+                            'modified' => $device['Device']['modified']
+                        );
+                        $datum = array(
+                            'email' => $user['User']['email'],
+                            'id' => $id, 'user_id' => $user['User']['id'], 'type' => 'reporter_device_submit', 'model' => 'Device',
+                            'subject' => CakeText::insert($message['Message']['subject'], $variables),
+                            'message' => CakeText::insert($message['Message']['content'], $variables)
+                        );
+
+                        $this->QueuedTask->createJob('GenericEmail', $datum);
+                        $this->QueuedTask->createJob('GenericNotification', $datum); 
+                    }
+                    //**********************************    END   *********************************
+
+                    $this->Session->setFlash(__('The DEVICE has been submitted to PPB'), 'alerts/flash_success');
+                    $this->redirect(array('controller'=>'pages','action' => 'home'));
+                }
+                // debug($this->request->data);
+                $this->Session->setFlash(__('The DEVICE has been saved'), 'alerts/flash_success');
+                $this->redirect($this->referer());
+            } else {
+                $this->Session->setFlash(__('The DEVICE could not be saved. Please, try again.'), 'alerts/flash_error');
+            }
+        } else {
+            $this->request->data = $this->Device->read(null, $id);
+        }
+ 
+        $counties = $this->Device->County->find('list', array('order' => array('County.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Device->Designation->find('list', array('order' => array('Designation.name' => 'ASC')));
+        $this->set(compact('designations'));
+    }
+    public function manager_archive($id=null) {
+        $this->Device->id = $id;
+        if (!$this->Device->exists()) {
+            throw new NotFoundException(__('Invalid DEVICE'));
+        }
+        $report = $this->Device->read(null, $id);
+        $report['Device']['archived'] = true;
+        $report['Device']['archived_date'] = date("Y-m-d H:i:s");
+        if ($this->Device->save($report, array('validate' => false))) {
+            $this->Session->setFlash(__('DEVICE Archived successfully'), 'alerts/flash_success');
+            $this->redirect(array('action' => 'index'));
+        }
+        $this->Session->setFlash(__('DEVICE was not archied'), 'alerts/flash_error');
+        $this->redirect($this->referer());
+	}
 }

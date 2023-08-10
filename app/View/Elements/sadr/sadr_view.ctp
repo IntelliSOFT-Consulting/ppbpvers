@@ -13,7 +13,7 @@
 			<div id="printAreade">
 				<div class="formback">
 
-				<p><b>(FOM001/MIP/PMS/SOP/001)</b></p>
+				<p><b>(FOM001/HPT/VMS/SOP/001)</b></p>
 	            <div class="row-fluid">
 	                <div class="span12">
 	                    <?php
@@ -24,7 +24,7 @@
 	                      <h4>MINISTRY OF HEALTH</h4>
 	                      <h5>PHARMACY AND POISONS BOARD</h5>
 	                      <h5>P.O. Box 27663-00506 NAIROBI</h5>
-	                      <h5>Tel: +254 709 770 100/+254 709 770 xxx (Replace xxx with extension)</h5>
+	                      <h5>Tel: +254795743049</h5>
 	                      <h5><b>Email:</b> pv@pharmacyboardkenya.org</h5>
 	                    <h5 style="color: red;">SUSPECTED ADVERSE DRUG REACTION REPORTING FORM</h5>
 	                    </div>
@@ -49,6 +49,8 @@
 							<h5>The report is on:</h5>
 							<p> <?php echo ($sadr['Sadr']['report_sadr']   ? $ichecked : $nchecked ); ?> Suspected adverse drug reaction  </p>
 							<p> <?php echo ($sadr['Sadr']['report_therapeutic']   ? $ichecked : $nchecked ); ?> Suspected Therapeutic ineffectiveness </p>
+							<p> <?php echo ($sadr['Sadr']['report_misuse']   ? $ichecked : $nchecked ); ?> Suspected misuse, abuse and / or dependence on medicines </p>
+							<p> <?php echo ($sadr['Sadr']['report_off_label']   ? $ichecked : $nchecked ); ?> Off-label Use </p>
 						</td>
 						<td style="width: 50%;">
 							<h5>Product category (Tick appropriate box)</h5>
@@ -73,7 +75,7 @@
 						<td style="width: 25%;">ADDRESS: </td>
 						<td style="width: 25%;"><strong><?php echo $sadr['Sadr']['address'] ?>	</strong></td>
 						<td style="width: 25%;">SUB-COUNTY: </td>
-						<td style="width: 25%;"><strong><?php echo $sadr['SubCounty']['sub_county_name'] ?>	</strong></td>
+						<td style="width: 25%;"><strong><?php echo (!empty($sadr['Sadr']['sub_county_id']))? $sadr['SubCounty']['sub_county_name']:'' ?>	</strong></td>
 					</tr>
 					<tr>
 						<td style="width: 25%;">INSTITUTION CODE: </td>
@@ -132,6 +134,10 @@
 					<tr>
 						<td style="width: 30%;">DIAGNOSIS:</td>
 						<td style="width: 70%;"><strong><?php echo $sadr['Sadr']['diagnosis'] ?></strong></td>
+					</tr>
+					<tr>
+						<td style="width: 30%;">REACTION:</td>
+						<td style="width: 70%;"><strong><?php echo $sadr['Sadr']['reaction'] ?></strong></td>
 					</tr>
 					<tr>
 						<td style="width: 25%;">DATE OF ONSET OF REACTION:</td>
@@ -193,7 +199,8 @@
 								<td><?php echo $sadrListOfDrug['dose'];
 										  if(!empty($sadrListOfDrug['Dose']['name'])) echo ' - '.$sadrListOfDrug['Dose']['name'];?></td>
 								<td style="width: 10%;"><?php if(!empty($sadrListOfDrug['Route']['name'])) echo $sadrListOfDrug['Route']['name'];?></td>
-								<td style="width: 10%;"><?php if(!empty($sadrListOfDrug['Frequency']['name'])) echo $sadrListOfDrug['Frequency']['name'];?></td>
+								<td style="width: 10%;"><?php if(!empty($sadrListOfDrug['Frequency']['name'])) echo $sadrListOfDrug['Frequency']['name'];?><br>
+								<span><?php echo $sadrListOfDrug['frequency_id_other'];?></span></td>
 								<td style="width: 10%;"><?php echo $sadrListOfDrug['start_date'];?></td>
 								<td style="width: 10%;"><?php echo $sadrListOfDrug['stop_date'];?></td>
 								<td style="width: 10%;"><?php echo $sadrListOfDrug['indication'];?></td>
@@ -233,7 +240,8 @@
 								<td><?php echo $sadrListOfMedicine['dose'];
 										  if(!empty($sadrListOfMedicine['Dose']['name'])) echo ' - '.$sadrListOfMedicine['Dose']['name'];?></td>
 								<td style="width: 10%;"><?php if(!empty($sadrListOfMedicine['Route']['name'])) echo $sadrListOfMedicine['Route']['name'];?></td>
-								<td style="width: 10%;"><?php if(!empty($sadrListOfMedicine['Frequency']['name'])) echo $sadrListOfMedicine['Frequency']['name'];?></td>
+								<td style="width: 10%;"><?php if(!empty($sadrListOfMedicine['Frequency']['name'])) echo $sadrListOfMedicine['Frequency']['name'];?><br>
+								<span><?php echo $sadrListOfMedicine['frequency_other'];?></span></td>
 								<td style="width: 10%;"><?php echo $sadrListOfMedicine['start_date'];?></td>
 								<td style="width: 10%;"><?php echo $sadrListOfMedicine['stop_date'];?></td>
 								<td style="width: 10%;"><?php echo $sadrListOfMedicine['indication'];?></td>

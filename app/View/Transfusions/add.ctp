@@ -1,5 +1,5 @@
 <?php
-	$this->assign('PQMP', 'active');
+	$this->assign('Poor-Quality Health Products and Technologies', 'active');
 	// pr($this->Session->read('Auth.User.initial_email'));
  ?>
  
@@ -28,7 +28,7 @@
 									<div class="span12">
 									  	<h3>GUIDELINES ON COMPLETION OF THE FORM	</h3>
 										<h4>WHEN TO COMPLETE THIS FORM	</h4>
-										<p>An <em>adverse event following immunization (AEFI)</em> is defined as any unfavorable medical occurrence which follows immunization and which may or may not be caused by the usage of the vaccine. The adverse event may be any unfavorable or unintended sign, abnormal laboratory finding, symptom or disease.	</p>								
+										<p>An <em>adverse event following immunization (Adverse Event Following Immunization)</em> is defined as any unfavorable medical occurrence which follows immunization and which may or may not be caused by the usage of the vaccine. The adverse event may be any unfavorable or unintended sign, abnormal laboratory finding, symptom or disease.	</p>								
 										
 										<p>
 											In the event of a severe reaction following transfusion of blood or blood products please complete this form and send it to the laboratory with the specimens listed below.
@@ -49,7 +49,7 @@
 											<strong>THE PHARMACY AND POISONS BOARD</strong><br>
 											Lenana Road.<br>
 											<abbr title="Post Office Box">P.O. Box</abbr> 27663-00506 NAIROBI<br>
-											<abbr title="Telephone Number">Tel:</abbr> +254 709 770 100/+254 709 770 xxx (Replace xxx with extension)
+											<abbr title="Telephone Number">Tel:</abbr> +254795743049
 											<abbr title="Fascimile">Fax:</abbr> (020)-2713431 / 2713409 <br>
 											E-mail: <a href="mailto:#">pv@pharmacyboardkenya.org</a>
 
@@ -99,8 +99,8 @@
 						'label' => 'Go to report',
 						'value' => 'Save',
 						'class' => 'btn btn-primary',
-						'id' => 'SadrSubmitEmail', 'title'=>'Start a New PQMP', 
-						'data-content' => 'Please provide us with your email address to start filling in the PQMP.',
+						'id' => 'SadrSubmitEmail', 'title'=>'Start a New Poor-Quality Health Products and Technologies', 
+						'data-content' => 'Please provide us with your email address to start filling in the Poor-Quality Health Products and Technologies.',
 						'div' => array(
 							'class' => 'form-actions',
 						)

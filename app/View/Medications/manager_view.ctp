@@ -1,81 +1,196 @@
 <?php
-    $this->assign('MED', 'active');
- ?>
+$this->assign('MED', 'active');
+?>
 
-      <!-- MEDICATION
+<!-- MEDICATION
     ================================================== -->
 <section id="medicationsview">
-    <ul class="nav nav-tabs">
-        <?php if(isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) { ?> <li><a href="#formoriginal" data-toggle="tab">Original</a></li> <?php } ?>
-        <li class="active"><a href="#formview" data-toggle="tab"><?php echo (!empty($medication['Medication']['reference_no'])) ? $medication['Medication']['reference_no'] : $medication['Medication']['id'] ; ?></a></li>
-        <li><a href="#external_report_comments" data-toggle="tab">Feedback (<?php echo count((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['ExternalComment'] : $medication['ExternalComment']); ?>)</a></li>
-    </ul>
-    
-    <div class="tab-content">
-    <?php if(isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) { ?>
+  <ul class="nav nav-tabs">
+    <?php if (isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) { ?> <li><a href="#formoriginal" data-toggle="tab">Original</a></li> <?php } ?>
+    <li class="active"><a href="#formview" data-toggle="tab"><?php echo (!empty($medication['Medication']['reference_no'])) ? $medication['Medication']['reference_no'] : $medication['Medication']['id']; ?></a></li>
+    <li><a href="#external_report_comments" data-toggle="tab">Feedback (<?php echo count((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['ExternalComment'] : $medication['ExternalComment']); ?>)</a></li>
+    <!-- <li><a href="#assign_manager" data-toggle="tab">Assign Manager </a></li> -->
+    <li><a href="#committee-review" data-toggle="tab">Committee Review </a></li>
+  </ul>
+
+  <div class="tab-content">
+    <?php if (isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) { ?>
       <div class="tab-pane" id="formoriginal">
-        <div class="row-fluid">     
+        <div class="row-fluid">
           <div class="span10">
-              <?php 
-                $omedication = [];
-                foreach ($medication['MedicationOriginal'] as $key => $value) {
-                  if (is_array($value)) {
-                    $omedication[$key] = $value;
-                  } else {
-                    $omedication['Medication'][$key] = $value;
-                  }
-                }
-                echo $this->element('medication/medication_view', ['medication' => $omedication]);
-              ?>
+            <?php
+            $omedication = [];
+            foreach ($medication['MedicationOriginal'] as $key => $value) {
+              if (is_array($value)) {
+                $omedication[$key] = $value;
+              } else {
+                $omedication['Medication'][$key] = $value;
+              }
+            }
+            echo $this->element('medication/medication_view', ['medication' => $omedication]);
+            ?>
           </div>
           <div class="span2">
-              <?php
-                      echo $this->Html->link('Download PDF', array('controller'=>'medications','action'=>'view', 'ext'=> 'pdf', $medication['MedicationOriginal']['id']),
-                                              array('class' => 'btn btn-primary btn-block mapop', 'title'=>'Download PDF',
-                                              'data-content' => 'Download the pdf version of the report',));
-              ?>
-              <hr>
+            <?php
+            echo $this->Html->link(
+              'Download PDF',
+              array('controller' => 'medications', 'action' => 'view', 'ext' => 'pdf', $medication['MedicationOriginal']['id']),
+              array(
+                'class' => 'btn btn-primary btn-block mapop', 'title' => 'Download PDF',
+                'data-content' => 'Download the pdf version of the report',
+              )
+            );
+            ?>
+            <hr>
 
           </div>
         </div>
       </div>
     <?php } ?>
-      <div class="tab-pane active" id="formview">
-        <div class="row-fluid">     
-          <div class="span10">
-              <?php echo $this->element('medication/medication_view');?>
-          </div>
-          <div class="span2">
-              <?php
-                      echo $this->Html->link('Download PDF', array('controller'=>'medications','action'=>'view', 'ext'=> 'pdf', $medication['Medication']['id']),
-                                              array('class' => 'btn btn-primary btn-block mapop', 'title'=>'Download PDF',
-                                              'data-content' => 'Download the pdf version of the report',));
-              ?>
-              <hr>
+    <div class="tab-pane active" id="formview">
+      <div class="row-fluid">
+        <div class="span10">
+          <?php echo $this->element('medication/medication_view'); ?>
+        </div>
+        <div class="span2">
+          <?php
+          echo $this->Html->link(
+            'Download PDF',
+            array('controller' => 'medications', 'action' => 'view', 'ext' => 'pdf', $medication['Medication']['id']),
+            array(
+              'class' => 'btn btn-primary btn-block mapop', 'title' => 'Download PDF',
+              'data-content' => 'Download the pdf version of the report',
+            )
+          );
+          ?>
+          <hr>
 
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="external_report_comments">
+      <!-- 12600 Letters debat -->
+      <div class="amend-form">
+        <h5 class="text-info"><u>FEEDBACK</u></h5>
+        <div class="row-fluid">
+          <div class="span8">
+            <?php
+            echo $this->element('comments/list', ['comments' => ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['ExternalComment'] : $medication['ExternalComment'])]);
+            ?>
+          </div>
+          <div class="span4 lefty">
+            <?php
+            $oid = ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['id'] : $medication['Medication']['id']);
+            echo $this->element('comments/add', [
+              'model' => [
+                'model_id' => $oid,
+                'foreign_key' => $oid,
+                'model' => 'Medication',
+                'category' => 'external',
+                'url' => 'report_feedback',
+                'review' => false,
+              ]
+            ])
+            ?>
           </div>
         </div>
       </div>
-      <div class="tab-pane" id="external_report_comments">
-        <!-- 12600 Letters debat -->
-        <div class="amend-form">
-            <h5 class="text-info"><u>FEEDBACK</u></h5>
-            <div class="row-fluid">
-              <div class="span8">    
-                  <?php                       
-                    echo $this->element('comments/list', ['comments' => ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['ExternalComment'] : $medication['ExternalComment'])]);
-                  ?> 
-                </div>
-                <div class="span4 lefty">
-                <?php 
-                    $oid = ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['id'] : $medication['Medication']['id']);
-                    echo $this->element('comments/add', [
-                                 'model' => ['model_id' => $oid, 'foreign_key' => $oid,   
-                                             'model' => 'Medication', 'category' => 'external', 'url' => 'report_feedback']]) 
-                ?>
-                </div>
-            </div>
+    </div>
+    <div class="tab-pane" id="committee-review">
+      <!-- 12600 Letters debat -->
+      <div class="amend-form">
+        <h5 class="text-info"><u>COMMITTEE REVIEW</u></h5>
+        <div class="row-fluid">
+          <div class="span8">
+            <?php
+            echo $this->element('comments/index', ['comments' => ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['ReviewComment'] : $medication['ReviewComment'])]);
+            ?>
+          </div>
+          <div class="span4 lefty">
+            <?php
+            $oid = ((isset($medication['MedicationOriginal']['id']) && !empty($medication['MedicationOriginal']['id'])) ? $medication['MedicationOriginal']['id'] : $medication['Medication']['id']);
+            echo $this->element('comments/add', [
+              'model' => [
+                'model_id' => $oid,
+                'foreign_key' => $oid,
+                'model' => 'Medication',
+                'category' => 'review',
+                'url' => 'report_feedback',
+                'review' => true,
+              ]
+            ])
+            ?>
+          </div>
         </div>
+      </div>
+    </div>
+    <div class="tab-pane" id="assign_manager">
+
+      <div class="amend-form">
+        <?php
+
+        if (!empty($medication['Medication']['assigned_to'])) { ?>
+          <h5 class="text-info"><u>Report Assigned to</u></h5>
+          <div class="row-fluid">
+            <div class="span4 center">
+              <h6>1. <?= $managers[$medication['Medication']['assigned_to']]; ?> </h6>
+              <span><?php
+                    echo $this->Html->link(
+                      'Unassign Report',
+                      array('controller' => 'medications', 'action' => 'unassign', $medication['Medication']['id']),
+                      array(
+                        'class' => 'btn btn-primary mapop', 'title' => 'Unassign Report',
+                        'data-content' => 'Download the pdf version of the report',
+                      )
+                    ) ?></span>
+            </div>
+          <?php
+        } else {
+          ?>
+            <h5 class="text-info"><u>Assign Report</u></h5>
+            <div class="row-fluid">
+              <div class="span4 center">
+                <?php
+                echo $this->Form->create('Medication', array(
+                  'url' => array(
+                    'controller' => 'medications',
+                    'action' => 'assign',
+
+                  ),
+                  'type' => 'file',
+                  'class' => false,
+                  'inputDefaults' => array(
+                    'div' => array('class' => 'control-group'),
+                    'label' => array('class' => 'control-label'),
+                    'between' => '<div class="controls">',
+                    'after' => '</div>',
+                    'class' => '',
+                    'format' => array('before', 'label', 'between', 'input', 'after', 'error'),
+                    'error' => array('attributes' => array('class' => 'controls help-block')),
+                  ),
+                ));
+                ?>
+                <?php
+                echo $this->Form->input('assigned_by', ['type' => 'hidden', 'value' => $this->Session->read('Auth.User.id')]);
+                echo $this->Form->input('report_id', ['type' => 'hidden', 'value' => $medication['Medication']['id']]);
+                echo $this->Form->input('assigned_to', ['label' => array('class' => 'required'), 'options' => $managers]);
+                echo $this->Form->input('content', ['label' => array('class' => 'required', 'text' => 'Reminder Note'), 'type' => 'textarea']);
+                ?>
+                <div class="form-group">
+                  <div class="span12">
+                    <button type="submit" class="btn btn-success active"><i class="fa fa-save" aria-hidden="true"></i> Assign</button>
+                  </div>
+                </div>
+                <?php echo $this->Form->end() ?>
+
+              </div>
+            </div>
+          <?php
+        }
+          ?>
+
+          </div>
+
       </div>
     </div>
 </section>

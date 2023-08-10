@@ -7,7 +7,7 @@
 
 				<table style="width: 100%;">
 					<tr>
-						<td><p><b>(FOM20/MIP/PMS/SOP/001)</b></p></td>
+						<td><p><b>(FOM20/HPT/VMS/SOP/001)</b></p></td>
 					</tr>
 					<tr>
 						<td style="text-align: center;">
@@ -15,7 +15,7 @@
 		                    <h5>MINISTRY OF HEALTH</h5>
 		                    <h5>PHARMACY AND POISONS BOARD</h5>
 		                    <h5>P.O. Box 27663-00506 NAIROBI</h5>
-		                    <h5>Tel: +254 709 770 100/+254 709 770 xxx (Replace xxx with extension)</h5>
+		                    <h5>Tel: +254795743049</h5>
 		                    <h5><b>Email:</b> pv@pharmacyboardkenya.org</h5>
 		                    <h5 style="color: red;">ADVERSE TRANSFUSION REACTION FORM </h5>
 		                    </div>
@@ -32,7 +32,7 @@
 				<hr>
 
 
-				<table style="width: 100%;">
+				<table style='width: 100%;'>
 					<tr>
 						<td colspan="4"><h4 style="text-align: center; color: #884805;">PATIENT INFORMATION</h4> </td>
 					</tr>
@@ -112,7 +112,7 @@
 						<td style="width: 25%;"><strong><?php echo $transfusion['Transfusion']['previous_reactions'] ?>	</strong></td>
 					</tr>
 					<tr>
-						<td style="width: 25%;"> Current Medications</td>
+						<td style="width: 25%;"> Current Medication</td>
 						<td style="width: 25%;"><strong><?php echo $transfusion['Transfusion']['current_medications'] ?>	</strong></td>
 						<td style="width: 25%;"> </td>
 						<td style="width: 25%;"><strong><?php echo $transfusion['Transfusion']['reaction_comment'] ?>	</strong></td>
@@ -273,13 +273,13 @@
 					<tr>
 						<td colspan="4"> 
 							<h5>Specimens required by the laboratory </h5>
-		                    <ol>
-		                        <li>10mls post-transfusion whole blood from patient from plain bottle </li>
-		                        <li>2mls of blood in EDTA bottle </li>
-		                        <li>10mls First Void Urine </li>
-		                        <li>The blood that reacted together with the attached transfusion set </li>
-		                        <li>All empty blood bags of already transfused unit </li>
-		                    </ol>
+							<p> <?php echo ($transfusion['Transfusion']['specimens_post_transfusion']   ? $ichecked : $nchecked ); ?> 10mls post-transfusion whole blood from patient from plain bottle </p>
+							<p> <?php echo ($transfusion['Transfusion']['specimens_edta_blood']   ? $ichecked : $nchecked ); ?> 2mls of blood in EDTA bottle </p>
+							<p> <?php echo ($transfusion['Transfusion']['specimens_void_urine']   ? $ichecked : $nchecked ); ?> 10mls First Void Urine </p>
+							<p> <?php echo ($transfusion['Transfusion']['specimens_blood_reacted']   ? $ichecked : $nchecked ); ?> The blood that reacted together with the attached transfusion set  </p>
+							<p> <?php echo ($transfusion['Transfusion']['specimens_blood_bags']   ? $ichecked : $nchecked ); ?> All empty blood bags of already transfused unit </p>
+						
+		                   
                      	</td>
 					</tr>					
 				</table>
@@ -410,7 +410,7 @@
 					</tr>
 					<tr>
 						<td colspan="2"><h5>In case of blood group O transfused to A or B or AB individual: Establish from the donor unit </h5> </td>				
-						<td style="width: 25%;"> Was the adverse reaction related to transfusion? </td>
+						<td style="width: 25%;"> Was the medicine side effects related to transfusion? </td>
 						<td style="width: 25%;"><strong><?php echo $transfusion['Transfusion']['adverse_reaction'] ?>	</strong></td>
 					</tr>
 					<tr>

@@ -20,9 +20,9 @@
                 <thead>
                   <tr>
                     <th colspan="2" style="width: 15%"> <label class="required">INN/Generic Name</label></th>
-                    <th> <label>Brand Name</label></th>
-                    <th> <label>Batch/ Lot No.</label></th>
-                    <th> <label>Manufacturer</label></th>
+                    <th> <label>Brand Name<span style="color:red;">*</span></label></th>
+                    <th> <label>Batch/ Lot No. <span style="color:red;">*</span></label></th>
+                    <th> <label>Manufacturer <span style="color:red;">*</span></label></th>
                     <th colspan="2" style="width: 13%;">
                       <label class="required">DOSE <span style="color:red;">*</span></label>
                     </th>
@@ -109,6 +109,17 @@
                               'error' => array('attributes' => array( 'class' => 'help-block')),
                           ));
                         ?>
+                        	<?php echo $this->Form->label('SadrListOfMedicine.'. $i . '.frequency_other', 'If Other specify', ['class' => 'small-label']) ?>
+								<?php echo $this->Form->input('SadrListOfMedicine.'. $i . '.frequency_other', [
+									'empty' => true,
+									'label' => false,
+									'between' => false,
+									'after' => false,
+									'class' => 'span12 autosave-ignore other',
+									'type' => 'text',
+									'id' => 'SadrListOfMedicine0FrequencyIdOther',
+									'error' => ['attributes' => ['class' => 'help-block']],
+								]) ?>
                     </td> 
                     <td><?php 
                         echo $this->Form->input('SadrListOfMedicine.'.$i.'.start_date', array(

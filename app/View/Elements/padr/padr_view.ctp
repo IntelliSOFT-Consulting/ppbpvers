@@ -110,11 +110,10 @@ $nchecked = "&#x2610;";
                             <p> <?php echo ($padr['Padr']['sadr_urination']   ? $ichecked : $nchecked); ?> Abnormal changes with urination </p>
                             <p> <?php echo ($padr['Padr']['sadr_eyes']   ? $ichecked : $nchecked); ?> Red, painful eyes </p>
                             <p> <?php echo ($padr['Padr']['sadr_died']   ? $ichecked : $nchecked); ?> Patient died </p>
-
-                        </td>
-                        <td style="width: 30%;">
-                            Other side effects experienced:
-                            <br><strong><?php echo $padr['Padr']['description_of_reaction'] ?></strong>
+                            <p>
+                                Other side effects experienced:
+                                <br><strong><?php echo $padr['Padr']['description_of_reaction'] ?></strong>
+                            </p>
                         </td>
                         <td>
                             When did the reaction start?
@@ -126,7 +125,7 @@ $nchecked = "&#x2610;";
                                     if (isset($rod['year'])) $dor .= $rod['year'];
                                     echo $dor;
                                     ?></strong>
-                            <br>Is the reaction still on?
+                            Is the reaction still on?
                             <strong><?php echo $padr['Padr']['reaction_on'] ?></strong>
                             <br> When did the reaction stop?
                             <strong><?php
@@ -201,6 +200,43 @@ $nchecked = "&#x2610;";
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
+                </table>
+                <hr>
+                <div style="background-color: lightblue;">
+                    <h5 style="text-align: center; text-decoration: underline;">OUTCOME DETAILS</h5>
+                </div>
+                <table style="width: 100%;">
+                    <tr>
+                        <td style="width: 20%;"><strong>Outcome:</strong></td>
+                        <td style="width: 30%;">
+                            <?php
+                            $outcome = $padr['Padr']['outcome'];
+                            if ($outcome == 'recovered/resolved') {
+                                echo 'Recovered/resolved';
+                            } elseif ($outcome == 'recovering/resolving') {
+                                echo 'Recovering/resolving';
+                            } elseif ($outcome == 'recovered/resolved with sequelae') {
+                                echo 'Recovered/resolved with sequelae';
+                            } elseif ($outcome == 'not recovered/not resolved') {
+                                echo 'Not recovered/not resolved';
+                            } elseif ($outcome == 'fatal') {
+                                echo 'Fatal';
+                            } elseif ($outcome == 'unknown') {
+                                echo 'Unknown';
+                            }
+                            ?> </td>
+                        <td style="width: 30%;"></td>
+                        <td style="width: 25%;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%;"><strong>Consent Given:</strong></td>
+                        <td style="width: 30%;">
+                            <?php
+                           echo $outcome = $padr['Padr']['consent'];
+                           ?> </td>
+                        <td style="width: 30%;"></td>
+                        <td style="width: 25%;"></td>
+                    </tr>
                 </table>
                 <hr>
 
