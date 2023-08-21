@@ -27,7 +27,7 @@ class SadrsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('yellowcard', 'guest_add', 'guest_edit', 'manager_check_missing');
+        $this->Auth->allow('yellowcard', 'guest_add', 'guest_edit', 'manager_check_missing', 'manager_assign_reference');
     }
     public function manager_check_missing()
     {
@@ -45,7 +45,31 @@ class SadrsController extends AppController
             exit;
         }
     }
-
+    public function manager_assign_reference($id = null)
+    {
+        $this->Sadr->id = $id;
+        if (!$this->Sadr->exists()) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+        $sadr = $this->Sadr->read(null, $id);
+        $count = $this->Sadr->find('count',  array(
+            'fields' => 'Sadr.reference_no',
+            'conditions' => array(
+                'Sadr.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Sadr.reference_no !=' => 'new'
+            )
+        ));
+        $count++;
+        $count = ($count < 10) ? "0$count" : $count;
+        $reference = 'SADR/' . date('Y') . '/' . $count;
+        // debug($reference);
+        // exit;
+        if (!empty($sadr['Sadr']['reference_no']) && $sadr['Sadr']['reference_no'] == 'new') {
+            $this->Sadr->saveField('reference_no', $reference);
+        }
+        $sadr = $this->Sadr->read(null, $id);
+        debug($sadr);
+        exit;
+    }
     public function generate_inner_reference()
     {
         # code...
@@ -384,6 +408,7 @@ class SadrsController extends AppController
         $this->general_viewer($id);
     }
 
+
     public function general_viewer($id = null)
     {
         # code...
@@ -708,6 +733,21 @@ class SadrsController extends AppController
 
         return $reference;
     }
+    public function assign_reference($id)
+    {
+        $this->Sadr->id = $id;
+        if (!$this->Sadr->exists()) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+
+        $reference = $this->generateReferenceNumber();
+        debug($reference);
+        exit;
+        $this->Sadr->saveField('reference_no', $reference);
+        $sadr = $this->Sadr->read(null, $id);
+        debug($sadr);
+        exit;
+    }
 
     public function reporter_edit($id = null)
     {
@@ -736,7 +776,16 @@ class SadrsController extends AppController
                     //lucian
                     // if(empty($sadr->reference_no)) {
                     if (!empty($sadr['Sadr']['reference_no']) && $sadr['Sadr']['reference_no'] == 'new') {
-                        $reference = $this->generateReferenceNumber();
+                        // $reference = $this->generateReferenceNumber();
+                        $count = $this->Sadr->find('count',  array(
+                            'fields' => 'Sadr.reference_no',
+                            'conditions' => array(
+                                'Sadr.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Sadr.reference_no !=' => 'new'
+                            )
+                        ));
+                        $count++;
+                        $count = ($count < 10) ? "0$count" : $count;
+                        $reference = 'SADR/' . date('Y') . '/' . $count;
                         $this->Sadr->saveField('reference_no', $reference);
                     }
                     //bokelo

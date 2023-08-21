@@ -22,7 +22,33 @@ class PqmpsController extends AppController
     public function beforeFilter()
     {
         parent::beforeFilter();
-        $this->Auth->allow('guest_add','guest_edit');
+        $this->Auth->allow('guest_add','guest_edit','manager_assign_reference');
+    }
+
+    public function manager_assign_reference($id = null)
+    {
+        $this->Pqmp->id = $id;
+        if (!$this->Pqmp->exists()) {
+            throw new NotFoundException(__('Invalid Pqmp'));
+        }
+        $Pqmp = $this->Pqmp->read(null, $id);
+        $count = $this->Pqmp->find('count',  array(
+            'fields' => 'Pqmp.reference_no',
+            'conditions' => array(
+                'Pqmp.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Pqmp.reference_no !=' => 'new'
+            )
+        ));
+        $count++;
+        $count = ($count < 10) ? "0$count" : $count;
+        $reference = 'PQHPT/' . date('Y') . '/' . $count;
+        // debug($reference);
+        // exit;
+        if (!empty($Pqmp['Pqmp']['reference_no']) && $Pqmp['Pqmp']['reference_no'] == 'new') {
+            $this->Pqmp->saveField('reference_no', $reference);
+        }
+        $Pqmp = $this->Pqmp->read(null, $id);
+        debug($Pqmp);
+        exit;
     }
 
     public function blackhole($type) {
@@ -565,7 +591,16 @@ class PqmpsController extends AppController
                     if (!empty($pqmp['Pqmp']['reference_no']) && $pqmp['Pqmp']['reference_no'] == 'new') {
 
                         //call a function to generate the reference number
-                        $reference = $this->generateReferenceNumber();
+                        
+                        $count = $this->Pqmp->find('count',  array(
+                            'fields' => 'Pqmp.reference_no',
+                            'conditions' => array(
+                                'Pqmp.created BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Pqmp.reference_no !=' => 'new'
+                            )
+                        ));
+                        $count++;
+                        $count = ($count < 10) ? "0$count" : $count;
+                        $reference = 'PQHPT/' . date('Y') . '/' . $count;
                         $this->Pqmp->saveField('reference_no', $reference);
                     }
                     //bokelo

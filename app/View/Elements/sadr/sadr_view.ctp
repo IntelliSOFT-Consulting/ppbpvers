@@ -195,7 +195,7 @@
 								<td><?php echo $i++;?>  &nbsp; <?php echo $sadrListOfDrug['drug_name'];?></td>
 								<td><?php echo $sadrListOfDrug['brand_name'];?></td>
 								<td><?php echo $sadrListOfDrug['batch_no'];?></td>
-								<td><?php echo $sadrListOfDrug['manufacturer'];?></td>
+								<td><?php echo $sadrListOfDrug['manufacturer'];?></td> 
 								<td><?php echo $sadrListOfDrug['dose'];
 										  if(!empty($sadrListOfDrug['Dose']['name'])) echo ' - '.$sadrListOfDrug['Dose']['name'];?></td>
 								<td style="width: 10%;"><?php if(!empty($sadrListOfDrug['Route']['name'])) echo $sadrListOfDrug['Route']['name'];?></td>
