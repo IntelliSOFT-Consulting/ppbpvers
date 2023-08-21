@@ -6,6 +6,7 @@
 /app/Config/email.php
 /app/webroot/media/
 /app/webroot/files/
+/app/vendor/
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /build
