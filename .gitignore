@@ -8,6 +8,7 @@
 /app/webroot/
 /app/Plugin/
 /app/Vendor/
+/app/Controller/Component/Auth/
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /build
