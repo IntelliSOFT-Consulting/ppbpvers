@@ -1,5 +1,10 @@
 <?php
+<<<<<<< HEAD
  
+=======
+
+use function PHPSTORM_META\type;
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 
 $this->assign('Poor-Quality Health Products and Technologies', 'active');
 ?>

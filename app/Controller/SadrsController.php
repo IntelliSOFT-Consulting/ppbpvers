@@ -70,6 +70,7 @@ class SadrsController extends AppController
         debug($sadr);
         exit;
     }
+   
     public function generate_inner_reference()
     {
         # code...
@@ -407,7 +408,6 @@ class SadrsController extends AppController
         }
         $this->general_viewer($id);
     }
-
 
     public function general_viewer($id = null)
     {
@@ -776,7 +776,7 @@ class SadrsController extends AppController
                     //lucian
                     // if(empty($sadr->reference_no)) {
                     if (!empty($sadr['Sadr']['reference_no']) && $sadr['Sadr']['reference_no'] == 'new') {
-                        // $reference = $this->generateReferenceNumber();
+                         
                         $count = $this->Sadr->find('count',  array(
                             'fields' => 'Sadr.reference_no',
                             'conditions' => array(

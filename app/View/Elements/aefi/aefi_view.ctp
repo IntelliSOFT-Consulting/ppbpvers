@@ -5,6 +5,7 @@
 <div id="printAreade">
 				<div class="formbacka">
 
+<<<<<<< HEAD
 				<table style="width: 100%;">
 					<tr>
 						<td>
@@ -24,6 +25,27 @@
 					</td>
 					</tr>
 				</table><br>
+=======
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<?php
+					echo ($this->Html->image('header-object.png', array('alt' => 'Adverse Event Following Immunization', 'fullBase' => true)));
+					?>
+				</td>
+				<td style="text-align: center;">
+					<h2>MINISTRY OF HEALTH</h2>
+					<p class="lead">UNIT OF VACCINES AND IMMUNIZATION SERVICES</p>
+					<h3>Adverse Event Following Immunization Reporting Form</h3>
+				</td>
+				<td>
+					<?php
+					echo $this->Html->image('med-blue.png', array('alt' => 'MED', 'fullBase' => true));
+					?>
+				</td>
+			</tr>
+		</table><br>
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 
 				<table style="width: 100%;">
 					<tr>
@@ -107,6 +129,7 @@
 				</table>
 				 <hr>
 
+<<<<<<< HEAD
 				<table style="width: 100%;">
 					<tr>
 						<td colspan="4"><h5 style="text-align: center; color: #884805;">TYPE OF Adverse Event Following Immunization</h5> </td>
@@ -137,10 +160,45 @@
 								<tr>
 									<td style="width: 50%;">TIME </td>
 									<td><strong>
+=======
+		<table style="width: 100%;">
+			<tr>
+				<td colspan="4">
+					<h5 style="text-align: center; color: #884805;">TYPE OF Adverse Event Following Immunization</h5>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 5%;"></td>
+				<td style="width: 30%;">
+					<p> <?php echo ($aefi['Aefi']['bcg']   ? $ichecked : $nchecked); ?> BCG Lymphadenitis </p>
+					<p> <?php echo ($aefi['Aefi']['convulsion']   ? $ichecked : $nchecked); ?> Convulsion </p>
+					<p> <?php echo ($aefi['Aefi']['urticaria']   ? $ichecked : $nchecked); ?> Generalized urticaria (hives) </p>
+					<p> <?php echo ($aefi['Aefi']['high_fever']   ? $ichecked : $nchecked); ?> High Fever </p>
+					<p> <?php echo ($aefi['Aefi']['abscess']   ? $ichecked : $nchecked); ?> Injection site abscess </p>
+					<p> <?php echo ($aefi['Aefi']['local_reaction']   ? $ichecked : $nchecked); ?> Severe Local Reaction </p>
+					<p> <?php echo ($aefi['Aefi']['anaphylaxis']   ? $ichecked : $nchecked); ?> Anaphylaxis </p>
+					<p> <?php echo ($aefi['Aefi']['meningitis']   ? $ichecked : $nchecked); ?> Encephalopathy, Encephalitis/Meningitis </p>
+					<p> <?php echo ($aefi['Aefi']['paralysis']   ? $ichecked : $nchecked); ?> Paralysis </p>
+					<p> <?php echo ($aefi['Aefi']['toxic_shock']   ? $ichecked : $nchecked); ?> Toxic shock </p>
+					<p> <?php echo ($aefi['Aefi']['complaint_other']   ? $ichecked : $nchecked); ?> Other </p>
+					<p> <?php echo $aefi['Aefi']['complaint_other_specify']; ?> </p>
+				</td>
+				<td style="width: 30%">
+					<table>
+						<tbody>
+							<tr>
+								<td style="width: 50%;">DATE Adverse Event Following Immunization STARTED </td>
+								<td><strong><?php echo $aefi['Aefi']['date_aefi_started'] ?> </strong></td>
+							</tr>
+							<tr>
+								<td style="width: 50%;">TIME </td>
+								<td><strong>
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 										<?php
 											if(isset($aefi['Aefi']['time_aefi_started']['hour'])) echo $aefi['Aefi']['time_aefi_started']['hour'].':';
 											if(isset($aefi['Aefi']['time_aefi_started']['min'])) echo $aefi['Aefi']['time_aefi_started']['min'];
 										?></strong>
+<<<<<<< HEAD
 									</td>
 								</tr>
 								<tr>
@@ -210,6 +268,31 @@
 	                  </tr>
 	                
 	                <?php endforeach; ?>
+=======
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									Describe Adverse Event Following Immunization (Signs & Symptoms) <br>
+									<strong><?php echo $aefi['Aefi']['aefi_symptoms'] ?> </strong><br>
+									<?php
+									foreach ($aefi['AefiDescription'] as $aefiDescription) :
+										echo $aefiDescription['description'] . "<br>";
+									endforeach; ?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+				<td style="width: 35%; vertical-align: top;">
+					<p><strong>Brief details on the event</strong></p>
+					<strong><?php echo $aefi['Aefi']['description_of_reaction'] ?> </strong>
+				</td>
+			</tr>
+
+			<?php // endforeach; 
+			?>
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 
 	                </tbody>
           		</table>
@@ -239,6 +322,7 @@
 				 <hr>
 
 
+<<<<<<< HEAD
 				<table style="width: 100%;">
 					<tr>
 						<td colspan="2"><p style="text-align: center;">Action Taken:</p></td>
@@ -252,6 +336,25 @@
 					</tr>
 				</table>
 				 <hr>
+=======
+		<table style="width: 100%;">
+			<tr>
+				<td colspan="2">
+					<p style="text-align: center;">Action Taken:</p>
+				</td>
+				<td colspan="2">
+					<p style="text-align: center;">Adverse Event Following Immunization Outcome:</p>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 25%;">Treatment given</td>
+				<td style="width: 25%;"><strong><?php echo $aefi['Aefi']['treatment_given'] ?></strong></td>
+				<td style="width: 25%;"> </td>
+				<td style="width: 25%;"><strong><?php echo $aefi['Aefi']['outcome'] ?> </strong></td>
+			</tr>
+		</table>
+		<hr>
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 
 				<?php if (count($aefi['Attachment']) > 0) { ?>
 				<table  class="change_order_items" style="width: 100%;">

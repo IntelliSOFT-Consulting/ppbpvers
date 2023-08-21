@@ -5,8 +5,15 @@
 /app/Config/bootstrap.php
 /app/Config/email.php
 /app/webroot/media/
+<<<<<<< HEAD
 /app/webroot/files/
 /app/vendor/
+=======
+/app/webroot/
+/app/Plugin/
+/app/Vendor/
+/app/Controller/Component/Auth/
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /build

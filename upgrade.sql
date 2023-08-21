@@ -59,7 +59,10 @@ ALTER TABLE `pqmps` ADD `reaction_comments` TEXT NULL DEFAULT NULL AFTER `advers
 
 
 
+<<<<<<< HEAD
 ALTER TABLE `devices`  ADD `deleted` TINYINT(1) NULL DEFAULT '0';
 ALTER TABLE `pqmps`  ADD `deleted` TINYINT(1) NULL DEFAULT '0';
 ALTER TABLE `medications`  ADD `deleted` TINYINT(1) NULL DEFAULT '0';
 ALTER TABLE `transfusions`  ADD `deleted` TINYINT(1) NULL DEFAULT '0';
+=======
+>>>>>>> f0fc79215f1357c5a0b6c9148f8d23f94db21515
