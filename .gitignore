@@ -5,6 +5,8 @@
 /app/Config/bootstrap.php
 /app/Config/email.php
 /app/webroot/media/
+/app/webroot/
+/app/Plugin/
 /app/tmp
 /lib/Cake/Console/Templates/skel/tmp/
 /build
