@@ -127,6 +127,15 @@ $nchecked = "&#x2610;";
                                     ?></strong>
                             Is the reaction still on?
                             <strong><?php echo $padr['Padr']['reaction_on'] ?></strong>
+                            <br> When did the reaction stop?
+                            <strong><?php
+                                    $rod = $padr['Padr']['date_of_end_of_reaction'];
+                                    $dor = '';
+                                    if (isset($rod['day'])) $dor .= $rod['day'] . '-';
+                                    if (isset($rod['month'])) $dor .= $rod['month'] . '-';
+                                    if (isset($rod['year'])) $dor .= $rod['year'];
+                                    echo $dor;
+                                    ?></strong>
                         </td>
                     </tr>
                 </table>
@@ -199,13 +208,6 @@ $nchecked = "&#x2610;";
                 <table style="width: 100%;">
                     <tr>
                         <td style="width: 20%;"><strong>Outcome:</strong></td>
-
-                        <!-- display the equivalent for  'recovered/resolved' => 'Recovered/resolved',
-                    'recovering/resolving' => 'Recovering/resolving',
-                    'recovered/resolved with sequelae' => 'Recovered/resolved with sequelae',
-                    'not recovered/not resolved' => 'Not recovered/not resolved',
-                    'fatal' => 'Fatal',
-                    'unknown' => 'Unknown', -->
                         <td style="width: 30%;">
                             <?php
                             $outcome = $padr['Padr']['outcome'];
@@ -223,6 +225,15 @@ $nchecked = "&#x2610;";
                                 echo 'Unknown';
                             }
                             ?> </td>
+                        <td style="width: 30%;"></td>
+                        <td style="width: 25%;"></td>
+                    </tr>
+                    <tr>
+                        <td style="width: 20%;"><strong>Consent Given:</strong></td>
+                        <td style="width: 30%;">
+                            <?php
+                           echo $outcome = $padr['Padr']['consent'];
+                           ?> </td>
                         <td style="width: 30%;"></td>
                         <td style="width: 25%;"></td>
                     </tr>

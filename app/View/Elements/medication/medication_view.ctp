@@ -30,7 +30,7 @@
 						<td style="width: 25%;"></td>
 						<td style="width: 45%;"></td>
 						<td style="width: 15%;">REPORT ID/Type: </td>
-						<td style="width: 15%;"><strong><?php echo $medication['Medication']['id'];  ?></strong></td>
+						<td style="width: 15%;"><strong><?php echo $medication['Medication']['reference_no'];  ?></strong></td>
 					</tr>
 				</table>
 				<table style="width: 100%;">
@@ -56,7 +56,7 @@
 					<tr>
 						<td style="width: 25%;">Contact/Tel No.</td>
 						<td style="width: 25%;"><strong><?php echo $medication['Medication']['institution_contact'] ?></strong></td>
-						<td style="width: 25%;">CONTACT </td>
+						<td style="width: 25%;">COUNTY </td>
 						<td style="width: 25%;"><strong><?php echo $medication['County']['county_name'] ?>	</strong></td>
 					</tr>
 				</table>

@@ -5,6 +5,7 @@
  */
     // $this->Html->script('multi/list_of_s', array('inline' => false));
   $this->Html->script('list_of_medicines', array('inline' => false));
+  $this->Html->css('sadr', false, array('inline' => false));
 ?>
     <div class="row-fluid">
       <div class="span12">
@@ -14,7 +15,7 @@
       </div>
     </div>                  
 
-    <div class="row-fluid">
+    <div class="row-fluid srollable">
         <div class="span12">
             <table id="listOfMedicinesTable"  class="table table-bordered table-condensed table-pvborder">
                 <thead>
@@ -109,6 +110,17 @@
                               'error' => array('attributes' => array( 'class' => 'help-block')),
                           ));
                         ?>
+                        	<?php echo $this->Form->label('SadrListOfMedicine.'. $i . '.frequency_other', 'If Other specify', ['class' => 'small-label']) ?>
+								<?php echo $this->Form->input('SadrListOfMedicine.'. $i . '.frequency_other', [
+									'empty' => true,
+									'label' => false,
+									'between' => false,
+									'after' => false,
+									'class' => 'span12 autosave-ignore other',
+									'type' => 'text',
+									'id' => 'SadrListOfMedicine0FrequencyIdOther',
+									'error' => ['attributes' => ['class' => 'help-block']],
+								]) ?>
                     </td> 
                     <td><?php 
                         echo $this->Form->input('SadrListOfMedicine.'.$i.'.start_date', array(

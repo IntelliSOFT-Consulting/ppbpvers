@@ -1,6 +1,7 @@
+<?= $this->Html->css('menu.css') ?>
 <div class="menu ">
 
-<ul class="nav nav-pills center-pills">
+<ul class="nav nav-pills center-pills responsive-menu">
     <li class="<?php echo $this->fetch('Dashboard') ?>">
         <?php
             echo $this->Html->link('<i class="fa fa-tachometer" aria-hidden="true"></i> Dashboard',
@@ -14,21 +15,21 @@
                 array('controller' => 'sadrs', 'action'=>'index', 'reporter' => true ), array('escape' => false ));
             ?>
      </li>             
-     <li class="<?php echo $this->fetch('AEFI') ?>">
+     <li class="<?php echo $this->fetch('Adverse Event Following Immunization') ?>">
         <?php
         if($this->Session->read('Auth.User.health_program')!="Cancer/Oncology program"){
             echo $this->Html->link('<i class="fa fa-child" aria-hidden="true"></i> AEFIs',
                 array('controller' => 'aefis', 'action'=>'index', 'reporter' => true ), array('escape' => false ));
          } ?>
      </li>
-     <li class="<?php echo $this->fetch('PQHPT') ?>">
+     <li class="<?php echo $this->fetch('Poor-Quality Health Products and Technologies') ?>">
         <?php
          if($this->Session->read('Auth.User.health_program')!="Cancer/Oncology program"){
             echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> PQHPTs',
                 array('controller' => 'pqmps', 'action'=>'index', 'reporter' => true ), array('escape' => false ));
           } ?>
      </li>
-     <li class="<?php echo $this->fetch('CE2B') ?>">
+     <li class="<?php echo $this->fetch('E2B') ?>">
         <?php
          if($this->Session->read('Auth.User.user_type')=="Market Authority"){
             echo $this->Html->link('<i class="fa fa-medkit" aria-hidden="true"></i> E2Bs',

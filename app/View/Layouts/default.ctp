@@ -73,8 +73,16 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
             } else {
               echo '<li class="' . $this->fetch('Login') . '">' . $this->Html->link('<i class="fa fa-sign-in"></i> Login', array('controller' => 'users', 'action' => 'login'), array('escape' => false)) . '</li>';
               echo '<li class="' . $this->fetch('Register') . '">' . $this->Html->link('<i class="fa fa-edit"></i> Register', array('controller' => 'users', 'action' => 'register'), array('escape' => false)) . '</li>';
-            }
+              echo '<li class="' . $this->fetch('Guest') . '">' . $this->Html->link('<i class="fa fa-user"></i> Guest', array('controller' => 'users', 'action' => 'guest'), array('escape' => false)) . '</li>';
             ?>
+
+            
+              <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                <i class="fa fa-question-circle"></i> Guest
+              </button> -->
+            <?php }
+            ?>
+
           </ul>
           <ul class="nav">
             <li class="<?php echo $this->fetch('Home'); ?>"><a href="/"><i class="fa fa-home"></i> Home</a></li>
@@ -88,6 +96,8 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
             <li class="<?php echo $this->fetch('ContactUs'); ?>"><a href="/feedbacks/add"> <i class="fa fa-envelope-o" aria-hidden="true"></i> Contact us</a></li>
           </ul>
         </div><!--/.nav-collapse -->
+
+
       </div>
     </div>
   </div>
@@ -109,27 +119,28 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
       echo $this->Session->flash('auth');
       ?>
       <?php echo $this->fetch('content'); ?>
+
+       
     </div>
-
-    <hr>
-
   </div>
+  <hr>
+
 
   <footer id="footer" class="section footer-classic footer-<?php echo $redir; ?> context-dark bg-image"><!-- 474b35 37462d-->
     <div class="container-fluid">
 
       <div class="row-fluid">
-      <div class="span3"> 
-      </div>
+        <div class="span3">
+        </div>
         <div class="span2">
           <div class="pr-xl-4">
             <a class="brand" href="/"><img class="brand-logo-light" src="/img/doktari.png"></a>
-            <p class="uppercase"> Ensuring Safety, Quality and Efficacy of Medicines.</p>           
+            <p class="uppercase"> Ensuring Safety, Quality and Efficacy of Medicines.</p>
           </div>
         </div>
-        <div class="span2"> 
-          <dl class="contact-list" style="text-align: center;"> 
-          <dt>CONTACTS:</dt>
+        <div class="span2">
+          <dl class="contact-list" style="text-align: center;">
+            <dt>CONTACTS:</dt>
             <dd>Address:Lenana Road, Nairobi</dd>
           </dl>
           <dl class="contact-list" style="text-align: center;">
@@ -138,7 +149,7 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
             <dd><a href="mailto:#">regulatory@pharmacyboardkenya.org</a></dd>
           </dl>
           <dl class="contact-list" style="text-align: center;">
-            <dt >TEL:</dt>
+            <dt>TEL:</dt>
             <dd>+254795743049</dd>
           </dl>
         </div>
@@ -151,16 +162,25 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
             <li><a href="#">Contacts</a></li>
           </ul>
         </div>
-        <div class="span3"> 
+        <div class="span3">
+        </div>
       </div>
-      </div>
-      <hr class="dark-line"> 
+      <hr class="dark-line">
       <div class="footer_text">
-      <p class="rights"><span>&copy; </span><span class="copyright-year"><?php echo date('Y'); ?></span><span> </span><span>Pharmacy and Poisons Board</span><span>. </span><span>All Rights Reserved.</span></p>
+        <p class="rights"><span>&copy; </span><span class="copyright-year"><?php echo date('Y'); ?></span><span> </span><span>Pharmacy and Poisons Board</span><span>. </span><span>All Rights Reserved.</span></p>
       </div>
     </div>
   </footer>
 
+
+  <script>
+    $(document).ready(function() {
+      $('.modal-trigger').click(function() {
+        $('#modal').modal();
+        $('#modal').modal('open');
+      });
+    });
+  </script>
   </body>
 
 </html>

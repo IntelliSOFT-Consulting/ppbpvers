@@ -40,21 +40,20 @@ if ($this->Session->read('Auth.User.group_id') === '2') $this->Html->script('hig
     <table class="table table-condensed" style="margin-bottom: 2px;">
       <tbody>
 
-        <!-- OLD FORMAT -->
         <tr>
           <td>
             <?php
             echo $this->Form->input(
               'start_date',
               array(
-                'div' => false, 'type' => 'text', 'class' => 'input-small unauthorized_index', 'after' => '-to-',
+                'div' => false, 'type' => 'text', 'class' => 'span3 input-small unauthorized_index', 'after' => '-to-',
                 'label' => array('class' => 'required', 'text' => 'Report Dates'), 'placeHolder' => 'Start Date'
               )
             );
             echo $this->Form->input(
               'end_date',
               array(
-                'div' => false, 'type' => 'text', 'class' => 'input-small unauthorized_index',
+                'div' => false, 'type' => 'text', 'class' => 'span3 input-small unauthorized_index',
                 'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                                   <em class="accordion-toggle">clear!</em></a>',
                 'label' => false, 'placeHolder' => 'End Date'
@@ -65,57 +64,22 @@ if ($this->Session->read('Auth.User.group_id') === '2') $this->Html->script('hig
           </td>
 
           <td>
-            <?php
-            echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+            
+          <td><?php
+             
+             echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
               'class' => 'btn btn-primary', 'div' => 'control-group', 'div' => false,
               'formnovalidate' => 'formnovalidate',
               'style' => array('margin-bottom: 5px')
             ));
-            ?>
+              ?>
           </td>
         </tr>
-        <!-- END OF OLD FORMAT -->
         <tr>
-          <!-- Report by Title -->
-          <td>
-            <?php
-            echo $this->Form->input(
-              'report_title',
-              array(
-                'div' => false, 'type' => 'text', 'class' => 'span4 unauthorized_index',
-                'label' => array('class' => 'required', 'text' => 'Report Title'), 'placeHolder' => 'Report Title'
-                // add clear button to clear the input field
-
-              )
-            );
-            // county dropdown 
-            echo $this->Form->input(
-              'county_id',
-              //select by simple click
-              array(
-                'div' => false, 'type' => 'select', 'class' => 'span4 unauthorized_index',
-                // add a id to the select element
-                'id' => 'county_id', 
-                // 'multiple' => 'multiple',
-                'label' => array('class' => 'required', 'text' => 'County'), 'empty' => true,
-                'options' => $counties, 'default' => $this->Session->read('Auth.User.county_id')
-              
-              // array(
-              //   'div' => true,
-              //   'type' => 'select', 
-              //   'multiple' => 'multiple',
-              //   'class' => 'span4 unauthorized_index',
-              //   'label' => array('class' => 'required', 'text' => 'County'), 'options' => $counties 
-              //   //popup to select multiple counties
-
-
-              )
-            );
-
-
-            ?>
-          </td>
+          
+            
         </tr>
+        
       </tbody>
     </table>
     <?php echo $this->Form->end(); ?>
@@ -144,11 +108,10 @@ if ($this->Session->read('Auth.User.group_id') === '2') $this->Html->script('hig
       ?>
     </div>
   <?php } ?>
-</div> 
-  
-<!-- JavaScript Bundle with Popper --> 
+</div>
+
+<!-- JavaScript Bundle with Popper -->
 <script type="text/javascript">
-  
   $(function() {
     var adates = $('#ReportStartDate, #ReportEndDate').datepicker({
       minDate: "-100Y",

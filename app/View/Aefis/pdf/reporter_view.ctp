@@ -17,7 +17,9 @@
 			<div class="row-fluid" id="abonokode">
 			<div class="span12">
 
-				<?php echo $this->element('aefi/aefi_view');?>
+				<?php 
+				echo $this->element('aefi/download');
+				?>
 				
 			</div>
 			</div>

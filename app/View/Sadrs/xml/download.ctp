@@ -193,13 +193,15 @@
                 <patientautopsyyesno/>
             </patientdeath>
             <reaction>
-                <primarysourcereaction><?php echo $sadr['Sadr']['description_of_reaction']; ?></primarysourcereaction>
+                <primarysourcereaction><?php echo $sadr['Sadr']['reaction']; ?></primarysourcereaction>
                 <reactionmeddraversionllt>23.0</reactionmeddraversionllt>
-                <reactionmeddrallt><?php echo $sadr['Sadr']['report_title']; ?></reactionmeddrallt>
+                <reactionmeddrallt><?php echo $sadr['Sadr']['medra']; ?></reactionmeddrallt>
                 <reactionmeddraversionpt></reactionmeddraversionpt>
                 <reactionmeddrapt></reactionmeddrapt>
                 <termhighlighted/>
-                <reactionstartdateformat><?php
+                <reactionstartdateformat>
+                    
+                    <?php
 					$onsetf = 102;
 					if (empty($sadr['Sadr']['date_of_onset_of_reaction']['day']) && empty($sadr['Sadr']['date_of_onset_of_reaction']['month'])) {
 						$onsetf = 602;
@@ -228,9 +230,7 @@
 								'recovered/resolved'=>1,
 								'recovering/resolving' => 2,
 								'recovered/resolved with sequelae' => 3,
-								'not recovered/not resolved' => 4,
-								// 'fatal - unrelated to reaction' => 8,
-								// 'fatal - reaction may be contributory' => 7,
+								'not recovered/not resolved' => 4, 
 								'fatal' => 5,
 								'unknown' => 6,
 							);
@@ -243,7 +243,7 @@
 					if ($sadrListOfDrug['suspected_drug'] == 1) echo 1 ;
 					else echo 2;
 				?></drugcharacterization>
-                <medicinalproduct><?php echo $sadrListOfDrug['brand_name']; ?></medicinalproduct>
+                <medicinalproduct><?php echo Sanitize::escape($sadrListOfDrug['brand_name']); ?></medicinalproduct>
                 <obtaindrugcountry/>
                 <drugbatchnumb/>
                 <drugauthorizationnumb/>

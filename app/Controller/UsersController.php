@@ -33,9 +33,62 @@ class UsersController extends AppController
         parent::beforeFilter();
         // remove initDb
         // $this->initDB();
-        $this->Auth->allow('register', 'login', 'api_register', 'api_token', 'api_forgotPassword', 'activate_account', 'forgotPassword', 'resetPassword', 'logout', 'mpublic', 'provider', 'holder');
+        $this->Auth->allow('register', 'login', 'api_auth', 'api_register', 'api_token', 'api_forgotPassword', 'activate_account', 'forgotPassword', 'resetPassword', 'logout', 'mpublic', 'provider', 'holder', 'guest');
     }
 
+    public function guest()
+    {
+        // $this->render('guest');
+    }
+    public function api_auth()
+    {
+        # code...
+        $this->RequestHandler->renderAs($this, 'json');
+        if ($this->request->is('post')) {
+            $data = $this->request->data;
+            if (!isset($data['username']) || !isset($data['password']) || empty($data['username']) || empty($data['password'])) {
+                $this->response->statusCode(400);
+                $this->set(['message' => 'Invalid request, Missing username or password', '_serialize' => ['message']]);
+                return;
+            }
+
+            // unset the request and apend new values
+
+            $this->request->data['User']['username'] = $this->request->data['username'];
+            $this->request->data['User']['password'] = $this->request->data['password'];
+            unset($this->request->data['username']);
+            unset($this->request->data['password']);
+
+            if ($this->Auth->login()) {
+                $user = $this->Auth->User();
+                $token = JWT::encode($user['id'], Configure::read('Security.salt'));
+
+                if ($user) {
+                    // only add the neccessary fields from the user 
+                    $datum = array('id' => $user['id'], 'name' => $user['name'], 'created' => $user['created']);
+                    $this->set('user', $datum);
+                    $this->set('token', $token);
+                    $this->set('_serialize', array('user', 'token'));
+                } else {
+                    $this->set([
+                        'success' => false,
+                        'data' => $this->request->data,
+                        '_serialize' => ['success', 'data']
+                    ]);
+                }
+            } else {
+                $this->response->statusCode(400);
+                $this->set(['message' => 'Invalid request, Invalid username or password', '_serialize' => ['message']]);
+                return;
+            }
+        } else {
+            $this->response->statusCode(405);
+            $this->set([
+                'error' => 'Only POST Request Allowed',
+                '_serialize' => ['error']
+            ]);
+        }
+    }
     public function mpublic()
     {
         $this->render('mpublic');
@@ -82,15 +135,15 @@ class UsersController extends AppController
                 // Check if it's the mini manager::: Check active date
                 if ($this->Auth->User('group_id') == '5') {
                     $active_date = $this->Auth->User('active_date');
-                    if (!empty($active_date)) { 
+                    if (!empty($active_date)) {
                         $today = date('Y-m-d');
                         $active_date_obj = date('Y-m-d', strtotime($active_date));
 
                         if ($active_date_obj < $today) {
                             // $active_date is earlier than today, return an error
                             $this->Session->setFlash('Your account has expired! Please contact PPB.', 'alerts/flash_error');
-                            $this->redirect($this->Auth->logout()); 
-                        } 
+                            $this->redirect($this->Auth->logout());
+                        }
                     } else {
                         // do something if $active_date is null or empty
                         $this->Session->setFlash('Your account has expired! Please contact PPB.', 'alerts/flash_error');
@@ -102,7 +155,7 @@ class UsersController extends AppController
                 if ($this->Auth->User('group_id') == '1') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'admin' => true));
                 if ($this->Auth->User('group_id') == '2') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'manager' => true));
                 if ($this->Auth->User('group_id') == '3') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'reporter' => true));
-                if ($this->Auth->User('group_id') == '4') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'partner' => true)); 
+                if ($this->Auth->User('group_id') == '4') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'partner' => true));
                 if ($this->Auth->User('group_id') == '5') $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'reviewer' => true));
             } else {
                 $this->Session->setFlash('Your username or password is incorrect.', 'alerts/flash_error');
@@ -524,8 +577,8 @@ class UsersController extends AppController
         }
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
-        $designations = $this->User->Designation->find('list',array(
-            'order'=>array('Designation.name'=>'asc')
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
         ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
@@ -578,10 +631,11 @@ class UsersController extends AppController
                 $this->QueuedTask->createJob('GenericNotification', $datum);
                 // CakeResque::enqueue('default', 'GenericEmailShell', array('sendEmail', $datum));
                 // CakeResque::enqueue('default', 'GenericNotificationShell', array('sendNotification', $datum));
+
                 //Notify Managers
                 $managers = $this->User->find('all', array(
                     'contain' => array(),
-                    'conditions' => array('group_id' => 2)
+                    'conditions' => array('group_id' => 2, 'User.is_active' => '1')
                 ));
                 foreach ($managers as $manager) {
                     $variables = array(
@@ -613,8 +667,8 @@ class UsersController extends AppController
         }
         $counties = $this->User->County->find('list', array('order' => 'County.county_name ASC'));
         $this->set(compact('counties'));
-        $designations = $this->User->Designation->find('list',array(
-            'order'=>array('Designation.name'=>'asc')
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
         ));
         $this->set(compact('designations'));
     }
@@ -653,12 +707,11 @@ class UsersController extends AppController
                 $this->loadModel('Queue.QueuedTask');
                 $this->QueuedTask->createJob('GenericEmail', $datum);
                 $this->QueuedTask->createJob('GenericNotification', $datum);
-                // CakeResque::enqueue('default', 'GenericEmailShell', array('sendEmail', $datum));
-                // CakeResque::enqueue('default', 'GenericNotificationShell', array('sendNotification', $datum));
+
                 //Notify Managers
                 $managers = $this->User->find('all', array(
                     'contain' => array(),
-                    'conditions' => array('group_id' => 2)
+                    'conditions' => array('group_id' => 2, 'User.is_active' => '1')
                 ));
                 foreach ($managers as $manager) {
                     $variables = array(
@@ -696,8 +749,8 @@ class UsersController extends AppController
         }
         $counties = $this->User->County->find('list', array('order' => 'County.county_name ASC'));
         $this->set(compact('counties'));
-        $designations = $this->User->Designation->find('list',array(
-            'order'=>array('Designation.name'=>'asc')
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
         ));
         $this->set(compact('designations'));
     }
@@ -739,27 +792,183 @@ class UsersController extends AppController
             'conditions' => array(
                 // only show SADRs that have been not been deleted 
                 'Sadr.deleted' => false,
-                'Sadr.user_id' => $this->Auth->User(
-                    'id'
-                )
+                'Sadr.user_id' => $this->Auth->User('id')
             ),
         ));
         $this->set('sadrs', $sadrs);
+        $user_id = $this->Auth->User('id');
+        $user_type = $this->Auth->User('user_type');
 
+        $conditions = array(
+            'Aefi.deleted' => false,
+            'Aefi.user_id' => $user_id
+        );
+        $conditionb = array(
+            'Sadr.deleted' => false,
+            'Sadr.user_id' => $user_id
+        );
+        $cmed = array(
+            'Medication.deleted' => false,
+            'Medication.user_id' => $user_id
+        );
+        $cpq = array(
+            'Pqmp.deleted' => false,
+            'Pqmp.user_id' => $user_id
+        );
+        $cdev = array(
+            'Device.deleted' => false,
+            'Device.user_id' => $user_id
+        );
+        $cblood = array(
+            'Transfusion.deleted' => false,
+            'Transfusion.user_id' => $user_id
+        );
         $aefis = $this->User->Aefi->find('all', array(
             'limit' => 7, 'contain' => array(),
             'fields' => array('Aefi.id', 'Aefi.user_id', 'Aefi.created', 'Aefi.submitted', 'Aefi.reference_no', 'Aefi.created', 'Aefi.serious'),
             'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
             'order' => array('Aefi.created' => 'desc'),
-            'conditions' => array(
-                // only show Reports that have been not been deleted
-                'Aefi.deleted' => false,
-                'Aefi.user_id' => $this->Auth->User(
-                    'id'
-                )
-            ),
+            'conditions' => $conditions,
+
         ));
         $this->set('aefis', $aefis);
+
+
+        if ($user_type === 'County Pharmacist') {
+            $conditions = array(
+                'Aefi.deleted' => false,
+                'Aefi.serious' => "Yes",
+                'Aefi.submitted' => 2,
+                'Aefi.county_id' => $this->Auth->User('county_id')
+            );
+            $conditionb = array(
+                'Sadr.deleted' => false,
+                'Sadr.serious' => "Yes",
+                'Sadr.submitted' => 2,
+                'Sadr.county_id' => $this->Auth->User('county_id')
+            );
+            $cmed = array(
+                'Medication.deleted' => false,
+                'Medication.submitted' => 2,
+                'Medication.county_id' => $this->Auth->User('county_id'),
+                'Medication.outcome IN' => array(
+                    "Treatment /intervention required-caused temporary harm",
+                    "Initial/prolonged hospitalization-caused temporary harm",
+                    "Caused permanent harm",
+                    "Near death event",
+                    "Death"
+                )
+            );
+            $cpq = array(
+                'Pqmp.deleted' => false,
+                'Pqmp.submitted' => 2,
+                'Pqmp.county_id' => $this->Auth->User('county_id'),
+                'OR' => array(
+                    'Pqmp.product_formulation IN' => array(
+                        "Injection",
+                        "Powder for Reconstitution of Injection",
+                        "Eye drops",
+                        "Nebuliser solution",
+                    ),
+                    'Pqmp.therapeutic_ineffectiveness' => true,
+                    'Pqmp.particulate_matter' => true
+                )
+            );
+            $cdev = array(
+                'Device.deleted' => false,
+                'Device.submitted' => 2,
+                'Device.county_id' => $this->Auth->User('county_id'),
+                'Device.serious IN' => array(
+                    "Fatal",
+                    "Serious",
+                )
+            );
+            $cblood = array(
+                'Transfusion.deleted' => false,
+                'Transfusion.submitted' => 2,
+                'Transfusion.county_id' => $this->Auth->User('county_id'),
+
+            );
+        }
+        $serious_aefis = $this->User->Aefi->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Aefi.id', 'Aefi.user_id', 'Aefi.created', 'Aefi.submitted', 'Aefi.reference_no', 'Aefi.serious'),
+            'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
+            'order' => array('Aefi.created' => 'desc'),
+            'conditions' => $conditions,
+
+        ));
+        $this->set('serious_aefis', $serious_aefis);
+        // Transfusion Serious Reports
+        $serious_trans = $this->User->Transfusion->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Transfusion.id', 'Transfusion.user_id', 'Transfusion.created', 'Transfusion.submitted', 'Transfusion.reference_no', 'Transfusion.faint'),
+            'order' => array('Transfusion.created' => 'desc'),
+            'conditions' => $cblood,
+
+        ));
+
+        $this->set('serious_trans', $serious_trans);
+        // SADR Serious Reports
+        $serious_sadr = $this->User->Sadr->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Sadr.id', 'Sadr.report_title', 'Sadr.user_id', 'Sadr.created', 'Sadr.submitted', 'Sadr.reference_no', 'Sadr.serious'),
+            'order' => array('Sadr.created' => 'desc'),
+            'conditions' => $conditionb,
+
+        ));
+
+        $this->set('serious_sadr', $serious_sadr);
+
+        /*$serious == "Treatment /intervention required-caused temporary harm" || $serious == "Initial/prolonged hospitalization-caused temporary harm" || $serious == "Caused permanent harm" || $serious == "Near death event" || $serious == "Death"    -> outcome*/
+
+        // Serious Medications 
+        $serious_med = $this->User->Medication->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Medication.id', 'Medication.user_id', 'Medication.created', 'Medication.submitted', 'Medication.reference_no', 'Medication.outcome'),
+            'order' => array('Medication.created' => 'desc'),
+            'conditions' => $cmed,
+
+        ));
+        $this->set('serious_med', $serious_med);
+        // Serious PQHPTS 
+        $serious_pqmp = $this->User->Pqmp->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Pqmp.id', 'Pqmp.user_id', 'Pqmp.created', 'Pqmp.submitted', 'Pqmp.reference_no'),
+            'order' => array('Pqmp.created' => 'desc'),
+            'conditions' => $cpq,
+
+        ));
+        $this->set('serious_pqmp', $serious_pqmp);
+        // Serious PQHPTS 
+        $serious_dev = $this->User->Device->find('all', array(
+            'limit' => 2, 'contain' => array(),
+            'fields' => array('Device.id', 'Device.user_id', 'Device.created', 'Device.submitted', 'Device.reference_no', 'Device.serious'),
+            'order' => array('Device.created' => 'desc'),
+            'conditions' => $cdev,
+
+        ));
+        $this->set('serious_dev', $serious_dev);
+
+        // SAEFIs Reports
+        $saefis = $this->User->Saefi->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Saefi.id', 'Saefi.user_id', 'Saefi.created', 'Saefi.submitted', 'Saefi.reference_no', 'Saefi.created'),
+            'contain' => array('AefiListOfVaccine', 'AefiListOfVaccine.Vaccine'),
+            'order' => array('Saefi.created' => 'desc'),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Saefi.deleted' => false,
+                'OR' => array(
+                    array('Saefi.user_id' => $this->Auth->User('id')),
+                    array('Saefi.province_id' =>  $this->Auth->User('county_id')),
+                )
+
+            ),
+        ));
+        $this->set('saefis', $saefis);
+
+
 
         $pqmps = $this->User->Pqmp->find('all', array(
             'limit' => 7, 'contain' => array(),
@@ -817,8 +1026,21 @@ class UsersController extends AppController
         ));
         $this->set('transfusions', $transfusions);
 
+        // CE2Bs
+        $ce2bs = $this->User->Ce2b->find('all', array(
+            'limit' => 7, 'contain' => array(),
+            'fields' => array('Ce2b.id', 'Ce2b.user_id', 'Ce2b.created', 'Ce2b.submitted', 'Ce2b.reference_no'),
+            'order' => array('Ce2b.created' => 'desc'),
+            'conditions' => array(
+                // only show Reports that have been not been deleted
+                'Ce2b.deleted' => false,
+                'Ce2b.user_id' => $this->Auth->User('id')
+            ),
+        ));
+        $this->set('ce2bs', $ce2bs);
+
         $this->set('notifications', $this->User->Notification->find('all', array(
-            'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 12
+            'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 6
         )));
         $this->set('messages', $this->Message->find('list', array('fields' => array('name', 'style'))));
     }
@@ -889,7 +1111,7 @@ class UsersController extends AppController
         $this->set('saes', $saes);
 
         $this->set('notifications', $this->User->Notification->find('all', array(
-            'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 12
+            'conditions' => array('Notification.user_id' => $this->Auth->User('id')), 'order' => 'Notification.created DESC', 'limit' => 6
         )));
         $this->set('messages', $this->Message->find('list', array('fields' => array('name', 'style'))));
     }
@@ -1046,7 +1268,6 @@ class UsersController extends AppController
             $this->redirect('/', null, false);
         }
         if ($this->request->is('post') || $this->request->is('put')) {
-            // $this->request->data['User']['group_id'] = 2;
             unset($this->User->validate['username']);
             unset($this->User->validate['password']);
             unset($this->User->validate['confirm_password']);
@@ -1059,8 +1280,8 @@ class UsersController extends AppController
         } else {
             $this->request->data = $this->User->read(null, $id);
         }
-        $designations = $this->User->Designation->find('list',array(
-            'order'=>array('Designation.name'=>'asc')
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
         ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
@@ -1139,8 +1360,8 @@ class UsersController extends AppController
         }
         $groups = $this->User->Group->find('list');
         $this->set(compact('groups'));
-        $designations = $this->User->Designation->find('list',array(
-            'order'=>array('Designation.name'=>'asc')
+        $designations = $this->User->Designation->find('list', array(
+            'order' => array('Designation.name' => 'asc')
         ));
         $this->set(compact('designations'));
         $counties = $this->User->County->find('list');
@@ -1201,6 +1422,7 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Users/manager_dashboard');
         $this->Acl->allow($group, 'controllers/Sadrs');
         $this->Acl->allow($group, 'controllers/Aefis');
+        $this->Acl->allow($group, 'controllers/Aefis/yellowcard');
         $this->Acl->allow($group, 'controllers/SadrFollowups');
         $this->Acl->allow($group, 'controllers/Pqmps');
         $this->Acl->allow($group, 'controllers/Devices');
@@ -1235,6 +1457,8 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Notifications');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
+        $this->Acl->allow($group, 'controllers/Khis');
 
         //Allow reporters to some
         $group->id = 3;
@@ -1304,6 +1528,7 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Pints/delete');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
         //Allow institution administrators to some
         $group->id = 4;
@@ -1336,6 +1561,7 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Notifications/delete');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
 
 
@@ -1379,6 +1605,7 @@ class UsersController extends AppController
         $this->Acl->allow($group, 'controllers/Notifications');
         $this->Acl->allow($group, 'controllers/Comments');
         $this->Acl->allow($group, 'controllers/Reports');
+        $this->Acl->allow($group, 'controllers/Saefis');
 
         echo "all done";
         exit;

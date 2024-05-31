@@ -116,8 +116,17 @@ echo $this->Session->flash();
             echo $this->Form->input(
               'drug_name',
               array(
-                'div' => false, 'placeholder' => 'drug name',
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Drug Name')
+                'div' => false, 'placeholder' => 'brand name',
+                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Brand Name')
+              )
+            );
+            ?>
+            <?php
+            echo $this->Form->input(
+              'manufacturer',
+              array(
+                'div' => false, 'placeholder' => 'manufacturer',
+                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Manufacturer')
               )
             );
             ?>
@@ -125,16 +134,29 @@ echo $this->Session->flash();
           <td>
             <?php
             echo $this->Form->input(
-              'medicine_name',
-              array('div' => false, 'placeholder' => 'drug name', 'class' => 'input-small unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Medicine Name'))
+              'inn',
+              array('div' => false, 'placeholder' => 'INN', 'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'INN'))
             );
+            //  echo $this->Form->checkbox('submitted', array('hiddenField' => false, 'label' => 'Submitted'));
+           ?>
+            <h5>Suspected Drugs?<br></h5>
+            <?php
+            echo $this->Form->input('suspected_drug', array(
+              'type' => 'checkbox', 'hiddenField' => false,
+              'label' => array('class' => '', 'text' => 'Only Suspected?')
+            ));
             ?>
+
           </td>
           <td colspan="2">
             <h5>Report on:</h5>
             <?php
-            echo $this->Form->input('report_sadr', array('label' => 'SADR', 'hiddenField' => false));
+            echo $this->Form->input('report_sadr', array('label' => 'Suspected adverse drug reaction', 'hiddenField' => false));
             echo $this->Form->input('report_therapeutic', array('label' => 'Therapeutic Ineffectiveness', 'hiddenField' => false));
+            echo $this->Form->input('report_misuse', array('label' => 'Suspected misuse, abuse and / or dependence on medicines', 'hiddenField' => false, 'type' => 'checkbox',));
+            echo $this->Form->input('report_off_label', array('label' => 'Off-label Use', 'hiddenField' => false, 'type' => 'checkbox',));
+
+
             ?>
           </td>
           <td>
@@ -245,16 +267,60 @@ echo $this->Session->flash();
         </tr>
         <tr>
           <td>
-          <h5>Report Status</h5>
+            <h5>Report Status</h5>
             <?php
-            
+
             echo $this->Form->input('submitted', array(
               'options' => array('1' => 'UnSubmitted', '2' => 'Submitted'), 'legend' => false,
               'type' => 'radio'
             ));
             ?>
           </td>
-          <td></td>  <td></td>  <td></td>  <td></td>  <td></td>  <td></td>
+          <td> <?php
+                echo $this->Form->input('health_program', array(
+                  'type' => 'select', 'options' => [
+                    'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
+                    'Neglected tropical diseases program' => 'Neglected tropical diseases program', 'MNCAH Priority Medicines' => 'MNCAH Priority Medicines', 'TB program' => 'TB program',
+                    'NASCOP program' => 'NASCOP program', 'Cancer/Oncology program' => 'Cancer/Oncology program'
+                  ], 'empty' => true,
+                  'label' => array('class' => 'control-label', 'text' => 'Public Health Program'),
+                  'class' => 'input-xlarge'
+                ));  ?>
+          </td>
+          <td><?php
+              echo $this->Form->input('device', array(
+                'type' => 'select', 'options' => [
+                  '0' => 'Web',
+                  '1' => 'Mobile',
+                ], 'empty' => true,
+                'label' => array('class' => 'control-label', 'text' => 'Sending Device'),
+                'class' => 'input-xlarge'
+              ));  ?></td>
+          <td><?php
+              echo $this->Form->input('mah', array(
+                'type' => 'select', 'options' => [
+                  '0' => 'MAH',
+                  '1' => 'Non MAH',
+                ],
+                'empty' => true,
+                'label' => array('class' => 'control-label', 'text' => 'Reporter Role'),
+                'class' => 'input-xlarge'
+              ));  ?></td>
+          <td>
+          <h5>Vigiflow status:</h5>
+            <?php
+          echo $this->Form->input('vigiflow', array(
+            'type' => 'select', 'options' => [
+              '0' => 'Uploaded',
+              '1' => 'Pending',
+            ], 'empty' => true,
+            'label' => array('class' => 'control-label', 'text' => ''),
+            'class' => 'input-xlarge'
+          ));
+           ?>
+          </td>
+          <td></td>
+          <td></td>
         </tr>
         <tr>
           <td><label for="SadrPages" class="required">Pages</label></td>
@@ -269,7 +335,7 @@ echo $this->Session->flash();
             ?>
           </td>
           <td>
-           
+
 
           </td>
           <td></td>
@@ -324,7 +390,7 @@ echo $this->Session->flash();
           <th><?php echo $this->Paginator->sort('reference_no'); ?></th>
           <th><?php echo $this->Paginator->sort('report_title'); ?></th>
           <th><?php echo ($this->Session->read('Auth.User.user_type') != 'Public Health Program') ? $this->Paginator->sort('patient_name') : $this->Paginator->sort('gender'); ?></th>
-          <?php if ($redir == 'manager'||$redir == 'reviewer') { ?><th><?php echo $this->Paginator->sort('vigiflow_ref'); ?></th> <?php } ?>
+          <?php if ($redir == 'manager' || $redir == 'reviewer') { ?><th><?php echo $this->Paginator->sort('vigiflow_ref'); ?></th> <?php } ?>
           <th><?php echo $this->Paginator->sort('reporter_date', 'Date reported'); ?></th>
           <th><?php echo $this->Paginator->sort('created', 'Date created'); ?></th>
           <th><?php echo $this->Paginator->sort('submitted_date', 'Date Submitted'); ?></th>
@@ -358,8 +424,8 @@ echo $this->Session->flash();
                 ?>&nbsp;
             </td>
             <td><?php echo ($this->Session->read('Auth.User.user_type') != 'Public Health Program') ? h($sadr['Sadr']['patient_name']) : h($sadr['Sadr']['gender']); ?>&nbsp;</td>
-            <?php if ($redir == 'manager'||$redir == 'reviewer') { ?><td><?php echo h($sadr['Sadr']['vigiflow_ref']);
-                                                    echo "\n" . $sadr['Sadr']['vigiflow_date']; ?></td> <?php } ?>
+            <?php if ($redir == 'manager' || $redir == 'reviewer') { ?><td><?php echo h($sadr['Sadr']['vigiflow_ref']);
+                                                                            echo "\n" . $sadr['Sadr']['vigiflow_date']; ?></td> <?php } ?>
             <td><?php echo h($sadr['Sadr']['reporter_date']); ?>&nbsp;</td>
             <td><?php echo h($sadr['Sadr']['created']); ?>&nbsp;</td>
             <td><?php echo h($sadr['Sadr']['submitted_date']); ?>&nbsp;</td>
@@ -374,22 +440,28 @@ echo $this->Session->flash();
                 echo "&nbsp;";
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> Followup </span>', array('controller' => 'sadrs', 'action' => 'followup', $sadr['Sadr']['id']), array('escape' => false), __('Add a followup report?'));
                 echo "&nbsp;";
-                if ($redir == 'manager'||$redir == 'reviewer') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'download', $sadr['Sadr']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
+                if ($redir == 'manager' || $redir == 'reviewer') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'download', $sadr['Sadr']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
                 echo "&nbsp;";
-                if (($redir == 'manager'||$redir == 'reviewer') && empty($sadr['Sadr']['vigiflow_ref']) && $sadr['Sadr']['copied'] == 2) echo $this->Html->link(
+                if (($redir == 'manager' || $redir == 'reviewer') && empty($sadr['Sadr']['vigiflow_ref']) && $sadr['Sadr']['copied'] == 2) echo $this->Html->link(
                   '<span class="label label-warning tooltipper" title="Send to vigiflow"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Vigiflow </span>',
                   array('controller' => 'sadrs', 'action' => 'vigiflow', $sadr['Sadr']['id'], 'manager' => false),
                   array('escape' => false)
                 );
-                echo "&nbsp;"; 
+                echo "&nbsp;";
 
-                if (($redir == 'manager'||$redir == 'reviewer') && $sadr['Sadr']['copied'] == 2) echo $this->Html->link(
+                if (($redir == 'manager' || $redir == 'reviewer') && $sadr['Sadr']['copied'] == 2) echo $this->Html->link(
                   '<span class="label label-success tooltipper" title="Copy & Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>',
                   array('controller' => 'sadrs', 'action' => 'edit', $sadr['Sadr']['id']),
                   array('escape' => false)
                 );
                 echo "&nbsp;";
-                if (($redir == 'manager'||$redir == 'reviewer') && $sadr['Sadr']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'sadrs', 'action' => 'copy', $sadr['Sadr']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                if (($redir == 'manager' || $redir == 'reviewer') && $sadr['Sadr']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'sadrs', 'action' => 'copy', $sadr['Sadr']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                echo $this->Html->link(
+                  '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
+                  array('controller' => 'sadrs', 'action' => 'archive', $sadr['Sadr']['id']),
+                  array('escape' => false),
+                  __('Are you sure you want to archive the report?')
+                );
               } else {
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program') echo $this->Html->link(
                   '<span class="label label-success tooltipper" title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>',
@@ -397,7 +469,7 @@ echo $this->Session->flash();
                   array('escape' => false)
                 );
                 echo "&nbsp;";
-                if ($redir == 'manager'||$redir == 'reviewer') echo $this->Html->link(
+                if ($redir == 'manager' || $redir == 'reviewer') echo $this->Html->link(
                   '<span class="label label-info tooltipper" title="View"><i class="fa fa-eye" aria-hidden="true"></i> View </span>',
                   array('controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id']),
                   array('escape' => false)

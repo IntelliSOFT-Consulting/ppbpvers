@@ -131,6 +131,15 @@ $this->assign('MED', 'active');
               ),
               'label' => array('class' => 'required', 'text' => 'In which process did the error occur?')
             ));
+
+            if (($this->Session->read('Auth.User.user_type') != 'Public Health Program'))  echo $this->Form->input(
+              'patient_name',
+              array(
+                'div' => false, 'placeholder' => 'Patient name',
+                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Patient Name')
+              )
+            );
+
             ?>
           </td>
           <td>
@@ -148,6 +157,16 @@ $this->assign('MED', 'active');
                 'Death' => 'Death',
               ),
               'label' => array('class' => 'required', 'text' => 'Error Outcome')
+            ));
+
+            echo $this->Form->input('submitted', array(
+              'label' => array('class' => 'required', 'text' => 'Report Status'),
+              'empty' => true,
+              'hiddenField' => false,
+              'options' => array(
+                '0' => 'Submitted',
+                '1' => 'Unsubmitted'
+              )
             ));
             ?>
           </td>
@@ -194,39 +213,30 @@ $this->assign('MED', 'active');
           </td>
         </tr>
         <tr>
+
           <td>
             <?php
-            if (($this->Session->read('Auth.User.user_type') != 'Public Health Program'))  echo $this->Form->input(
-              'patient_name',
-              array(
-                'div' => false, 'placeholder' => 'Patient name',
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Patient Name')
-              )
-            );
-            ?>
-          </td>
-          <td>
-            <?php
-            echo $this->Form->input('submitted', array(
-              'label' => array('class' => 'required', 'text' => 'Report Status'),
-              'empty' => true,
-              'hiddenField' => false,
-              'options' => array(
-                '0' => 'Submitted',
-                '1' => 'Unsubmitted'
-              )
+            echo $this->Form->input('health_program', array(
+              'type' => 'select', 'options' => [
+                'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
+                'Neglected tropical diseases program' => 'Neglected tropical diseases program', 'MNCAH Priority Medicines' => 'MNCAH Priority Medicines', 'TB program' => 'TB program',
+                'NASCOP program' => 'NASCOP program', 'Cancer/Oncology program' => 'Cancer/Oncology program'
+              ], 'empty' => true,
+              'label' => array('class' => 'control-label', 'text' => 'Public Health Program'),
+              'class' => 'input-xlarge'
             ));
             ?>
           </td>
           <td>
             <?php
-
-            ?>
-          </td>
-          <td>
-            <?php
-
-            ?>
+            echo $this->Form->input('sending_device', array(
+              'type' => 'select', 'options' => [
+                '1' => 'Web',
+                '2' => 'Mobile',
+              ], 'empty' => true,
+              'label' => array('class' => 'control-label', 'text' => 'Sending Device'),
+              'class' => 'input-xlarge'
+            ));  ?>
           </td>
           <td>
             <?php
@@ -247,6 +257,18 @@ $this->assign('MED', 'active');
             );
             ?>
           </td>
+          <td><?php
+              echo $this->Form->input('mah', array(
+                'type' => 'select',
+                'options' => [
+                  '0' => 'MAH',
+                  '1' => 'Non MAH',
+                ],
+                'empty' => true,
+                'label' => array('class' => 'control-label', 'text' => 'Reporter Role'),
+                'class' => 'input-xlarge'
+              ));
+              ?></td>
           <td>
             <h5>Gender</h5>
             <?php
@@ -343,9 +365,21 @@ $this->assign('MED', 'active');
             <td>
               <?php
               if ($medication['Medication']['submitted'] > 1) {
-                echo $this->Html->link($medication['Medication']['reference_no'], array('action' => 'view', $medication['Medication']['id']), array('escape' => false));
+                echo $this->Html->link($medication['Medication']['reference_no'], array('action' => 'view', $medication['Medication']['id']), array('escape' => false, 'class' => 'text-' . (in_array($medication['Medication']['outcome'], array(
+                    "Treatment /intervention required-caused temporary harm",
+                    "Initial/prolonged hospitalization-caused temporary harm",
+                    "Caused permanent harm",
+                    "Near death event",
+                    "Death"
+                  )) ? 'error' : 'success')));
               } else {
-                echo $this->Html->link($medication['Medication']['reference_no'], array('action' => (($redir == 'reporter') ? 'edit' : 'view'), $medication['Medication']['id']), array('escape' => false));
+                echo $this->Html->link($medication['Medication']['reference_no'], array('action' => (($redir == 'reporter') ? 'edit' : 'view'), $medication['Medication']['id']), array('escape' => false, 'class' => 'text-' . (in_array($medication['Medication']['outcome'], array(
+                    "Treatment /intervention required-caused temporary harm",
+                    "Initial/prolonged hospitalization-caused temporary harm",
+                    "Caused permanent harm",
+                    "Near death event",
+                    "Death"
+                  )) ? 'error' : 'success')));
               }
               ?>&nbsp;
             </td>
@@ -364,21 +398,27 @@ $this->assign('MED', 'active');
                 echo "&nbsp;";
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> Followup </span>', array('controller' => 'medications', 'action' => 'followup', $medication['Medication']['id']), array('escape' => false), __('Add a followup report?'));
                 echo "&nbsp;";
-                if ($redir == 'manager'||$redir == 'reviewer') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'medications', 'action' => 'download', $medication['Medication']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
+                if ($redir == 'manager' || $redir == 'reviewer') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'medications', 'action' => 'download', $medication['Medication']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
                 echo "&nbsp;";
-                if (($redir == 'manager'||$redir == 'reviewer') && empty($medication['Medication']['vigiflow_ref'])  && $medication['Medication']['copied'] == 2) echo $this->Html->link(
+                if (($redir == 'manager' || $redir == 'reviewer') && empty($medication['Medication']['vigiflow_ref'])  && $medication['Medication']['copied'] == 2) echo $this->Html->link(
                   '<span class="label label-warning tooltipper" title="Send to vigiflow"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Vigiflow </span>',
                   array('controller' => 'medications', 'action' => 'vigiflow', $medication['Medication']['id'], 'manager' => false),
                   array('escape' => false)
                 );
                 echo "&nbsp;";
-                if (($redir == 'manager'||$redir == 'reviewer') && $medication['Medication']['copied'] == 2) echo $this->Html->link(
+                if (($redir == 'manager' || $redir == 'reviewer') && $medication['Medication']['copied'] == 2) echo $this->Html->link(
                   '<span class="label label-success tooltipper" title="Copy & Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>',
                   array('controller' => 'medications', 'action' => 'edit', $medication['Medication']['id']),
                   array('escape' => false)
                 );
                 echo "&nbsp;";
-                if (($redir == 'manager'||$redir == 'reviewer') && $medication['Medication']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'medications', 'action' => 'copy', $medication['Medication']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                if (($redir == 'manager' || $redir == 'reviewer') && $medication['Medication']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'medications', 'action' => 'copy', $medication['Medication']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                if (($redir == 'manager' || $redir == 'reviewer')) echo $this->Html->link(
+                  '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
+                  array('controller' => 'medications', 'action' => 'archive', $medication['Medication']['id']),
+                  array('escape' => false),
+                  __('Are you sure you want to archive the report?')
+                );
               } else {
                 // if($redir != 'manager' && $medication['Medication']['copied'] != 2) 
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program')   echo $this->Html->link(

@@ -569,10 +569,30 @@
                     ?>
                     </div>
                 </div>
+                <div class="span12">
+                <?php
+				echo "<h5>Did the drug result in an medicine side effects?</h5>";
+
+				echo $this->Form->input('adverse_reaction', array(
+					'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false,
+					'class' => 'cold_chain',
+					'before' => '<label class="radio inline">', 'after' => '</label>',
+					'options' => array('Yes' => 'Yes')
+				));
+				echo $this->Form->input('adverse_reaction', array(
+					'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'class' => 'cold_chain',
+					'format' => array('before', 'label', 'between', 'input', 'after', 'error'),
+					'error' => array('attributes' => array('wrap' => 'p', 'class' => 'controls required error')),
+					'before' => '<label class="radio inline">',
+					'after' => '</label>',
+					'options' => array('No' => 'No'),
+				));
+				?>
+                </div>
             </div>
 
             
-            <?php echo $this->element('multi/attachments', ['model' => 'Medication', 'group' => 'attachment']); ?>
+            <?php echo $this->element('multi/attachments', ['model' => 'Medication', 'group' => 'attachment','examples'=>'']); ?>
             
 
             <hr>

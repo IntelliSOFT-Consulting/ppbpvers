@@ -1,5 +1,5 @@
 <?php
-$this->assign('CE2B', 'active');
+$this->assign('E2B', 'active');
 ?>
 
 
@@ -12,13 +12,13 @@ echo $this->Session->flash();
         <?php
         if ($redir == 'reporter') {
             echo $this->Html->link(
-                '<i class="fa fa-file-o" aria-hidden="true"></i> New Ce2b',
+                '<i class="fa fa-file-o" aria-hidden="true"></i> New E2b',
                 array('controller' => 'ce2bs', 'action' => 'add'),
                 array('escape' => false, 'class' => 'btn btn-success')
             );
         }
         ?>
-        <h3>Ce2b Reports:<small> <i class="icon-glass"></i> Filter, <i class="icon-search"></i> Search, and <i class="icon-eye-open"></i> view reports</small>
+        <h3>E2b Reports:<small> <i class="icon-glass"></i> Filter, <i class="icon-search"></i> Search, and <i class="icon-eye-open"></i> view reports</small>
            
         </h3>
         <hr class="soften" style="margin: 7px 0px;">
@@ -160,7 +160,7 @@ echo $this->Session->flash();
                     <th><?php echo $this->Paginator->sort('reference_no'); ?></th>
                     <th><?php echo $this->Paginator->sort('company_name'); ?></th>
                     <th><?php echo $this->Paginator->sort('reporter_email'); ?></th>
-                    <th><?php echo $this->Paginator->sort('e2b_file'); ?></th>
+                    <th><?php echo $this->Paginator->sort('e2b_file_type'); ?></th>
                     <th><?php echo $this->Paginator->sort('created'); ?></th>
                     <th class="actions"><?php echo __('Actions'); ?></th>
                 </tr>
@@ -176,7 +176,7 @@ echo $this->Session->flash();
                             ?>&nbsp;</td>
                         <td><?php echo h($ce2b['Ce2b']['company_name']); ?>&nbsp;</td>
                         <td><?php echo h($ce2b['Ce2b']['reporter_email']); ?>&nbsp;</td>
-                        <td></td>
+                        <td><?php echo h($ce2b['Ce2b']['e2b_type']); ?>&nbsp;</td>
                         <td><?php echo h($ce2b['Ce2b']['created']); ?>&nbsp;</td>
                         <td class="actions">
                             <?php
@@ -186,6 +186,8 @@ echo $this->Session->flash();
                                     array('controller' => 'ce2bs', 'action' => 'view', $ce2b['Ce2b']['id']),
                                     array('escape' => false)
                                 );
+                                echo "&nbsp;";
+                                if (($redir == 'manager' || $redir == 'reviewer')) echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'ce2bs', 'action' => 'download', $ce2b['Ce2b']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
                                 echo "&nbsp;";
                                
                                 if ($redir == 'manager') echo $this->Html->link(
@@ -201,6 +203,11 @@ echo $this->Session->flash();
                                 );
                                 echo "&nbsp;";
                                 if (($redir == 'manager' || $redir == 'reviewer') && $ce2b['Ce2b']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'ce2bs', 'action' => 'copy', $ce2b['Ce2b']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                                echo $this->Html->link(
+                                    '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
+                                    array('controller' => 'ce2bs', 'action' => 'archive', $ce2b['Ce2b']['id']),
+                                    array('escape' => false), __('Are you sure you want to archive the report?')
+                                  );
                             } else {
                                 if ($redir == 'reporter') echo $this->Html->link(
                                     '<span class="label label-success tooltipper" title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i> Edit </span>',
@@ -219,6 +226,7 @@ echo $this->Session->flash();
                                     array('controller' => 'ce2bs', 'action' => 'view', $ce2b['Ce2b']['id']),
                                     array('escape' => false)
                                 );
+                               
                             }
                             ?>
                         </td>

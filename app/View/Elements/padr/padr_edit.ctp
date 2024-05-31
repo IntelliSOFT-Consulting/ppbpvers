@@ -13,7 +13,7 @@ $this->Html->css('padr', false, array('inline' => false));
     echo $this->Session->flash();
     echo $this->Form->create('Padr', array(
         'type' => 'file',
-        'class' => 'form-horizontal',
+        'class' => 'form-vertical',
         'inputDefaults' => array(
             'div' => array('class' => 'control-group'),
             'label' => array('class' => 'control-label'),
@@ -43,12 +43,22 @@ $this->Html->css('padr', false, array('inline' => false));
             <div style="background-color: #aad7d4;">
                 <h5 style="text-align: center; text-decoration: underline;">DETAILS OF THE PERSON REPORTING</h5>
             </div>
-            <div class="row-fluid">
+            <div class="row-fluid report">
                 <div class="span6">
                     <?php
                     echo $this->Form->input('reporter_name', array(
+                        'class' => 'set-input',
                         'div' => array('class' => 'control-group required'),
                         'label' => array('class' => 'control-label required', 'text' => 'Name of Person Reporting <span style="color:red;">*</span>'),
+                    ));
+
+                    echo $this->Form->input('county_id', array(
+                        'class' => 'set-input',
+                        'label' => array(
+                            'class' => 'control-label required',
+                            'text' => 'County <span style="color:red;">*</span>'
+                        ),
+                        'empty' => true, 'between' => '<div class="controls ui-widget set-input">',
                     ));
 
                     ?>
@@ -57,17 +67,11 @@ $this->Html->css('padr', false, array('inline' => false));
                 <div class="span6">
                     <?php
                     echo $this->Form->input('relation', array(
-                        'type' => 'select', 'empty' => true,
+                        'type' => 'select', 'empty' => true, 'class' => 'set-input',
                         'label' => array('class' => 'control-label required', 'text' => 'Relation'),
                         'options' => array('Self' => 'Self', 'Parent' => 'Parent', 'Guardian' => 'Guardian', 'Other' => 'Other')
                     ));
-                    echo $this->Form->input('county_id', array(
-                        'label' => array(
-                            'class' => 'control-label required',
-                            'text' => 'County <span style="color:red;">*</span>'
-                        ),
-                        'empty' => true, 'between' => '<div class="controls ui-widget">',
-                    ));
+
 
                     ?>
                 </div>
@@ -75,10 +79,11 @@ $this->Html->css('padr', false, array('inline' => false));
             </div>
             <!--/row-->
             <div style="background-color: #d3d3d352; padding-top: 7px;">
-                <div class="row-fluid">
+                <div class="row-fluid report">
                     <div class="span5">
                         <?php
                         echo $this->Form->input('reporter_email', array(
+                            'class' => 'set-input',
                             'type' => 'email',
                             'div' => array('class' => 'control-group required'), 'required' => false,
                             'label' => array('class' => 'control-label required', 'text' => 'Email Address')
@@ -91,20 +96,20 @@ $this->Html->css('padr', false, array('inline' => false));
                         <?php
                         // echo $this->Form->input('reporter_phone', array(
                         //     'div' => array('class' => 'control-group'), 'required' => false,
-                            
+
                         //     'label' => array('class' => 'control-label required', 'text' => 'Mobile No.<span style="color:red;">*</span>'),
-                            
+
                         // ));
                         echo $this->Form->input('reporter_phone', array(
                             'label' => array('class' => 'control-label required', 'text' => 'Mobile No.<span style="color:red;">*</span>'),
                             'placeholder' => '', 'title' => 'Mobile No.',
                             'data-content' => 'It is important for follow up by the Pharmacy and Poisons Board and to obtain additional information as well as providing you with the feedback',
-                            'after' => '<p class="help-block"> Your phone number is important for follow up by the Pharmacy and Poisons Board and to obtain additional information as well as providing you with the feedback </p></div>',
-                            // 'class' => 'span9',
+                            'after' => '<p class="help-block phone"> Your phone number is important for follow up by the <br> Pharmacy and Poisons Board and to obtain <br> additional information as well as providing you with the feedback </p></div>',
+                            'class' => 'set-input',
                         ));
                         ?>
                         <span></span>
-                        
+
                     </div>
                 </div>
             </div>
@@ -112,13 +117,14 @@ $this->Html->css('padr', false, array('inline' => false));
             <div style="background-color: lightblue;">
                 <h5 style="text-align: center; text-decoration: underline;">DETAILS OF THE PATIENT</h5>
             </div>
-            <div class="row-fluid">
+            <div class="row-fluid report">
                 <div class="span6">
                     <?php
                     echo $this->Form->input('patient_name', array(
+                        'class' => 'span11',
                         'label' => array('class' => 'control-label required', 'text' =>  'Patient\'s Name <span style="color:red;">*</span>'),
                         // 'after'=>'<span class="muted"> or initials e.g E.O.O </span></div>',
-                        'placeholder' => 'Name or Initials', 'class' => 'tooltipper',
+                        'placeholder' => 'Name or Initials', 'class' => 'set-input',
                     ));
                     ?>
                 </div>
@@ -151,8 +157,8 @@ $this->Html->css('padr', false, array('inline' => false));
                 <!--/span-->
             </div>
             <!--/row-->
-            <div class="row-fluid">
-                <div class="span7">
+            <div class="row-fluid report">
+                <div class="span4">
 
                     <?php
 
@@ -166,15 +172,17 @@ $this->Html->css('padr', false, array('inline' => false));
                                 $(\'#PadrAgeGroup\').attr(\'disabled\',\'disabled\'); $(\'#PadrAgeGroup\').val(\'\');" >
                                 <em class="accordion-toggle">clear!</em></a>
                                 <p class="help-block">  If selected, year is mandatory.  </p></div>',
-                        'class' => 'tooltipper span3',
+                        'class' => 'tooltipper set-input',
                     ));
 
                     ?>
-
+                </div>
+                <div class="span2">
                     <div class="controls">
-                        <h5 class="text-success">--OR--</h5>
+                        <h5 class="text-success" style="margin-top:30px;">--OR--</h5>
                     </div>
-
+                </div>
+                <div class="span5">
                     <?php
                     echo $this->Form->input('age_group', array(
                         'type' => 'select',
@@ -191,11 +199,10 @@ $this->Html->css('padr', false, array('inline' => false));
                         'after' => '<a onclick="$(\'#PadrAgeGroup\').removeAttr(\'disabled\'); $(\'#PadrAgeGroup\').val(\'\');
                                     $(\'.birthdate\').attr(\'disabled\',\'disabled\'); $(\'.birthdate\').val(\'\');" >
                                 <em class="accordion-toggle">clear!</em></a> </div>',
+                        'class' => 'set-input',
                     ));
 
                     ?>
-                </div>
-                <div class="span5">
                 </div>
             </div>
             <div class="row-fluid">
@@ -212,7 +219,7 @@ $this->Html->css('padr', false, array('inline' => false));
                                         <input type="hidden" value="" id="SadrPersonSubmitting_" name="data[Padr][report_sadr]">
                                         <label class="radio">',
                                         'after' => '</label>&nbsp;&nbsp;',
-                                        'options' => array('Adverse Reaction' => 'Adverse Reaction'),
+                                        'options' => array('Side Effects' => 'Side Effects'),
                                     ));
                                     echo $this->Form->input('report_sadr', array(
                                         'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'class' => 'person-submit',
@@ -301,12 +308,12 @@ $this->Html->css('padr', false, array('inline' => false));
                                                                     <label class="checkbox">',
                                 'after' => 'Patient died </label>',
                             ));  ?>
-                        
+
                             <?php
                             echo $this->Form->input('description_of_reaction', array(
                                 'class' => 'span11', 'rows' => '1', 'between' => false, 'div' => false,
                                 'label' => array('class' => 'required', 'text' => 'Other side effects experienced'),
-                                'after' => '<span class="help-block">What were the signs of the side effect?</span>',
+                                'after' => '<span class="help-block"></span>',
                             ));
                             ?>
                         </div>
@@ -416,41 +423,88 @@ $this->Html->css('padr', false, array('inline' => false));
                 <!--/row-->
             </div>
 
-            <?php echo $this->element('multi/padr_list_of_medicines'); ?>
+                <?php echo $this->element('multi/padr_list_of_medicines'); ?>
+
             <!-- Section to show the outcome -->
             <div style="background-color: lightblue;">
                 <h5 style="text-align: center; text-decoration: underline;">OUTCOME DETAILS</h5>
             </div>
-            <?php
-            echo $this->Form->input('outcome', array(
-                'type' => 'select',
-                'empty' => true,
-                'options' => array(
-                    'recovered/resolved' => 'Recovered/resolved',
-                    'recovering/resolving' => 'Recovering/resolving',
-                    'recovered/resolved with sequelae' => 'Recovered/resolved with sequelae', //sequele meaning: you've recovered but still has hidden
-                    // 'recovered/resolved with sequelae' => 'Recovered/resolved with long term effects', //sequele meaning: you've recovered but still has hidden effects
-                    'not recovered/not resolved' => 'Not recovered/not resolved',
-                    'death' => 'Death',
-                    'unknown' => 'Unknown',
-                ),
-                'label' => array('class' => 'control-label required', 'text' => 'Outcome'),
-                'after' => '<a onclick="$(\'#PadrOutcome\').removeAttr(\'disabled\'); $(\'#PadrOutcome\').val(\'\');" >
-                                <em class="accordion-toggle">clear!</em></a> </div>',
-            ));
+            <div class="row-fluid report">
 
-            ?>
+                <p class="required">Outcome</p>
+                <?php
+
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'outcome',
+                    'before' => '<div class="control-group"> <label class="radio inline">',
+                    'after' => '</label>',
+                    'options' => array('recovered/resolved' => 'Recovered/resolved'),
+                ));
+
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'outcome',
+                    'before' => '<label class="radio inline">',    'after' => '</label>',
+                    'options' => array('recovering/resolving' => 'Recovering/resolving'),
+                ));
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'outcome',
+                    'before' => '<label class="radio inline">',    'after' => '</label>',
+                    'options' => array('recovered/resolved with sequelae' => 'Recovered/resolved with sequelae'),
+                ));
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'outcome',
+                    'before' => '<label class="radio inline">',    'after' => '</label>',
+                    'options' => array('not recovered/not resolved' => 'Not recovered/not resolved'),
+                ));
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false, 'class' => 'outcome',
+                    'before' => '<label class="radio inline">',    'after' => '</label>',
+                    'options' => array('death' => 'Death'),
+                ));
+                echo $this->Form->input('outcome', array(
+                    'type' => 'radio',    'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'class' => 'outcome',
+                    'format' => array('before', 'label', 'between', 'input', 'error', 'after'),
+                    'error' => array('attributes' => array('wrap' => 'p', 'class' => 'required error')),
+                    'before' => '<label class="radio inline">',
+                    'after' => '</label>
+                            <a class="button"
+                                    onclick="$(\'.outcome\').removeAttr(\'checked\');" >
+                                    <em class="accordion-toggle">clear!</em></a>
+                        </div>',
+                    'options' => array('Unknown' => 'Unknown'),
+                ));
+
+
+                ?>
+            </div>
             <!-- End of outcome section -->
-            <?php echo $this->element('multi/attachments', ['model' => 'Padr', 'group' => 'attachment']); ?>
+            <?php echo $this->element('multi/attachments', ['model' => 'Padr', 'group' => 'attachment', 'examples' => '']); ?>
+            <div class="row-fluid report">
+                <?php
+                echo $this->Form->input('consent', array(
+                    'type' => 'select',
+                    'empty' => true,
+                    'options' => array(
+                        'Yes' => 'Yes',
+                        'No' => 'No',
+                    ),
+                    'class' => 'set-input',
+                    'label' => array('class' => 'control-label required', 'text' => 'If we need further information to help us understand the case do we have your permission to contact you?'),
+                    'after' => '<a onclick="$(\'#PadrConsent\').removeAttr(\'disabled\'); $(\'#PadrConsent\').val(\'\');" >
+                                <em class="accordion-toggle">clear!</em></a> </div>',
+                ));
 
+                ?>
+            </div>
             <div class="row-fluid">
                 <div class="span4">
                     <label class="required pull-right" style="color: purple; padding-top: 4px;">Please solve the riddle <i class="fa fa-smile-o" aria-hidden="true"></i></label>
-                </div>
-                <div class="span8">
                     <?php
                     echo $this->Captcha->input('Padr', array('label' => false, 'type' => 'number'));
                     ?>
+                </div>
+                <div class="span8 pull-left">
+                    
                 </div>
             </div>
 

@@ -33,3 +33,35 @@ CREATE TABLE `imports` (
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `sadrs` ADD `product_category` VARCHAR(255) NULL DEFAULT NULL AFTER `report_therapeutic`;
+
+
+ALTER TABLE `sadrs` ADD `medication_id` INT(11) NULL DEFAULT NULL AFTER `pqmp_id`;
+ALTER TABLE `sadrs` ADD `report_misuse` TINYINT NULL DEFAULT NULL AFTER `report_therapeutic`;
+ALTER TABLE `facility_codes` ADD `keph_level` VARCHAR(255) NULL DEFAULT NULL AFTER `cots`;
+ALTER TABLE `sadrs` ADD `archived` BOOLEAN NULL DEFAULT NULL AFTER `deleted`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`;
+ALTER TABLE `sadrs` CHANGE `archived` `archived` TINYINT(1) NULL DEFAULT '0';
+ALTER TABLE `transfusions` ADD `specimens_post_transfusion` TINYINT NULL DEFAULT NULL AFTER `clinic_venue`, ADD `specimens_edta_blood` TINYINT NULL DEFAULT NULL AFTER `specimens_post_transfusion`, ADD `specimens_void_urine` TINYINT NULL DEFAULT NULL AFTER `specimens_edta_blood`, ADD `specimens_blood_reacted` TINYINT NULL DEFAULT NULL AFTER `specimens_void_urine`, ADD `specimens_blood_bags` TINYINT NULL DEFAULT NULL AFTER `specimens_blood_reacted`;
+ALTER TABLE `sadrs` ADD `report_off_label` TINYINT NULL DEFAULT NULL AFTER `report_misuse`;
+ALTER TABLE `padrs` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`;
+ALTER TABLE `aefis` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `saefis` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `pqmps` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `ce2bs` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `devices` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `medications` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `transfusions` ADD `archived` TINYINT NULL DEFAULT '0' AFTER `copied`, ADD `archived_date` DATETIME NULL DEFAULT NULL AFTER `archived`
+ALTER TABLE `ce2bs` ADD `company_code` INT NULL DEFAULT NULL AFTER `assigned_by`;
+ALTER TABLE `ce2bs` CHANGE `company_code` `company_code` VARCHAR(255) NULL DEFAULT NULL;
+ALTER TABLE `pqmps` ADD `reaction_comments` TEXT NULL DEFAULT NULL AFTER `adverse_reaction`;
+
+
+
+-- KHIS
+ALTER TABLE `facility_codes` ADD `sub_county` VARCHAR(255) NULL DEFAULT NULL AFTER `county`;
+ALTER TABLE `facility_codes` ADD `ward` VARCHAR(255) NULL DEFAULT NULL AFTER `division`;
+
+
+

@@ -10,6 +10,7 @@ app/Console/cake acl deny Group.2 controllers
 app/Console/cake acl grant Group.2 controllers/Users/manager_dashboard
 app/Console/cake acl grant Group.2 controllers/Sadrs
 app/Console/cake acl grant Group.2 controllers/Aefis
+app/Console/cake acl grant Group.2 controllers/Drugs
 app/Console/cake acl grant Group.2 controllers/SadrFollowups
 app/Console/cake acl grant Group.2 controllers/Pqmps
 app/Console/cake acl grant Group.2 controllers/Devices
@@ -46,6 +47,10 @@ app/Console/cake acl grant Group.2 controllers/Notifications
 app/Console/cake acl grant Group.2 controllers/Comments 
 app/Console/cake acl grant Group.2 controllers/Reports
 app/Console/cake acl grant Group.2 controllers/AefiDescriptions
+app/Console/cake acl grant Group.2 controllers/SadrReactions
+app/Console/cake acl grant Group.2 controllers/Saefis
+app/Console/cake acl grant Group.2 controllers/Reviews
+app/Console/cake acl grant Group.2 controllers/Khis
 
 # Allow reporters to some 
 echo "*************** Assign Reporter Permissions  *******************"
@@ -56,6 +61,7 @@ app/Console/cake acl grant Group.3 controllers/Users/edit
 app/Console/cake acl grant Group.3 controllers/Sadrs/sadrIndex
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_index
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_add
+app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_addme
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_followup
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_edit
 app/Console/cake acl grant Group.3 controllers/Sadrs/reporter_view
@@ -67,7 +73,9 @@ app/Console/cake acl grant Group.3 controllers/Aefis/institutionCodes
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_index
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_add
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_followup
+app/Console/cake acl grant Group.3 controllers/Aefis/reporter_investigation
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_edit
+app/Console/cake acl grant Group.3 controllers/Aefis/reporter_sedit
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_view
 app/Console/cake acl grant Group.3 controllers/Aefis/reporter_delete 
 
@@ -100,8 +108,8 @@ app/Console/cake acl grant Group.3 controllers/Medications/reporter_delete
 
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_index
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_add
-app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_followup
-app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_edit
+app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_followup 
+app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_edit 
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_view
 app/Console/cake acl grant Group.3 controllers/Transfusions/reporter_delete 
 
@@ -124,6 +132,9 @@ app/Console/cake acl grant Group.3 controllers/Pints/delete
 app/Console/cake acl grant Group.3 controllers/Comments
 app/Console/cake acl grant Group.3 controllers/Reports
 app/Console/cake acl grant Group.3 controllers/AefiDescriptions
+app/Console/cake acl grant Group.3 controllers/SadrReactions
+app/Console/cake acl grant Group.3 controllers/Saefis
+app/Console/cake acl grant Group.3 controllers/Reviews
 
 # Allow institution administrators to some 
 echo "*************** Assign Institution Managers Permissions  *******************"
@@ -156,6 +167,8 @@ app/Console/cake acl grant Group.4 controllers/Notifications/partner_index
 app/Console/cake acl grant Group.4 controllers/Notifications/delete
 app/Console/cake acl grant Group.4 controllers/Comments
 app/Console/cake acl grant Group.4 controllers/Reports
+app/Console/cake acl grant Group.4 controllers/Saefis
+app/Console/cake acl grant Group.4 controllers/SadrReactions
 
  
 
@@ -201,6 +214,8 @@ app/Console/cake acl grant Group.5 controllers/Notifications
 app/Console/cake acl grant Group.5 controllers/Comments 
 app/Console/cake acl grant Group.5 controllers/Reports
 app/Console/cake acl grant Group.5 controllers/AefiDescriptions
+app/Console/cake acl grant Group.5 controllers/SadrReactions
+app/Console/cake acl grant Group.5 controllers/Saefis
 
 
 echo "*************** Completed  *******************"

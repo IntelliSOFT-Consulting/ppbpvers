@@ -1,8 +1,7 @@
 <?php
 
-use function PHPSTORM_META\type;
 
-$this->assign('PQHPT', 'active');
+$this->assign('Poor-Quality Health Products and Technologies', 'active');
 ?>
 
 <div class="row-fluid">
@@ -29,7 +28,7 @@ $this->assign('PQHPT', 'active');
     <div class="marketing">
       <div class="row-fluid">
         <div class="span12">
-          <h3>PQHPT:<small> <i class="icon-glass"></i> Filter, <i class="icon-search"></i> Search, and <i class="icon-eye-open"></i> view reports</small></h3>
+          <h3>Poor-Quality Health Products and Technologies:<small> <i class="icon-glass"></i> Filter, <i class="icon-search"></i> Search, and <i class="icon-eye-open"></i> view reports</small></h3>
           <hr class="soften" style="margin: 7px 0px;">
         </div>
       </div>
@@ -210,7 +209,17 @@ $this->assign('PQHPT', 'active');
               )
             ));
 
+            echo $this->Form->input('health_program', array(
+              'type' => 'select', 'options' => [
+                'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
+                'Neglected tropical diseases program' => 'Neglected tropical diseases program', 'MNCAH Priority Medicines' => 'MNCAH Priority Medicines', 'TB program' => 'TB program',
+                'NASCOP program' => 'NASCOP program', 'Cancer/Oncology program' => 'Cancer/Oncology program'
+              ], 'empty' => true,
+              'label' => array('class' => 'control-label', 'text' => 'Public Health Program'),
+              'class' => 'input-xlarge'
+            ));
             ?>
+
           </td>
           <td>
             <h5>Complaint</h5>
@@ -221,7 +230,17 @@ $this->assign('PQHPT', 'active');
             echo $this->Form->input('caking', array('label' => 'Caking', 'hiddenField' => false));
             echo $this->Form->input('moulding', array('label' => 'Moulding', 'hiddenField' => false));
             ?>
+            <?php
+            echo $this->Form->input('sending_device', array(
+              'type' => 'select', 'options' => [
+                '1' => 'Web',
+                '2' => 'Mobile',
+              ], 'empty' => true,
+              'label' => array('class' => 'control-label', 'text' => '<b>Sending Device</b>'),
+              'class' => 'input-xlarge'
+            ));  ?>
           </td>
+
           <td>
             <?php
             echo $this->Form->input('odour_change', array('label' => 'Change of odour', 'hiddenField' => false));
@@ -240,6 +259,17 @@ $this->assign('PQHPT', 'active');
             echo $this->Form->input('sampling', array('label' => 'Sampling', 'hiddenField' => false));
             echo $this->Form->input('mechanism', array('label' => 'Mechanism', 'hiddenField' => false));
             echo $this->Form->input('electrical', array('label' => 'Electrical', 'hiddenField' => false));
+
+            echo $this->Form->input('mah', array(
+              'type' => 'select',
+              'options' => [
+                '0' => 'MAH',
+                '1' => 'Non MAH',
+              ],
+              'empty' => true,
+              'label' => array('class' => 'control-label', 'text' => 'Reporter Role'),
+              'class' => 'input-xlarge'
+            ));
             ?>
           </td>
           <td>
@@ -391,6 +421,12 @@ $this->assign('PQHPT', 'active');
                 );
                 echo "&nbsp;";
                 if (($redir == 'manager' || $redir == 'reviewer') && $pqmp['Pqmp']['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'pqmps', 'action' => 'copy', $pqmp['Pqmp']['id']), array('escape' => false), __('Create a clean copy to edit?'));
+                if (($redir == 'manager' || $redir == 'reviewer')) echo $this->Html->link(
+                  '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
+                  array('controller' => 'pqmps', 'action' => 'archive', $pqmp['Pqmp']['id']),
+                  array('escape' => false),
+                  __('Are you sure you want to archive the report?')
+                );
               } else {
                 if ($redir == 'reporter' and $this->Session->read('Auth.User.user_type') != 'Public Health Program') {
                   echo $this->Html->link(

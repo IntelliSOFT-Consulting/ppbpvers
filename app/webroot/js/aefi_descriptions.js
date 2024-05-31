@@ -31,8 +31,6 @@ $(function() {
     }
     	 
     // Multi Drugs Handling
-     
-    // Multi Drugs Handling
     function addAefiDescriptions() {
         var se = $("#aefi-descriptions .aefi-description-group").last().find('button').attr('id');
         if ( typeof se !== 'undefined' && se !== false && se !== "") {
@@ -44,10 +42,10 @@ $(function() {
             var new_aefidescription = $('<div class="aefi-description-group">\
                 <div class="row-fluid">\
                     <div class="span12">\
-                      <input type="hidden" name="data[AefiDescription][{i}][id]" class="" id="AefiDescription{i}Id">\
+                      <input type="hidden" name="data[AefiDescription][{i}][id]" class="" id="AefiDescription{i}id">\
                       <div class="control-group">\
-                        <textarea name="data[AefiDescription][{i}][description]" class="span12 other_reactions" rows="2" id="AefiDescription{i}Description"></textarea>\
-                      </div>\
+                      <textarea name="data[AefiDescription][{i}][description]" class="span12 other_reactions" rows="2" id="AefiDescription{i}description"></textarea>\
+                  </div> \
                     </div>\
                     <div class="row-fluid">\
                       <div class="span12">\

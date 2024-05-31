@@ -104,4 +104,20 @@ class SadrDescriptionsController extends AppController {
 		}
 		return $this->redirect(array('action' => 'index'));
 	}
+
+
+	// Delete Reactions 
+	public function reaction_delete($id = null) {
+		$this->loadModel('SadrReaction');
+		if (!$this->SadrReaction->exists($id)) {
+			throw new NotFoundException(__('Invalid sadr reaction'));
+		}
+		$this->request->allowMethod('post', 'delete');
+		if ($this->SadrReaction->delete($id)) {
+			$this->Flash->success(__('The sadr reaction has been deleted.'));
+		} else {
+			$this->Flash->error(__('The sadr reaction could not be deleted. Please, try again.'));
+		}
+		// return $this->redirect(array('action' => 'index'));
+	}
 }

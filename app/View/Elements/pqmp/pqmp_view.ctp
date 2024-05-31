@@ -1,5 +1,5 @@
 <?php
-	$this->assign('PQHPT', 'active');
+	$this->assign('Poor-Quality Health Products and Technologies', 'active');
 	$ichecked = "&#x2611;";
     $nchecked = "&#x2610;";
 ?>
@@ -194,7 +194,7 @@
 						<strong><?php echo $pqmp['Pqmp']['complaint_description'] ?></strong></td>
 					</tr>
 					<tr>
-						<td>Did the drug result in an adverse reaction? <br>
+						<td>Did the drug result in an adverse drug reaction? <br>
 						<strong><?php echo $pqmp['Pqmp']['adverse_reaction'] ?></strong></td>
 					</tr><tr>
 						<td>Did the product result in a medication error<br>

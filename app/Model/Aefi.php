@@ -8,23 +8,32 @@ App::uses('AppModel', 'Model');
  * @property SubCounty $SubCounty
  * @property Designation $Designation
  */
-class Aefi extends AppModel {
+class Aefi extends AppModel
+{
 
-	//The Associations below have been created with all possible keys, those that are not needed can be removed
-	public $actsAs = array('Search.Searchable', 'Containable');
+    //The Associations below have been created with all possible keys, those that are not needed can be removed
+    public $actsAs = array('Search.Searchable', 'Containable');
 
-	public $filterArgs = array(
+    public $filterArgs = array(
         'reference_no' => array('type' => 'like', 'encode' => true),
         'report_title' => array('type' => 'like', 'encode' => true),
         'name_of_institution' => array('type' => 'like', 'encode' => true),
         'serious' => array('type' => 'like', 'encode' => true),
-        'range' => array('type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'CAST(Aefi.reporter_date as DATE) BETWEEN ? AND ?'),
+        'range' => array('type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'CAST(Aefi.reporter_date as DATE) BETWEEN ? AND ?'), 
         'start_date' => array('type' => 'query', 'method' => 'dummy'),
         'end_date' => array('type' => 'query', 'method' => 'dummy'),
-        'county_id' => array('type' => 'value'),
-        'vaccine_name' => array('type' => 'query', 'method' => 'findByVaccineName', 'encode' => true),
+        'month' => array('type' => 'query', 'method' => 'dummy'),
+        'year' => array('type' => 'query', 'method' => 'dummy'),
+        'category' => array('type' => 'query', 'method' => 'dummy'),
+        'county' => array('type' => 'query', 'method' => 'dummy'),
+        'sub_county' => array('type' => 'query', 'method' => 'dummy'),
+        'ward' => array('type' => 'query', 'method' => 'dummy'),
+        'county_id' => array('type' => 'value'), 
+        'vaccine_name' => array('type' => 'query', 'method' => 'findByVaccineName', 'encode' => true), 
         'health_program' => array('type' => 'query', 'method' => 'findByHealthProgram', 'encode' => true),
+        'mah' => array('type' => 'query', 'method' => 'findByMarketAuthority', 'encode' => true),
         'bcg' => array('type' => 'value'),
+        'device' => array('type' => 'value'),
         'convulsion' => array('type' => 'value'),
         'urticaria' => array('type' => 'value'),
         'high_fever' => array('type' => 'value'),
@@ -44,122 +53,179 @@ class Aefi extends AppModel {
         'gender' => array('type' => 'value'),
         'submitted' => array('type' => 'value'),
         'submit' => array('type' => 'query', 'method' => 'orConditions', 'encode' => true),
+        'vigiflow' => array('type' => 'query', 'method' => 'findByVigiflowStatus', 'encode' => true),
     );
+    public function findByVigiflowStatus($data = array())
+    { 
+        $cond = array(); 
+        if (isset($data['vigiflow'])) { 
+            if ($data['vigiflow'] == 0) {
+                $cond = array(
+                    $this->alias . '.vigiflow_ref IS NOT NULL'
+                );
+            } else {
+                $cond=array(
+                    $this->alias . '.vigiflow_ref IS NULL'
+                );
+            }
+        }
+        return $cond;
+    }
+    public function dummy($data = array())
+    {
+        return array('1' => '1');
+    }
+    public function findByCategory($data = array())
+    {
+        $category = $data['category'];
 
-    public function dummy($data = array()) {
-    	return array( '1' => '1');
+        // debug($category);
+    }
+    public function findByMonthYear($data = array())
+    {
+        $month = $data['month'];
+        $year = $data['year'];
+        $startDate = date('Y-m-01', strtotime($month . ' ' . $year));
+        $endDate = date('Y-m-t', strtotime($month . ' ' . $year));
+        return array($startDate, $endDate);
+        // debug($startDate);
+        // debug($endDate);
+        // $records = $this->find('all', array(
+        //     'conditions' => array(
+        //         $this->alias . '.submitted_date >=' => $startDate,
+        //         $this->alias . '.submitted_date <=' => $endDate
+        //     )
+        // ));
+        // return $records;
+        // if (!empty($data['month'])) $start_date =date('Y-m-01', strtotime($month . ' ' . $year));
+        // else $start_date = date('Y-m-d', strtotime('2012-05-01'));
+
+        // if (!empty($data['end_date'])) $end_date = date('Y-m-d', strtotime($data['end_date']));
+        // else $end_date = date('Y-m-d');
+
+        // return array($start_date, $end_date);
     }
 
-    public function findByVaccineName($data = array()) {
+    public function findByVaccineName($data = array())
+    {
         $vaxs = ClassRegistry::init('Vaccine')->find('list', array('conditions' => array('vaccine_name LIKE' => '%' . $data['vaccine_name'] . '%'), 'fields' => array('id', 'id')));
-        $cond = array($this->alias.'.id' => $this->AefiListOfVaccine->find('list', array(
+        $cond = array($this->alias . '.id' => $this->AefiListOfVaccine->find('list', array(
             'conditions' => array(
                 'OR' => array(
                     'AefiListOfVaccine.vaccine_name LIKE' => '%' . $data['vaccine_name'] . '%',
                     'AefiListOfVaccine.vaccine_id' => $vaxs,
-                    'AefiListOfVaccine.vaccine_manufacturer LIKE' => '%' . $data['vaccine_name'] . '%', )),
+                    'AefiListOfVaccine.vaccine_manufacturer LIKE' => '%' . $data['vaccine_name'] . '%',
+                )
+            ),
             'fields' => array('aefi_id', 'aefi_id')
-                )));
+        )));
         return $cond;
     }
 
-    public function findByHealthProgram($data = array()) {
+    public function findByHealthProgram($data = array())
+    {
         $vdrugs = ClassRegistry::init('Vaccine')->find('list', array('conditions' => array('health_program' => $data['health_program']), 'fields' => array('id', 'id')));
-        $cond = array($this->alias.'.id' => $this->AefiListOfVaccine->find('list', array(
+        $cond = array($this->alias . '.id' => $this->AefiListOfVaccine->find('list', array(
             'conditions' => array(
                 'OR' => array(
-                    'AefiListOfVaccine.vaccine_id' => $vdrugs,
-                    'AefiListOfVaccine.vaccine_manufacturer' => $vdrugs, )),
+                    'AefiListOfVaccine.vaccine_id' => $vdrugs, 
+                    'AefiListOfVaccine.vaccine_manufacturer' => $vdrugs,
+                )
+            ),
             'fields' => array('aefi_id', 'aefi_id')
-                )));
+        )));
         return $cond;
     }
 
-    public function reporterFilter($data = array()) {
-            $filter = $data['reporter'];
-            $cond = array(
-                'OR' => array(
-                    $this->alias . '.reporter_name LIKE' => '%' . $filter . '%',
-                    $this->alias . '.reporter_email LIKE' => '%' . $filter . '%',
-                ));
-            return $cond;
+    public function reporterFilter($data = array())
+    {
+        $filter = $data['reporter'];
+        $cond = array(
+            'OR' => array(
+                $this->alias . '.reporter_name LIKE' => '%' . $filter . '%',
+                $this->alias . '.reporter_email LIKE' => '%' . $filter . '%',
+            )
+        );
+        return $cond;
     }
 
-  	public function orConditions($data = array()) {
-            $filter = $data['submit'];
-            if ($filter == '0') {
-              $cond = array(
-                    $this->alias . '.submitted' => array('1', '2', '3'),
-                    // $this->alias . '.active' => '1'
-                );
-            } else {
-              $cond = array(
-                    $this->alias . '.submitted' => array('0', '1', '2', '3', '4', '5', '6'),
-                    // $this->alias . '.active' => '1'
-                );
-            }
-            return $cond;
+    public function orConditions($data = array())
+    {
+        $filter = $data['submit'];
+        if ($filter == '0') {
+            $cond = array(
+                $this->alias . '.submitted' => array('1', '2', '3'),
+                // $this->alias . '.active' => '1'
+            );
+        } else {
+            $cond = array(
+                $this->alias . '.submitted' => array('0', '1', '2', '3', '4', '5', '6'),
+                // $this->alias . '.active' => '1'
+            );
         }
+        return $cond;
+    }
 
-	
-        public function makeRangeCondition($data = array()) {
-		if(!empty($data['start_date'])) $start_date = date('Y-m-d', strtotime($data['start_date']));
-		else $start_date = date('Y-m-d', strtotime('2012-05-01'));
 
-		if(!empty($data['end_date'])) $end_date = date('Y-m-d', strtotime($data['end_date']));
-		else $end_date = date('Y-m-d');
+    public function makeRangeCondition($data = array())
+    {
+        if (!empty($data['start_date'])) $start_date = date('Y-m-d', strtotime($data['start_date']));
+        else $start_date = date('Y-m-d', strtotime('2012-05-01'));
 
-		return array($start_date, $end_date);
-	}
+        if (!empty($data['end_date'])) $end_date = date('Y-m-d', strtotime($data['end_date']));
+        else $end_date = date('Y-m-d');
 
-/**
- * belongsTo associations
- *
- * @var array
- */
-	public $belongsTo = array(
-		'User' => array(
-			'className' => 'User',
-			'foreignKey' => 'user_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'County' => array(
-			'className' => 'County',
-			'foreignKey' => 'county_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'SubCounty' => array(
-			'className' => 'SubCounty',
-			'foreignKey' => 'sub_county_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		),
-		'Designation' => array(
-			'className' => 'Designation',
-			'foreignKey' => 'designation_id',
-			'conditions' => '',
-			'fields' => '',
-			'order' => ''
-		), 
+        return array($start_date, $end_date);
+    }
+
+    /**
+     * belongsTo associations
+     *
+     * @var array
+     */
+    public $belongsTo = array(
+        'User' => array(
+            'className' => 'User',
+            'foreignKey' => 'user_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'County' => array(
+            'className' => 'County',
+            'foreignKey' => 'county_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'SubCounty' => array(
+            'className' => 'SubCounty',
+            'foreignKey' => 'sub_county_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
+        'Designation' => array(
+            'className' => 'Designation',
+            'foreignKey' => 'designation_id',
+            'conditions' => '',
+            'fields' => '',
+            'order' => ''
+        ),
         'AefiOriginal' => array(
             'className' => 'Aefi',
             'foreignKey' => 'aefi_id',
             'dependent' => true,
             'conditions' => array('AefiOriginal.copied' => '1'),
         )
-	);
+    );
 
-	/**
- * hasMany associations
- *
- * @var array
- */
-	public $hasMany = array(
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
+    public $hasMany = array(
         'AefiFollowup' => array(
             'className' => 'Aefi',
             'foreignKey' => 'aefi_id',
@@ -172,25 +238,32 @@ class Aefi extends AppModel {
             'dependent' => true,
             'conditions' => '',
         ),
-		'Attachment' => array(
+
+        'AefiReaction' => array(
+            'className' => 'AefiReaction',
+            'foreignKey' => 'aefi_id',
+            'dependent' => true,
+            'conditions' => '',
+        ),
+        'Attachment' => array(
             'className' => 'Attachment',
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('Attachment.model' => 'Aefi', 'Attachment.group' => 'attachment'),
-      	),
-		'AefiListOfVaccine' => array(
-			'className' => 'AefiListOfVaccine',
-			'foreignKey' => 'aefi_id',
-			'dependent' => true,
-			'conditions' => '',
-			'fields' => '',
-			'order' => '',
-			'limit' => '',
-			'offset' => '',
-			'exclusive' => '',
-			'finderQuery' => '',
-			'counterQuery' => ''
-		),
+        ),
+        'AefiListOfVaccine' => array(
+            'className' => 'AefiListOfVaccine',
+            'foreignKey' => 'aefi_id',
+            'dependent' => true,
+            'conditions' => '',
+            'fields' => '',
+            'order' => '',
+            'limit' => '',
+            'offset' => '',
+            'exclusive' => '',
+            'finderQuery' => '',
+            'counterQuery' => ''
+        ),
         'Reminder' => array(
             'className' => 'Reminder',
             'foreignKey' => 'foreign_key',
@@ -201,33 +274,42 @@ class Aefi extends AppModel {
             'className' => 'Comment',
             'foreignKey' => 'foreign_key',
             'dependent' => true,
-            'conditions' => array('ExternalComment.model' => 'Aefi', 'ExternalComment.category' => 'external' ),
+            'conditions' => array('ExternalComment.model' => 'Aefi', 'ExternalComment.category' => 'external'),
+        ),
+        'ReviewComment' => array(
+            'className' => 'Comment',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => array('ReviewComment.model' => 'Aefi', 'ReviewComment.category' => 'review'),
         )
-	);
 
-	public $validate = array(
-		// 'form_id' => array(
-  //           'notBlank' => array(
-  //               'rule'     => 'notBlank',
-  //               'required' => true,
-		// 		'on'       => 'create',
-  //               'message'  => 'Please provide a form ID'
-  //           ),
-		// 	'formIdExists' => array(
-  //               'rule'     => 'formIdExists',
-  //               'required' => true,
-		// 		'on'       => 'create',
-  //               'message'  => 'The Unique form ID provided does not exist.'
-  //           ),
-  //       ),
-		'list' => array(
+
+
+    );
+
+    public $validate = array(
+        // 'form_id' => array(
+        //           'notBlank' => array(
+        //               'rule'     => 'notBlank',
+        //               'required' => true,
+        // 		'on'       => 'create',
+        //               'message'  => 'Please provide a form ID'
+        //           ),
+        // 	'formIdExists' => array(
+        //               'rule'     => 'formIdExists',
+        //               'required' => true,
+        // 		'on'       => 'create',
+        //               'message'  => 'The Unique form ID provided does not exist.'
+        //           ),
+        //       ),
+        'list' => array(
             'atLeastOneVaccine' => array(
                 'rule'     => 'atLeastOneVaccine',
                 // 'required' => true,
                 'message'  => 'Please add at least one vaccine below'
             ),
         ),
-		'name_of_institution' => array(
+        'name_of_institution' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
@@ -241,59 +323,69 @@ class Aefi extends AppModel {
                 'message'  => 'Please provide a patient\'s name'
             ),
         ),
-		'aefi_symptoms' => array(
+        'aefi_symptoms' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
-                'message'  => 'Please describe the AEFI'
+                'message'  => 'Please describe the Adverse Event Following Immunization'
             ),
         ),
-		'date_of_birth' => array(
+        'date_of_birth' => array(
             'ageOrDate' => array(
                 'rule'     => 'ageOrDate',
                 // 'required' => false,
-				'allowEmpty' => true,
+                'allowEmpty' => true,
                 'message'  => 'Please specify the patient\'s date / Year of birth or age in months'
             ),
         ),
-		'county_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				'message' => 'Please select a county',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'designation_id' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				'message' => 'Please specify your designation',
-			),
-		),
-		'gender' => array(
+        'county_id' => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
+                'message' => 'Please select a county',
+                //'allowEmpty' => false,
+                //'required' => false,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'sub_county_id' => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
+                'message' => 'Please select a sub county',
+                //'allowEmpty' => false,
+                'required' => true,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
+        'designation_id' => array(
+            'numeric' => array(
+                'rule' => array('numeric'),
+                'message' => 'Please specify your designation',
+            ),
+        ),
+        'gender' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please specify the patient\'s gender'
             ),
         ),
-		'vaccination_type' => array(
+        'vaccination_type' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please specify the vaccination type (static, mass, outreach)'
             ),
         ),
-		'description_of_reaction' => array(
+        'description_of_reaction' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please provide brief details on the event'
             ),
         ),
-		'complaint' => array(
+        'complaint' => array(
             'atLeastOne' => array(
                 'rule'     => 'atLeastOne',
                 'required' => true,
@@ -304,7 +396,7 @@ class Aefi extends AppModel {
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
-                'message'  => 'Please specify the AEFI outcome'
+                'message'  => 'Please specify the Adverse Event Following Immunization outcome'
             ),
         ),
         'serious' => array(
@@ -314,21 +406,34 @@ class Aefi extends AppModel {
                 'message'  => 'Please specify the seriousness of the event!!'
             ),
         ),
+        // Don't allow date to be blank
+        'date_aefi_started' => array(
+            'onlyPastDates' => array(
+                'rule'     => 'onlyPastDates',
+                'required' => true,
+                'message'  => 'Please specify when reaction started'
+            ),
+            'afterVaccination' => array(
+                'rule'     => 'afterVaccination',
+                'required' => true,
+                'message'  => 'Date reaction started should be after the vaccination dates!!'
+            ),
+        ),
         'serious_yes' => array(
             'seriousYes' => array(
                 'rule'     => 'seriousYes',
                 'required' => false,
                 'message'  => 'Please specify the reason for seriousness!!'
             ),
-        ),  
-		// 'treatment_given' => array(
-  //           'treatOrSpecimen' => array(
-  //               'rule'     => 'treatOrSpecimen',
-  //               // 'required' => true,
-  //               'message'  => 'Please specify the action taken i.e. treatment tiven or specimen collected'
-  //           ),
-  //       ),        
-		'reporter_name' => array(
+        ),
+        // 'treatment_given' => array(
+        //           'treatOrSpecimen' => array(
+        //               'rule'     => 'treatOrSpecimen',
+        //               // 'required' => true,
+        //               'message'  => 'Please specify the action taken i.e. treatment tiven or specimen collected'
+        //           ),
+        //       ),        
+        'reporter_name' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
@@ -342,7 +447,7 @@ class Aefi extends AppModel {
                 'message'  => 'Please provide the date of submission of the report'
             ),
         ),
-		'reporter_email' => array(
+        'reporter_email' => array(
             'notBlank' => array(
                 'rule'     => 'email',
                 'required' => true,
@@ -368,90 +473,178 @@ class Aefi extends AppModel {
                 'message' => 'Please provide a valid phone number',
             ),
             'maxLength' => array(
-                'rule' => array('maxLength', 10),
+                'rule' => array('maxLength', 12),
                 'message' => 'Please provide a valid phone number',
             ),
         ),
     );
+    public function findByMarketAuthority($data = array())
+    {
+        $conditions = array();
+        $filter = $data['mah'];
+        if ($filter == '0') {
+            $conditions = array(
+                'user_type' => 'Market Authority'
+            );
+        } else {
+            $conditions = array(
+                'OR' => array(
+                    'NOT' => array('user_type' => 'Market Authority'),
+                    'user_type IS NULL',
+                    'user_type' => ''
+                )
+            );
+        }
 
-	public function atLeastOne($field = null) {
-		return $this->data['Aefi']['bcg'] + $this->data['Aefi']['convulsion'] + $this->data['Aefi']['urticaria'] + $this->data['Aefi']['high_fever'] +
-				$this->data['Aefi']['abscess'] +  $this->data['Aefi']['local_reaction'] + $this->data['Aefi']['anaphylaxis'] +
-				$this->data['Aefi']['meningitis'] +  $this->data['Aefi']['paralysis'] + $this->data['Aefi']['toxic_shock'] +
-				$this->data['Aefi']['complaint_other'] > 0;
-	}
+        $user = ClassRegistry::init('User')->find(
+            'list',
+            array(
+                'conditions' => $conditions,
+                'fields' => array('id', 'id')
+            )
+        );
 
-	public function atLeastOneVaccine($field = null) {
-		if (!empty($this->data['AefiListOfVaccine'])) {
-			return count($this->data['AefiListOfVaccine']) > 0;
-		} 
-		return false;
-	}
-
-	public function ageOrDate($field = null) {
-		return !empty($this->data['Aefi']['date_of_birth']['year']) || !empty($this->data['Aefi']['age_months']);
-	}
-
-    public function treatOrSpecimen($field = null) {
-        return !empty($this->data['Aefi']['treatment_given']) || !empty($this->data['Aefi']['specimen_collected']);
+        $cond = array($this->alias . '.user_id' => $user);
+        return $cond;
+    }
+    public function atLeastOne($field = null)
+    {
+        return $this->data['Aefi']['bcg'] + $this->data['Aefi']['convulsion'] + $this->data['Aefi']['urticaria'] + $this->data['Aefi']['high_fever'] +
+            $this->data['Aefi']['abscess'] +  $this->data['Aefi']['local_reaction'] + $this->data['Aefi']['anaphylaxis'] +
+            $this->data['Aefi']['meningitis'] +  $this->data['Aefi']['paralysis'] + $this->data['Aefi']['toxic_shock'] +
+            $this->data['Aefi']['complaint_other'] > 0;
     }
 
-	public function seriousYes($field = null) {
-		if($this->data['Aefi']['serious'] == 'Yes') return !empty($this->data['Aefi']['serious_yes']);
+    public function atLeastOneVaccine($field = null)
+    {
+        if (!empty($this->data['AefiListOfVaccine'])) {
+            return count($this->data['AefiListOfVaccine']) > 0;
+        }
+        return false;
+    }
+
+    public function ageOrDate($field = null)
+    {
+        return !empty($this->data['Aefi']['date_of_birth']['year']) || !empty($this->data['Aefi']['age_months'])|| !empty($this->data['Aefi']['age_group']);
+    }
+
+    public function treatOrSpecimen($field = null)
+    {
+        return !empty($this->data['Aefi']['treatment_given']) || !empty($this->data['Aefi']['specimen_collected']);
+    }
+    public function onlyPastDates($field = null)
+    {
+        if (!empty($this->data['Aefi']['date_aefi_started'])) {
+            $date_aefi_started = $this->data['Aefi']['date_aefi_started'];
+            $today = date('Ymd');
+    
+            $start_date = date('Ymd', strtotime($today));
+            $date1 = date_create($date_aefi_started);
+            $date2 = date_create($start_date);
+    
+            $diff = date_diff($date1, $date2);
+            $answ = $diff->format("%R%a");
+    
+            if ($answ >= 0) {
+                $proceed = true;
+            } else {
+                $proceed = false;
+            }
+    
+            return $proceed;
+        }
+    
+        return false;
+    }
+    
+    public function afterVaccination($field = null)
+    {
+        if (!empty($this->data['AefiListOfVaccine'])) {
+            $vaccines = $this->data['AefiListOfVaccine'];
+            $proceed = true;
+            foreach ($vaccines as $va) {
+                $date = $va['vaccination_date'];
+                // if vacination if after then return false;
+                $vacination_date = date('Ymd', strtotime($date));
+                $vacc = $this->data['Aefi']['date_aefi_started'];
+                $start_date = date('Ymd', strtotime($vacc));
+
+                $date1 = date_create($vacination_date);
+                $date2 = date_create($start_date);
+
+                $diff = date_diff($date1, $date2);
+                $answ = $diff->format("%R%a");
+
+                if ($answ >= 0) {
+                    $proceed = true;
+                } else {
+                    $proceed = false;
+                }
+            }
+            return $proceed;
+        }
+        return false;
+    }
+
+    public function seriousYes($field = null)
+    {
+        if ($this->data['Aefi']['serious'] == 'Yes') return !empty($this->data['Aefi']['serious_yes']);
         else return true;
-	}
+    }
 
-    public function beforeSave($options = array()) {
-		if (!empty($this->data['Aefi']['date_of_birth'])) {
-			$this->data['Aefi']['date_of_birth'] = implode('-', $this->data['Aefi']['date_of_birth']);
-		} else {
-			$this->data['Aefi']['date_of_birth'] = '';
-		}
+    public function beforeSave($options = array())
+    {
+        if (!empty($this->data['Aefi']['date_of_birth'])) {
+            $this->data['Aefi']['date_of_birth'] = implode('-', $this->data['Aefi']['date_of_birth']);
+        } else {
+            $this->data['Aefi']['date_of_birth'] = '';
+        }
 
-		if (!empty($this->data['Aefi']['time_aefi_started'])) {
-			$this->data['Aefi']['time_aefi_started'] = implode(':', $this->data['Aefi']['time_aefi_started']);
-		} else {
-			$this->data['Aefi']['time_aefi_started'] = '';
-		}
+        if (!empty($this->data['Aefi']['time_aefi_started'])) {
+            $this->data['Aefi']['time_aefi_started'] = implode(':', $this->data['Aefi']['time_aefi_started']);
+        } else {
+            $this->data['Aefi']['time_aefi_started'] = '';
+        }
 
-		if(empty($this->data['Aefi']['age_months'])){
-			$this->data['Aefi']['age_months'] = '';
-		}
-		if (!empty($this->data['Aefi']['date_aefi_started'])) {
-			$this->data['Aefi']['date_aefi_started'] = $this->dateFormatBeforeSave($this->data['Aefi']['date_aefi_started']);
-		}
-		if (!empty($this->data['Aefi']['reporter_date'])) {
-			$this->data['Aefi']['reporter_date'] = $this->dateFormatBeforeSave($this->data['Aefi']['reporter_date']);
-		}
-		if (!empty($this->data['Aefi']['reporter_date_diff'])) {
-			$this->data['Aefi']['reporter_date_diff'] = $this->dateFormatBeforeSave($this->data['Aefi']['reporter_date_diff']);
-		}
-		return true;
-	}
+        if (empty($this->data['Aefi']['age_months'])) {
+            $this->data['Aefi']['age_months'] = '';
+        }
+        if (!empty($this->data['Aefi']['date_aefi_started'])) {
+            $this->data['Aefi']['date_aefi_started'] = $this->dateFormatBeforeSave($this->data['Aefi']['date_aefi_started']);
+        }
+        if (!empty($this->data['Aefi']['reporter_date'])) {
+            $this->data['Aefi']['reporter_date'] = $this->dateFormatBeforeSave($this->data['Aefi']['reporter_date']);
+        }
+        if (!empty($this->data['Aefi']['reporter_date_diff'])) {
+            $this->data['Aefi']['reporter_date_diff'] = $this->dateFormatBeforeSave($this->data['Aefi']['reporter_date_diff']);
+        }
+        return true;
+    }
 
-	function afterFind($results, $primary = false) {
-		foreach ($results as $key => $val) {
+    function afterFind($results, $primary = false)
+    {
+        foreach ($results as $key => $val) {
 
-			if (!empty($val['Aefi']['date_of_birth'])) {
-				if(empty($val['Aefi']['date_of_birth'])) $val['Aefi']['date_of_birth'] = '--';
-				$a = explode('-', $val['Aefi']['date_of_birth']);
-				$results[$key]['Aefi']['date_of_birth'] = array('day'=> $a[0],'month'=> $a[1],'year'=> $a[2]);
-			}
-			if (!empty($val['Aefi']['time_aefi_started'])) {
-				if(empty($val['Aefi']['time_aefi_started'])) $val['Aefi']['time_aefi_started'] = ':';
-				$a = explode(':', $val['Aefi']['time_aefi_started']);
-				$results[$key]['Aefi']['time_aefi_started'] = array('hour'=> $a[0],'min'=> $a[1]);
-			}
-			if (isset($val['Aefi']['date_aefi_started'])) {
-				$results[$key]['Aefi']['date_aefi_started'] = $this->dateFormatAfterFind($val['Aefi']['date_aefi_started']);
-			}
-			if (isset($val['Aefi']['reporter_date'])) {
-				$results[$key]['Aefi']['reporter_date'] = $this->dateFormatAfterFind($val['Aefi']['reporter_date']);
-			}
-			if (isset($val['Aefi']['reporter_date_diff'])) {
-				$results[$key]['Aefi']['reporter_date_diff'] = $this->dateFormatAfterFind($val['Aefi']['reporter_date_diff']);
-			}
-		}
-		return $results;
-	}
+            if (!empty($val['Aefi']['date_of_birth'])) {
+                if (empty($val['Aefi']['date_of_birth'])) $val['Aefi']['date_of_birth'] = '--';
+                $a = explode('-', $val['Aefi']['date_of_birth']);
+                $results[$key]['Aefi']['date_of_birth'] = array('day' => $a[0], 'month' => $a[1], 'year' => $a[2]);
+            }
+            if (!empty($val['Aefi']['time_aefi_started'])) {
+                if (empty($val['Aefi']['time_aefi_started'])) $val['Aefi']['time_aefi_started'] = ':';
+                $a = explode(':', $val['Aefi']['time_aefi_started']);
+                $results[$key]['Aefi']['time_aefi_started'] = array('hour' => $a[0], 'min' => $a[1]);
+            }
+            if (isset($val['Aefi']['date_aefi_started'])) {
+                $results[$key]['Aefi']['date_aefi_started'] = $this->dateFormatAfterFind($val['Aefi']['date_aefi_started']);
+            }
+            if (isset($val['Aefi']['reporter_date'])) {
+                $results[$key]['Aefi']['reporter_date'] = $this->dateFormatAfterFind($val['Aefi']['reporter_date']);
+            }
+            if (isset($val['Aefi']['reporter_date_diff'])) {
+                $results[$key]['Aefi']['reporter_date_diff'] = $this->dateFormatAfterFind($val['Aefi']['reporter_date_diff']);
+            }
+        }
+        return $results;
+    }
 }

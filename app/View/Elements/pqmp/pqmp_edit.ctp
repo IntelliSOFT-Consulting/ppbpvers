@@ -1,5 +1,5 @@
 <?php
-$this->assign('PQHPT', 'active');
+$this->assign('Poor-Quality Health Products and Technologies', 'active');
 $this->Html->script('jquery/combobox', array('inline' => false));
 $this->Html->script('pqmp?v=2', array('inline' => false));
 ?>
@@ -22,7 +22,7 @@ echo $this->Form->create('Pqmp', array(
 ));
 ?>
 
-<!-- PQHPT EDIT
+<!-- Poor-Quality Health Products and Technologies EDIT
 ================================================== -->
 <div class="row-fluid">
 	<div class="span10 formbackp">
@@ -47,7 +47,7 @@ echo $this->Form->create('Pqmp', array(
 					<h5>P.O. Box 27663-00506 NAIROBI</h5>
 					<h5>Tel: +254795743049</h5>
 					<h5><b>Email:</b> pv@pharmacyboardkenya.org</h5>
-					<h5 style="background-color: #F7A3D8;">FORM FOR REPORTING SUSPECTED POOR-QUALITY MEDICAL PRODUCTS AND HEALTH TECHNOLOGIES</h5>
+					<h5 style="background-color: #F7A3D8;">FORM FOR REPORTING SUSPECTED POOR-QUALITY HEALTH PRODUCTS AND TECHNOLOGIES</h5>
 				</div>
 			</div>
 		</div>
@@ -207,6 +207,7 @@ echo $this->Form->create('Pqmp', array(
 				echo $this->Form->input('receipt_date', array(
 					'div' => array('class' => 'control-group required'),
 					'type' => 'text',
+					'class' => 'date-pick-expire',
 					'label' => array('class' => 'control-label required', 'text' => 'Date of Receipt' . ' '),
 					'after' => '<p class="help-block">	Date format (dd-mm-yyyy) </p></div>',
 				));
@@ -673,7 +674,7 @@ echo $this->Form->create('Pqmp', array(
 		<div class="row-fluid">
 			<div class="span12">
 				<?php
-				echo "<h5>Did the drug result in an adverse reaction?</h5>";
+				echo "<h5>Did the drug result in an adverse drug reaction?</h5>";
 
 				echo $this->Form->input('adverse_reaction', array(
 					'type' => 'radio',  'label' => false, 'legend' => false, 'div' => false, 'hiddenField' => false, 'error' => false,
@@ -686,12 +687,21 @@ echo $this->Form->create('Pqmp', array(
 					'format' => array('before', 'label', 'between', 'input', 'after', 'error'),
 					'error' => array('attributes' => array('wrap' => 'p', 'class' => 'controls required error')),
 					'before' => '<label class="radio inline">',
-					'after' => '</label>', 
+					'after' => '</label>',
 					'options' => array('No' => 'No'),
 				));
 				?>
-		 
+
 				<?php
+				echo $this->Form->input('reaction_comments', array(
+					'class' => 'span8 only_follow_up', 
+					'rows' => '2',
+					'label' => array(
+						'class' => 'control-label required', 
+						'text' => 'Add comments'
+					),
+					'after' => '<p class="help-block">  </p></div>',
+				));
 				echo "<h5>Did the product result in a medication error?</h5>";
 
 				echo $this->Form->input('medication_error', array(
@@ -713,7 +723,7 @@ echo $this->Form->create('Pqmp', array(
 		</div>
 		<hr>
 
-		<?php echo $this->element('multi/attachments', ['model' => 'Pqmp', 'group' => 'attachment']); ?>
+		<?php echo $this->element('multi/attachments', ['model' => 'Pqmp', 'group' => 'attachment', 'examples' => '']); ?>
 
 		<div class="row-fluid">
 			<div class="span6">
@@ -738,7 +748,10 @@ echo $this->Form->create('Pqmp', array(
 				);
 				echo $this->Form->input('reporter_phone', array(
 					'div' => array('class' => 'control-group'),
-					'label' => array('class' => 'control-label required', 'text' => 'PHONE NO.' . ' <span style="color:red;">*</span>')
+					'label' => array(
+						'class' => 'control-label',
+						'text' => 'PHONE NO.' . ' <span style="color:red;">*</span>'
+					)
 				));
 
 				echo $this->Form->input('reporter_date', array(
@@ -835,9 +848,11 @@ echo $this->Form->create('Pqmp', array(
 				<?php
 				echo $this->Form->button('<i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit', array(
 					'name' => 'submitReport',
-					'onclick' => "return confirm('Are you sure you wish to submit the report?');",
+					// 'onclick' => "return confirm('Are you sure you wish to submit the report?');",
+					'onclick' => 'return confirmReportSubmission();',
 					'class' => 'btn btn-primary btn-block mapop',
-					'id' => 'SiteInspectionSubmitReport', 'title' => 'Save and Submit Report',
+					'id' => 'SiteInspectionSubmitReport',
+					'title' => 'Save and Submit Report',
 					'data-content' => 'Submit report for peer review and approval.',
 					'div' => false,
 				));
@@ -869,3 +884,41 @@ echo $this->Form->create('Pqmp', array(
 		</div>
 	</div>
 </div>
+
+<script>
+	function confirmReportSubmission() {
+		var additionalMessage = '';
+		if ($("#PqmpAdverseReactionYes").is(':checked')) {
+
+			// check for the specific  adverse_reaction
+			if ($("#PqmpMedicinalProduct:checked").length > 0) {
+				// Checkbox is checked
+				additionalMessage = "You'll be required to submit a Suspected Drug reaction Form";
+			}
+			// else if blood_products display Blood Transfusion
+			else if ($("#PqmpBloodProducts:checked").length > 0) {
+				// Checkbox is checked
+				additionalMessage = "You'll be required to submit a Blood Transfusion Form";
+			} else if ($("#PqmpMedicalDevice:checked").length > 0) {
+				// Checkbox is checked
+				additionalMessage = "You'll be required to submit a Medical Device Incident Form";
+
+			} else if ($("#PqmpProductVaccine:checked").length > 0) {
+				// Checkbox is checked
+				additionalMessage = "You'll be required to submit a Adverse Event Following Immunization Form";
+			} else {
+				additionalMessage = "You'll be required to submit a Suspected Drug reaction Form"
+			}
+		}
+		if ($("#PqmpMedicationErrorYes").is(':checked')) {
+			additionalMessage = "You'll be required to submit a Medication Error Form"
+		}
+
+		// Show the confirm dialog with the additional message
+		if (additionalMessage != '') {
+			return confirm('Are you sure you wish to submit the report?\n\n' + additionalMessage);
+		} else {
+			return confirm('Are you sure you wish to submit the report?');
+		}
+	}
+</script>

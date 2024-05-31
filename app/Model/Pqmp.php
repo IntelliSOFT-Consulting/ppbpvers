@@ -23,6 +23,7 @@ class Pqmp extends AppModel
         'country_id' => array('type' => 'value'),
         'generic_name' => array('type' => 'like', 'encode' => true),
         'health_program' => array('type' => 'query', 'method' => 'findByHealthProgram', 'encode' => true),
+        'mah' => array('type' => 'query', 'method' => 'findByMarketAuthority', 'encode' => true),
         'name_of_manufacturer' => array('type' => 'like', 'encode' => true),
         'medicinal_product' => array('type' => 'value'),
         'blood_products' => array('type' => 'value'),
@@ -59,7 +60,35 @@ class Pqmp extends AppModel
         'submitted' => array('type' => 'value'),
         'submit' => array('type' => 'query', 'method' => 'orConditions', 'encode' => true),
     );
+    public function findByMarketAuthority($data = array())
+    {
+        $conditions = array();
+        $filter = $data['mah'];
+        if ($filter == '0') {
+            $conditions = array(
+                'user_type' => 'Market Authority'
+            );
+        } else {
+            $conditions = array(
+                'OR' => array(
+                    'NOT' => array('user_type' => 'Market Authority'),
+                    'user_type IS NULL',
+                    'user_type' => ''
+                )
+            );
+        }
 
+        $user = ClassRegistry::init('User')->find(
+            'list',
+            array(
+                'conditions' => $conditions,
+                'fields' => array('id', 'id')
+            )
+        );
+
+        $cond = array($this->alias . '.user_id' => $user);
+        return $cond;
+    }
     public function dummy($data = array())
     {
         return array('1' => '1');
@@ -182,10 +211,18 @@ class Pqmp extends AppModel
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('ExternalComment.model' => 'Pqmp', 'ExternalComment.category' => 'external'),
+        ),
+        'ReviewComment' => array(
+            'className' => 'Comment',
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'conditions' => array('ReviewComment.model' => 'Pqmp', 'ReviewComment.category' => 'review'),
         )
     );
 
     public $validate = array(
+        
+       
         'complaint' => array(
             'atLeastOne' => array(
                 'rule'     => 'atLeastOne',
@@ -193,15 +230,16 @@ class Pqmp extends AppModel
                 'message'  => 'Please tick at least one complaint'
             ),
         ),
+
         'brand_name' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please provide the brand name of the product'
             ),
-        ),
-        'batch_number' => array(
-            'notBlank' => array(
+		),
+		'batch_number' => array(
+			'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please provide the batch number of the product'
@@ -227,13 +265,7 @@ class Pqmp extends AppModel
                 'message'  => 'The expiry date must be greater than the date of manufacture'
             ),
         ),
-        // 'receipt_date' => array(
-        // 	'notBlank' => array(
-        //               'rule'     => 'notBlank',
-        //               'required' => true,
-        //               'message'  => 'Please provide date of receipt'
-        //           ),
-        // ),
+        
         'product_formulation' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
@@ -282,30 +314,17 @@ class Pqmp extends AppModel
                 'required' => true,
                 'message'  => 'Please provide a valid email address'
             ),
-        ),
-        'reporter_phone' => array(
-            'notBlank' => array(
-                'rule'     => 'notBlank',
-                'required' => true,
-                'message'  => 'Please provide phone number'
-            ),
-        ),
-        //ensure reporter phone is numeric and 10 digits
-        'reporter_phone' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'minLength' => array(
-                'rule' => array('minLength', 10),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'maxLength' => array(
-                'rule' => array('maxLength', 10),
-                'message' => 'Please provide a valid phone number',
-            ),
-        ),
+        ), 
+       
     );
+   
+    public function notEmptyIf($check, $otherField, $otherFieldValue)
+    {
+        $value = reset($check);
+        $otherValue = $this->data[$this->name][$otherField];
+        return !($otherFieldValue && !$value && !$otherValue);
+    }
+
 
     public function atLeastOne($field = null)
     {
