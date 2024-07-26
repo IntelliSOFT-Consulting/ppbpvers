@@ -177,3 +177,199 @@
 2024-07-16 09:59:42,705 INFO spawned: 'cake_queue_worker' with pid 51
 2024-07-16 09:59:43,808 WARN exited: cake_queue_worker (exit status 1; not expected)
 2024-07-16 09:59:44,810 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-16 15:37:01,828 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-16 15:37:01,830 INFO supervisord started with pid 1
+2024-07-16 15:37:02,834 INFO spawned: 'apache' with pid 7
+2024-07-16 15:37:02,838 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-16 15:37:02,957 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 15:37:03,958 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-16 15:37:03,961 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-16 15:37:04,085 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 15:37:06,087 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-16 15:37:06,172 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 15:37:09,176 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-16 15:37:09,257 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 15:37:10,258 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-16 16:01:22,875 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-16 16:01:22,877 INFO supervisord started with pid 1
+2024-07-16 16:01:23,879 INFO spawned: 'apache' with pid 7
+2024-07-16 16:01:23,881 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-16 16:01:23,982 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 16:01:24,983 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-16 16:01:24,986 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-16 16:01:25,107 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 16:01:27,110 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-16 16:01:27,199 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 16:01:31,024 INFO spawned: 'cake_queue_worker' with pid 54
+2024-07-16 16:01:31,141 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-16 16:01:32,142 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-17 06:55:40,590 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-17 06:55:40,593 INFO supervisord started with pid 1
+2024-07-17 06:55:41,599 INFO spawned: 'apache' with pid 7
+2024-07-17 06:55:41,602 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-17 06:55:41,787 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 06:55:42,788 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-17 06:55:42,789 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-17 06:55:42,884 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 06:55:44,887 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-17 06:55:45,004 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 06:55:48,009 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-17 06:55:48,088 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 06:55:49,089 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-17 20:36:24,063 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-17 20:36:24,065 INFO supervisord started with pid 1
+2024-07-17 20:36:25,071 INFO spawned: 'apache' with pid 6
+2024-07-17 20:36:25,074 INFO spawned: 'cake_queue_worker' with pid 7
+2024-07-17 20:36:25,262 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 20:36:26,264 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-17 20:36:26,267 INFO spawned: 'cake_queue_worker' with pid 26
+2024-07-17 20:36:26,362 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 20:36:28,368 INFO spawned: 'cake_queue_worker' with pid 38
+2024-07-17 20:36:28,446 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 20:36:31,452 INFO spawned: 'cake_queue_worker' with pid 50
+2024-07-17 20:36:31,532 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-17 20:36:32,533 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-18 07:24:28,652 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-18 07:24:28,655 INFO supervisord started with pid 1
+2024-07-18 07:24:29,662 INFO spawned: 'apache' with pid 7
+2024-07-18 07:24:29,663 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-18 07:24:29,870 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-18 07:24:30,871 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-18 07:24:30,872 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-18 07:24:30,950 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-18 07:24:32,955 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-18 07:24:33,067 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-18 07:24:36,074 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-18 07:24:36,155 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-18 07:24:37,156 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-19 08:40:52,334 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-19 08:40:52,337 INFO supervisord started with pid 1
+2024-07-19 08:40:53,348 INFO spawned: 'apache' with pid 7
+2024-07-19 08:40:53,351 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-19 08:40:53,791 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 08:40:54,793 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-19 08:40:54,796 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-19 08:40:55,024 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 08:40:57,028 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-19 08:40:57,134 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 08:41:00,139 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-19 08:41:00,277 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 08:41:01,278 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-19 13:53:38,267 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-19 13:53:38,269 INFO supervisord started with pid 1
+2024-07-19 13:53:39,276 INFO spawned: 'apache' with pid 7
+2024-07-19 13:53:39,278 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-19 13:53:39,464 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 13:53:40,465 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-19 13:53:40,468 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-19 13:53:40,548 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 13:53:42,554 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-19 13:53:42,638 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 13:53:45,644 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-19 13:53:45,727 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-19 13:53:46,728 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-22 08:00:06,387 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-22 08:00:06,390 INFO supervisord started with pid 1
+2024-07-22 08:00:07,399 INFO spawned: 'apache' with pid 7
+2024-07-22 08:00:07,403 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-22 08:00:07,819 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 08:00:08,821 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-22 08:00:08,824 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-22 08:00:09,046 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 08:00:11,051 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-22 08:00:11,335 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 08:00:14,306 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-22 08:00:14,408 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 08:00:15,409 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-22 10:44:04,584 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-22 10:44:04,588 INFO supervisord started with pid 1
+2024-07-22 10:44:05,591 INFO spawned: 'apache' with pid 7
+2024-07-22 10:44:05,592 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-22 10:44:05,837 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 10:44:06,838 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-22 10:44:06,839 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-22 10:44:06,915 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 10:44:08,917 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-22 10:44:09,002 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 10:44:12,006 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-22 10:44:12,115 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-22 10:44:13,116 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-23 08:57:58,884 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-23 08:57:58,888 INFO supervisord started with pid 1
+2024-07-23 08:57:59,898 INFO spawned: 'apache' with pid 7
+2024-07-23 08:57:59,902 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-23 08:58:00,349 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-23 08:58:01,352 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-23 08:58:01,354 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-23 08:58:01,584 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-23 08:58:03,588 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-23 08:58:03,703 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-23 08:58:06,707 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-23 08:58:06,823 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-23 08:58:07,825 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-24 10:27:55,742 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-24 10:27:55,744 INFO supervisord started with pid 1
+2024-07-24 10:27:56,755 INFO spawned: 'apache' with pid 7
+2024-07-24 10:27:56,758 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-24 10:27:56,946 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-24 10:27:57,947 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-24 10:27:57,948 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-24 10:27:58,024 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-24 10:28:00,027 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-24 10:28:00,107 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-24 10:28:03,111 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-24 10:28:03,191 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-24 10:28:04,192 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-25 08:11:17,972 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-25 08:11:17,975 INFO supervisord started with pid 1
+2024-07-25 08:11:18,980 INFO spawned: 'apache' with pid 7
+2024-07-25 08:11:18,982 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-25 08:11:19,172 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-25 08:11:20,174 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-25 08:11:20,176 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-25 08:11:20,257 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-25 08:11:22,262 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-25 08:11:22,358 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-25 08:11:25,365 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-25 08:11:25,446 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-25 08:11:26,447 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-26 11:51:51,215 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-26 11:51:51,218 INFO supervisord started with pid 1
+2024-07-26 11:51:52,223 INFO spawned: 'apache' with pid 7
+2024-07-26 11:51:52,225 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-26 11:51:52,671 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:51:53,671 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-26 11:51:53,673 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-26 11:51:53,759 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:51:55,761 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-26 11:51:55,932 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:51:59,175 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-26 11:52:09,307 INFO success: cake_queue_worker entered RUNNING state, process has stayed up for > than 10 seconds (startsecs)
+2024-07-26 11:52:10,779 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:11,921 INFO spawned: 'cake_queue_worker' with pid 63
+2024-07-26 11:52:22,019 INFO success: cake_queue_worker entered RUNNING state, process has stayed up for > than 10 seconds (startsecs)
+2024-07-26 11:52:25,578 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:26,727 INFO spawned: 'cake_queue_worker' with pid 75
+2024-07-26 11:52:28,213 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:29,231 INFO spawned: 'cake_queue_worker' with pid 87
+2024-07-26 11:52:29,319 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:31,325 INFO spawned: 'cake_queue_worker' with pid 99
+2024-07-26 11:52:31,474 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:34,792 INFO spawned: 'cake_queue_worker' with pid 111
+2024-07-26 11:52:35,881 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 11:52:36,886 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-26 13:22:50,936 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-26 13:22:50,939 INFO supervisord started with pid 1
+2024-07-26 13:22:51,944 INFO spawned: 'apache' with pid 7
+2024-07-26 13:22:51,948 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-26 13:22:52,024 WARN exited: apache (exit status 0; not expected)
+2024-07-26 13:22:52,142 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 13:22:53,146 INFO spawned: 'apache' with pid 22
+2024-07-26 13:22:53,149 INFO spawned: 'cake_queue_worker' with pid 23
+2024-07-26 13:22:53,229 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 13:22:54,229 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-26 13:22:55,231 INFO spawned: 'cake_queue_worker' with pid 42
+2024-07-26 13:22:55,310 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 13:22:58,314 INFO spawned: 'cake_queue_worker' with pid 54
+2024-07-26 13:22:58,383 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-26 13:22:59,385 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly

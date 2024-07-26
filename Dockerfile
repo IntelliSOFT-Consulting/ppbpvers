@@ -1,10 +1,10 @@
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 ENV TZ=Africa/Nairobi
 
 # Set some image labels
 LABEL imeja.image.authors="kiprotich.japheth19@gmail.com" \
-    imeja.image.php.version="8.1"
+    imeja.image.php.version="8.2"
 
 
 # Enable some apache modules.
@@ -46,15 +46,15 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 
 # Install PHP dependencies
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+# RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 
 # Update PHP dependencies
-RUN composer update --no-interaction --optimize-autoloader --no-dev
+# RUN composer update --no-interaction --optimize-autoloader --no-dev
 
 # Install Supervisor
 RUN apt-get update && apt-get install -y supervisor
@@ -74,4 +74,4 @@ CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 
 # Run the migration script as the container's entrypoint
-ENTRYPOINT ["/usr/local/bin/run_migrations.sh"]
+# ENTRYPOINT ["/usr/local/bin/run_migrations.sh"]
