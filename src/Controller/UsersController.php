@@ -68,6 +68,11 @@ class UsersController extends AppController
         }
     }
 
+    public function guest()
+    {
+
+    }
+
     //Login with username or password
     public function login()
     {

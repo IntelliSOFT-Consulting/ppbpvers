@@ -1,75 +1,162 @@
-/* Home page styles */
-@font-face {
-    font-family: 'cakefont';
-    src: url('../font/cakedingbats-webfont.eot');
-    src: url('../font/cakedingbats-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../font/cakedingbats-webfont.woff2') format('woff2'),
-    url('../font/cakedingbats-webfont.woff') format('woff'),
-    url('../font/cakedingbats-webfont.ttf') format('truetype'),
-    url('../font/cakedingbats-webfont.svg#cake_dingbatsregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
+
+/*Home css*/
+.carousel-control {
+    position: absolute;
+    top: 40%;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    margin-top: -20px;
+    font-size: 60px;
+    font-weight: 100;
+    line-height: 30px;
+    color: #ffffff;
+    text-align: center;
+    background: #222222;
+    border: 3px solid #ffffff;
+    -webkit-border-radius: 23px;
+    -moz-border-radius: 23px;
+    border-radius: 23px;
+    opacity: 0.5;
+    filter: alpha(opacity=50);
 }
-body {
-    padding: 60px 0;
+.carousel-control.right {
+    right: 15px;
+    left: auto;
 }
-header {
-    margin-bottom: 60px;
+.carousel-caption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 15px;
+    background: #333333;
+    background: rgba(0, 0, 0, 0.75);
 }
-img {
-    margin-bottom: 30px;
-}
-h1 {
-    font-weight: bold;
-}
-ul {
-    list-style-type: none;
-    margin: 0 0 30px 0;
-    padding-left: 25px;
-}
-a {
-    color: #0071BC;
-    text-decoration: underline;
-}
-hr {
-    border-bottom: 1px solid #e7e7e7;
-    border-top: 0;
-    margin-bottom: 35px;
+.carousel-caption p {
+    margin-bottom: 0;
 }
 
-.text-center {
+@media screen and (max-width: 700px){
+     .carousel-caption p {
+        font-size: 13px;
+    }
+    .carousel-caption {
+    background: rgba(0, 0, 0, 0.55);
+    }
+    .carousel-control {
+        top: 20%;
+    }
+}
+
+/* Added section */
+.clint-logo-wrapper {
+    display: block;
     text-align: center;
+    padding-top: 10px;
 }
-.links a {
-    margin-right: 10px;
+
+.clint-logo-wrapper img {
+    max-width: 200px;
+    vertical-align: middle;
+    max-height: 120px;
 }
-.release-name {
-    color: #D33C43;
-    font-weight: 400;
-    font-style: italic;
+
+.clint-logo-wrapper span {
+    vertical-align: middle;
+    color: #888;
+    font-size: 20px;
 }
-.bullet:before {
-    font-family: 'cakefont', sans-serif;
-    font-size: 18px;
+
+.header_text {
+    text-align: center;
+    margin: 35px auto 25px;
+    color: #646464;
+    font-size: 24px;
+    width: 100%;
+}
+
+/* Home Container */
+.home_container {
+    width: 750px;
+    margin: 20px auto 0;
+    padding: 0 15px 20px;
+    overflow: hidden;
+    background: #f8f8f8;
+    z-index: 2;
+}
+
+.home_container>h4 {
+    margin: 0;
+    text-align: center;
+    color: #646464;
+    font-size: 16px;
+}
+
+.inner_section {
+    position: relative;
+    width: 207px;
+    min-height: 200px;
     display: inline-block;
-    margin-left: -1.3em;
-    width: 1.2em;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    vertical-align: -1px;
+    margin: 10px 15px;
+    background: #fff;
+    padding: 5px;
+    border-radius: 11px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    z-index: 2;
+    vertical-align: top;
 }
-.success:before {
-    color: #88c671;
-    content: "\0056";
+
+.inner_section:hover {
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
-.problem:before {
-    color: #d33d44;
-    content: "\0057";
+
+.launch {
+    text-align: center;
+    font-size: 20px;
 }
-.cake-error {
-    padding: 10px;
-    margin: 10px 0;
+
+.launch img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    margin: 15px auto;
 }
-#url-rewriting-warning {
-    display: none;
+
+.launch span {
+    min-height: 55px;
+    display: inline-block;
+    color: #f4834d;
+    font-weight: bold;
+    font-size: 18px;
+    text-transform: uppercase;
 }
+ .info {
+        padding: 10px;
+        position: relative;
+    }
+    .info-icon {
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        display: inline-block;
+        cursor: pointer;
+        width: 17px;
+        height: 17px;
+        background-color: transparent;
+        border: 1px solid darkgray;
+        padding: 0px;
+        border-radius: 8px;
+        font-weight: bold;
+    }
+    .info-details {
+        cursor: pointer;
+        font-size: 12px;
+    }
+    .info-details > div {
+        margin: 10px 0;
+    }
+/* End of the section */
+
+/*End Home css*/
