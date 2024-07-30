@@ -1,13 +1,11 @@
 <?php
+
 /**
- * Routes configuration.
+ * Routes configuration
  *
  * In this file, you set up routes to your controllers and their actions.
  * Routes are very important mechanism that allows you to freely connect
  * different URLs to chosen controllers and their actions (functions).
- *
- * It's loaded within the context of `Application::routes()` method which
- * receives a `RouteBuilder` instance `$routes` as method argument.
  *
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -21,124 +19,120 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-use Cake\Routing\Route\DashedRoute;
-use Cake\Routing\RouteBuilder;
-use Cake\Routing\Router;
-use Cake\Core\Plugin;
+ use Cake\Routing\Route\DashedRoute;
+ use Cake\Routing\RouteBuilder;
+ use Cake\Routing\Router;
+ use Cake\Core\Plugin;
 
-/*
- * This file is loaded in the context of the `Application` class.
-  * So you can use  `$this` to reference the application class instance
-  * if required.
+/**
+ * The default class to use for all routes
+ *
+ * The following route classes are supplied with CakePHP and are appropriate
+ * to set as the default:
+ *
+ * - Route
+ * - InflectedRoute
+ * - DashedRoute
+ *
+ * If no call is made to `Router::defaultRouteClass()`, the class used is
+ * `Route` (`Cake\Routing\Route\Route`)
+ *
+ * Note that `Route` does not do any inflections on URLs which will result in
+ * inconsistently cased URLs when used with `:plugin`, `:controller` and
+ * `:action` markers.
+ *
  */
-return function (RouteBuilder $routes): void {
-    /*
-     * The default class to use for all routes
+Router::defaultRouteClass(DashedRoute::class);
+
+Router::extensions(['json', 'xml', 'csv']);
+Router::prefix('api', function ($routes) {
+    // $routes->extensions(['json', 'xml']);
+    $routes->resources('Sadrs', [
+        'connectOptions' => [
+            //'id' => '[a-zA-Z0-9\-]{2,30}'
+            'id' => '[a-zA-Z0-9+/]+={0,2}$'
+        ]
+    ]);
+    $routes->resources('Aefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    $routes->resources('Adrs', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    $routes->resources('Saefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    $routes->resources('Users', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    $routes->resources('Sites', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    $routes->resources('Feedbacks', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+    // Router::connect('/api/users/register', ['controller' => 'Users', 'action' => 'add', 'prefix' => 'api']);
+    $routes->fallbacks('InflectedRoute');
+});
+
+Router::prefix('admin', function ($routes) {
+    // All routes here will be prefixed with `/admin`
+    // And have the prefix => admin route element added.
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'admin']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+Router::prefix('base', function ($routes) {
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'base']);
+    $routes->fallbacks(DashedRoute::class);
+});
+Router::prefix('manager', function ($routes) {
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'manager']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+Router::prefix('institution', function ($routes) {
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'institution']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+Router::prefix('evaluator', function ($routes) {
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'evaluator']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+
+// Technical Section 
+Router::prefix('technical', function ($routes) {
+    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'technical']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+
+//
+Router::scope('/', function (RouteBuilder $routes) {
+    /**
+     * Here, we are connecting '/' (base path) to a controller called 'Pages',
+     * its action called 'display', and we pass a param to select the view file
+     * to use (in this case, src/Template/Pages/home.ctp)...
+     */
+    $routes->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+
+    /**
+     * ...and connect the rest of 'Pages' controller's URLs.
+     */
+    $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
+
+    /**
+     * Connect catchall routes for all controllers.
      *
-     * The following route classes are supplied with CakePHP and are appropriate
-     * to set as the default:
+     * Using the argument `DashedRoute`, the `fallbacks` method is a shortcut for
+     *    `$routes->connect('/:controller', ['action' => 'index'], ['routeClass' => 'DashedRoute']);`
+     *    `$routes->connect('/:controller/:action/*', [], ['routeClass' => 'DashedRoute']);`
      *
-     * - Route
-     * - InflectedRoute
+     * Any route class can be used with this method, such as:
      * - DashedRoute
+     * - InflectedRoute
+     * - Route
+     * - Or your own route class
      *
-     * If no call is made to `Router::defaultRouteClass()`, the class used is
-     * `Route` (`Cake\Routing\Route\Route`)
-     *
-     * Note that `Route` does not do any inflections on URLs which will result in
-     * inconsistently cased URLs when used with `{plugin}`, `{controller}` and
-     * `{action}` markers.
+     * You can remove these routes once you've connected the
+     * routes you want in your application.
      */
-    $routes->setRouteClass(DashedRoute::class);
+    $routes->fallbacks(DashedRoute::class);
+});
 
-    Router::extensions(['json', 'xml', 'csv']);
-    Router::prefix('api', function ($routes) {
-        // $routes->extensions(['json', 'xml']);
-        $routes->resources('Sadrs', [
-            'connectOptions' => [
-                //'id' => '[a-zA-Z0-9\-]{2,30}'
-                'id' => '[a-zA-Z0-9+/]+={0,2}$'
-            ]
-        ]);
-        $routes->resources('Aefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
-        $routes->resources('Adrs', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
-        $routes->resources('Saefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
-        $routes->resources('Users', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
-        $routes->resources('Sites', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
-        $routes->resources('Feedbacks', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]); 
-        $routes->fallbacks('InflectedRoute');
-    });
-    
+/**
+ * Load all plugin routes. See the Plugin documentation on
+ * how to customize the loading of plugin routes.
+ */
 
-    Router::prefix('Admin', function ($routes) {
-        // All routes here will be prefixed with `/admin`
-        // And have the prefix => admin route element added.
-        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'admin']);
-    
-        $routes->fallbacks(DashedRoute::class);
-    });
-    Router::prefix('base', function ($routes) {
-        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'base']);
-        $routes->fallbacks(DashedRoute::class);
-    });
-    Router::prefix('manager', function ($routes) {
-        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'manager']);
-    
-        $routes->fallbacks(DashedRoute::class);
-    });
-    
-    Router::prefix('reporter', function ($routes) {
-        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'reporter']);
-    
-        $routes->fallbacks(DashedRoute::class);
-    });
-     
-    
-
-    $routes->scope('/', function (RouteBuilder $builder): void {
-        /*
-         * Here, we are connecting '/' (base path) to a controller called 'Pages',
-         * its action called 'display', and we pass a param to select the view file
-         * to use (in this case, templates/Pages/home.php)...
-         */
-        $builder->connect('/', ['controller' => 'Pages', 'action' => 'display', 'home']);
-
-        /*
-         * ...and connect the rest of 'Pages' controller's URLs.
-         */
-        $builder->connect('/pages/*', 'Pages::display');
-
-        /*
-         * Connect catchall routes for all controllers.
-         *
-         * The `fallbacks` method is a shortcut for
-         *
-         * ```
-         * $builder->connect('/{controller}', ['action' => 'index']);
-         * $builder->connect('/{controller}/{action}/*', []);
-         * ```
-         *
-         * You can remove these routes once you've connected the
-         * routes you want in your application.
-         */
-        $builder->fallbacks();
-    });
-
-    /*
-     * If you need a different set of middleware or none at all,
-     * open new scope and define routes there.
-     *
-     * ```
-     * $routes->scope('/api', function (RouteBuilder $builder): void {
-     *     // No $builder->applyMiddleware() here.
-     *
-     *     // Parse specified extensions from URLs
-     *     // $builder->setExtensions(['json', 'xml']);
-     *
-     *     // Connect API actions here.
-     * });
-     * ```
-     */
-};
-
-Plugin::routes();
+// Plugin::routes();

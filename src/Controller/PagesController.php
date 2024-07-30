@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 namespace App\Controller;
+ 
+
 
 /**
  * Pages Controller
@@ -10,6 +12,15 @@ namespace App\Controller;
  */
 class PagesController extends AppController
 {
+
+    public function beforeFilter(\Cake\Event\EventInterface $event): void
+{
+    parent::beforeFilter($event);
+ 
+}
+
+
+
     public function display(...$path)
     {
         $count = count($path);
