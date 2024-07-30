@@ -27,8 +27,8 @@ class ListOfDevicesFixture extends TestFixture
                 'manufacturer' => 'Lorem ipsum dolor sit amet',
                 'manufacture_date' => 'Lorem ipsum dolor sit amet',
                 'expiry_date' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:17',
-                'modified' => '2024-07-30 09:45:17',
+                'created' => '2024-07-30 10:20:38',
+                'modified' => '2024-07-30 10:20:38',
             ],
         ];
         parent::init();

@@ -24,7 +24,7 @@ class AefiListOfVaccinesFixture extends TestFixture
                 'saefi_id' => 1,
                 'vaccine_id' => 1,
                 'vaccine_name' => 'Lorem ipsum dolor sit amet',
-                'vaccination_date' => '2024-07-30 09:45:03',
+                'vaccination_date' => '2024-07-30 10:20:26',
                 'vaccination_time' => 'Lorem ip',
                 'vaccine_manufacturer' => 'Lorem ipsum dolor sit amet',
                 'vaccination_route' => 'Lorem ipsum dolor sit amet',
@@ -37,8 +37,8 @@ class AefiListOfVaccinesFixture extends TestFixture
                 'diluent_manufacturer' => 'Lorem ipsum dolor sit amet',
                 'diluent_expiry_date' => '2024-07-30',
                 'suspected_drug' => 1,
-                'created' => '2024-07-30 09:45:03',
-                'modified' => '2024-07-30 09:45:03',
+                'created' => '2024-07-30 10:20:26',
+                'modified' => '2024-07-30 10:20:26',
             ],
         ];
         parent::init();

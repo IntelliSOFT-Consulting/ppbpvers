@@ -35,8 +35,8 @@ class Ce2bListOfDrugsFixture extends TestFixture
                 'stop_date' => '2024-07-30',
                 'indication' => 'Lorem ipsum dolor sit amet',
                 'suspected_drug' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:08',
-                'modified' => '2024-07-30 09:45:08',
+                'created' => '2024-07-30 10:20:30',
+                'modified' => '2024-07-30 10:20:30',
                 'route' => 'Lorem ipsum dolor sit amet',
             ],
         ];

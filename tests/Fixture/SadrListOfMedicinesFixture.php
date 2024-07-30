@@ -35,8 +35,8 @@ class SadrListOfMedicinesFixture extends TestFixture
                 'stop_date' => '2024-07-30',
                 'indication' => 'Lorem ipsum dolor sit amet',
                 'suspected_drug' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:26',
-                'modified' => '2024-07-30 09:45:26',
+                'created' => '2024-07-30 10:20:46',
+                'modified' => '2024-07-30 10:20:46',
             ],
         ];
         parent::init();

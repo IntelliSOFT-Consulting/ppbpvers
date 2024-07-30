@@ -23,6 +23,8 @@
 
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
+use Cake\Routing\Router;
+use Cake\Core\Plugin;
 
 /*
  * This file is loaded in the context of the `Application` class.
@@ -48,6 +50,50 @@ return function (RouteBuilder $routes): void {
      * `{action}` markers.
      */
     $routes->setRouteClass(DashedRoute::class);
+
+    Router::extensions(['json', 'xml', 'csv']);
+    Router::prefix('api', function ($routes) {
+        // $routes->extensions(['json', 'xml']);
+        $routes->resources('Sadrs', [
+            'connectOptions' => [
+                //'id' => '[a-zA-Z0-9\-]{2,30}'
+                'id' => '[a-zA-Z0-9+/]+={0,2}$'
+            ]
+        ]);
+        $routes->resources('Aefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+        $routes->resources('Adrs', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+        $routes->resources('Saefis', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+        $routes->resources('Users', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+        $routes->resources('Sites', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]);
+        $routes->resources('Feedbacks', ['connectOptions' => ['id' => '[a-zA-Z0-9+/]+={0,2}$']]); 
+        $routes->fallbacks('InflectedRoute');
+    });
+    
+
+    Router::prefix('Admin', function ($routes) {
+        // All routes here will be prefixed with `/admin`
+        // And have the prefix => admin route element added.
+        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'admin']);
+    
+        $routes->fallbacks(DashedRoute::class);
+    });
+    Router::prefix('base', function ($routes) {
+        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'base']);
+        $routes->fallbacks(DashedRoute::class);
+    });
+    Router::prefix('manager', function ($routes) {
+        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'manager']);
+    
+        $routes->fallbacks(DashedRoute::class);
+    });
+    
+    Router::prefix('reporter', function ($routes) {
+        $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'reporter']);
+    
+        $routes->fallbacks(DashedRoute::class);
+    });
+     
+    
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         /*
@@ -94,3 +140,5 @@ return function (RouteBuilder $routes): void {
      * ```
      */
 };
+
+Plugin::routes();

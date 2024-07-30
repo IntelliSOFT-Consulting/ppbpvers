@@ -13,7 +13,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\DesignationsTable&\Cake\ORM\Association\BelongsTo $Designations
  * @property \App\Model\Table\CountiesTable&\Cake\ORM\Association\BelongsTo $Counties
- * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
  * @property \App\Model\Table\AefisTable&\Cake\ORM\Association\HasMany $Aefis
  * @property \App\Model\Table\AggregatesTable&\Cake\ORM\Association\HasMany $Aggregates
  * @property \App\Model\Table\Ce2bsTable&\Cake\ORM\Association\HasMany $Ce2bs
@@ -65,6 +65,7 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Acl.Acl', ['type' => 'requester']);
 
         $this->belongsTo('Designations', [
             'foreignKey' => 'designation_id',
@@ -72,8 +73,8 @@ class UsersTable extends Table
         $this->belongsTo('Counties', [
             'foreignKey' => 'county_id',
         ]);
-        $this->belongsTo('Groups', [
-            'foreignKey' => 'group_id',
+        $this->belongsTo('Roles', [
+            'foreignKey' => 'role_id',
             'joinType' => 'INNER',
         ]);
         $this->hasMany('Aefis', [
@@ -173,8 +174,8 @@ class UsersTable extends Table
             ->notEmptyString('email');
 
         $validator
-            ->integer('group_id')
-            ->notEmptyString('group_id');
+            ->integer('role_id')
+            ->notEmptyString('role_id');
 
         $validator
             ->scalar('name_of_institution')
@@ -268,8 +269,17 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
         $rules->add($rules->existsIn('designation_id', 'Designations'), ['errorField' => 'designation_id']);
         $rules->add($rules->existsIn('county_id', 'Counties'), ['errorField' => 'county_id']);
-        $rules->add($rules->existsIn('group_id', 'Groups'), ['errorField' => 'group_id']);
+        $rules->add($rules->existsIn('role_id', 'Roles'), ['errorField' => 'role_id']);
 
         return $rules;
     }
+
+    public function beforeSave(\Cake\Event\Event $event, \Cake\ORM\Entity $entity, 
+    \ArrayObject $options)
+{
+    $hasher = new DefaultPasswordHasher;
+    if(!empty($entity->password)) $entity->password = $hasher->hash($entity->password);
+    if(!empty($entity->confirm_password)) $entity->confirm_password = $hasher->hash($entity->confirm_password);
+    return true;
+}  
 }

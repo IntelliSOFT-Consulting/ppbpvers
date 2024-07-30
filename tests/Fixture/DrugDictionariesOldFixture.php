@@ -49,8 +49,8 @@ class DrugDictionariesOldFixture extends TestFixture
                 'product_group' => 'Lorem ip',
                 'create_date' => 'Lorem ',
                 'date_changed' => 'Lorem ',
-                'created' => '2024-07-30 09:45:14',
-                'modified' => '2024-07-30 09:45:14',
+                'created' => '2024-07-30 10:20:35',
+                'modified' => '2024-07-30 10:20:35',
             ],
         ];
         parent::init();

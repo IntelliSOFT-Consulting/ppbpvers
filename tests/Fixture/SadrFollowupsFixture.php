@@ -33,8 +33,8 @@ class SadrFollowupsFixture extends TestFixture
                 'active' => 1,
                 'device' => 1,
                 'notified' => 1,
-                'created' => '2024-07-30 09:45:25',
-                'modified' => '2024-07-30 09:45:25',
+                'created' => '2024-07-30 10:20:45',
+                'modified' => '2024-07-30 10:20:45',
             ],
         ];
         parent::init();

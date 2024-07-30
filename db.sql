@@ -981,10 +981,10 @@ CREATE TABLE `frequencies` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `groups`
+-- Table structure for table `roles`
 --
 
-CREATE TABLE `groups` (
+CREATE TABLE `roles` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
   `description` text,
@@ -2247,7 +2247,7 @@ CREATE TABLE `users` (
   `confirm_password` char(140) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `email` char(50) NOT NULL DEFAULT '',
-  `group_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
   `name_of_institution` varchar(100) DEFAULT NULL,
   `institution_address` varchar(100) DEFAULT NULL,
   `institution_code` varchar(100) DEFAULT NULL,
@@ -2512,9 +2512,9 @@ ALTER TABLE `frequencies`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `groups`
+-- Indexes for table `roles`
 --
-ALTER TABLE `groups`
+ALTER TABLE `roles`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -2908,9 +2908,9 @@ ALTER TABLE `frequencies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `groups`
+-- AUTO_INCREMENT for table `roles`
 --
-ALTER TABLE `groups`
+ALTER TABLE `roles`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --

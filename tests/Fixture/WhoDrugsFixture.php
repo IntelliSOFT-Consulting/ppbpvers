@@ -42,8 +42,8 @@ class WhoDrugsFixture extends TestFixture
                 'product_group' => 'Lorem ip',
                 'create_date' => 'Lorem ',
                 'date_changed' => 'Lorem ',
-                'created' => '2024-07-30 09:45:31',
-                'modified' => '2024-07-30 09:45:31',
+                'created' => '2024-07-30 10:20:50',
+                'modified' => '2024-07-30 10:20:50',
             ],
         ];
         parent::init();

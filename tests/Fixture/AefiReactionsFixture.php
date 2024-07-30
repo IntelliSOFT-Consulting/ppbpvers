@@ -22,8 +22,8 @@ class AefiReactionsFixture extends TestFixture
                 'id' => 1,
                 'aefi_id' => 1,
                 'reaction_name' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:04',
-                'modified' => '2024-07-30 09:45:04',
+                'created' => '2024-07-30 10:20:26',
+                'modified' => '2024-07-30 10:20:26',
             ],
         ];
         parent::init();

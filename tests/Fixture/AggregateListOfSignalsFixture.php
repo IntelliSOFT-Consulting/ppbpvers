@@ -30,8 +30,8 @@ class AggregateListOfSignalsFixture extends TestFixture
                 'date_closed' => '2024-07-30',
                 'reason_summary' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
                 'evaluation_method' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-                'created' => '2024-07-30 09:45:04',
-                'modified' => '2024-07-30 09:45:04',
+                'created' => '2024-07-30 10:20:27',
+                'modified' => '2024-07-30 10:20:27',
             ],
         ];
         parent::init();

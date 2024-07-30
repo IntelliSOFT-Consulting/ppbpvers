@@ -46,8 +46,8 @@ class AttachmentsOldFixture extends TestFixture
                 'foreign_key' => 1,
                 'alternative' => 'Lorem ipsum dolor sit amet',
                 'group' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:07',
-                'modified' => '2024-07-30 09:45:07',
+                'created' => '2024-07-30 10:20:29',
+                'modified' => '2024-07-30 10:20:29',
             ],
         ];
         parent::init();

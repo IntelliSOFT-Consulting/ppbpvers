@@ -23,8 +23,8 @@ class FrequenciesFixture extends TestFixture
                 'value' => 'Lorem ipsum dolor sit amet',
                 'name' => 'Lorem ipsum dolor sit amet',
                 'icsr_code' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:15',
-                'modified' => '2024-07-30 09:45:15',
+                'created' => '2024-07-30 10:20:37',
+                'modified' => '2024-07-30 10:20:37',
             ],
         ];
         parent::init();

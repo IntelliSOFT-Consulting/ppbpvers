@@ -16,7 +16,7 @@ use Cake\ORM\Entity;
  * @property string|null $confirm_password
  * @property string|null $name
  * @property string $email
- * @property int $group_id
+ * @property int $role_id
  * @property string|null $name_of_institution
  * @property string|null $institution_address
  * @property string|null $institution_code
@@ -39,7 +39,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\Designation $designation
  * @property \App\Model\Entity\County $county
- * @property \App\Model\Entity\Group $group
+ * @property \App\Model\Entity\Role $role
  * @property \App\Model\Entity\Aefi[] $aefis
  * @property \App\Model\Entity\Aggregate[] $aggregates
  * @property \App\Model\Entity\Ce2b[] $ce2bs
@@ -77,7 +77,7 @@ class User extends Entity
         'confirm_password' => true,
         'name' => true,
         'email' => true,
-        'group_id' => true,
+        'role_id' => true,
         'name_of_institution' => true,
         'institution_address' => true,
         'institution_code' => true,
@@ -99,7 +99,7 @@ class User extends Entity
         'active_date' => true,
         'designation' => true,
         'county' => true,
-        'group' => true,
+        'role' => true,
         'aefis' => true,
         'aggregates' => true,
         'ce2bs' => true,
@@ -127,4 +127,23 @@ class User extends Entity
     protected $_hidden = [
         'password',
     ];
+
+
+    public function parentNode()
+    {
+        if (!$this->id) {
+            return null;
+        }
+        if (isset($this->role_id)) {
+            $roleId = $this->role_id;
+        } else {
+            $Users = TableRegistry::get('Users');
+            $user = $Users->find('all', ['fields' => ['role_id']])->where(['id' => $this->id])->first();
+            $roleId = $user->role_id;
+        }
+        if (!$roleId) {
+            return null;
+        }
+        return ['Roles' => ['id' => $roleId]];
+    }
 }

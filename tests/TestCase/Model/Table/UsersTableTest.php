@@ -27,7 +27,7 @@ class UsersTableTest extends TestCase
         'app.Users',
         'app.Designations',
         'app.Counties',
-        'app.Groups',
+        'app.Roles',
         'app.Aefis',
         'app.Aggregates',
         'app.Ce2bs',

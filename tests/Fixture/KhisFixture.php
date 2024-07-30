@@ -22,9 +22,9 @@ class KhisFixture extends TestFixture
                 'id' => 1,
                 'elementId' => 'Lorem ipsum dolor sit amet',
                 'elementName' => 'Lorem ipsum dolor sit amet',
-                'deleted' => '2024-07-30 09:45:17',
-                'created' => '2024-07-30 09:45:17',
-                'modified' => '2024-07-30 09:45:17',
+                'deleted' => '2024-07-30 10:20:38',
+                'created' => '2024-07-30 10:20:38',
+                'modified' => '2024-07-30 10:20:38',
             ],
         ];
         parent::init();

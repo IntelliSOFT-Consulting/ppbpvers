@@ -28,8 +28,8 @@ class DrugsFixture extends TestFixture
                 'registration_status' => 'Lorem ipsum dolor sit amet',
                 'retention_status' => 'Lorem ipsum dolor sit amet',
                 'donation' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:14',
-                'modified' => '2024-07-30 09:45:14',
+                'created' => '2024-07-30 10:20:35',
+                'modified' => '2024-07-30 10:20:35',
             ],
         ];
         parent::init();

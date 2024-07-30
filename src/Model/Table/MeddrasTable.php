@@ -36,8 +36,11 @@ class MeddrasTable extends Table
     public function initialize(array $config): void
     {
         parent::initialize($config);
+                $this->setTable('meddras');
+        $this->setDisplayField('llt_name');
+        $this->setPrimaryKey('id');
 
-        $this->setTable('meddras');
+        $this->addBehavior('Timestamp');
     }
 
     /**

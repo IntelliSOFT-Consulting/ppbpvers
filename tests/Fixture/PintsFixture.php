@@ -25,8 +25,8 @@ class PintsFixture extends TestFixture
                 'pint_no' => 'Lorem ipsum dolor sit amet',
                 'expiry_date' => '2024-07-30',
                 'volume_transfused' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:21',
-                'modified' => '2024-07-30 09:45:21',
+                'created' => '2024-07-30 10:20:42',
+                'modified' => '2024-07-30 10:20:42',
             ],
         ];
         parent::init();

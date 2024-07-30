@@ -29,8 +29,8 @@ class SubCountiesFixture extends TestFixture
                 'AreaSqKms' => 'Lorem ipsum dolor sit amet',
                 'CAWards' => 'Lorem ipsum dolor sit amet',
                 'MainEthnicGroup' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:29',
-                'modified' => '2024-07-30 09:45:29',
+                'created' => '2024-07-30 10:20:48',
+                'modified' => '2024-07-30 10:20:48',
             ],
         ];
         parent::init();

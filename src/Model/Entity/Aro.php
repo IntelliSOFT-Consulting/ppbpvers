@@ -16,8 +16,8 @@ use Cake\ORM\Entity;
  * @property int|null $lft
  * @property int|null $rght
  *
- * @property \App\Model\Entity\Aro $parent_aro
- * @property \App\Model\Entity\Aro[] $child_aros
+ * @property \App\Model\Entity\ParentAro $parent_aro
+ * @property \App\Model\Entity\ChildAro[] $child_aros
  * @property \App\Model\Entity\Aco[] $acos
  */
 class Aro extends Entity

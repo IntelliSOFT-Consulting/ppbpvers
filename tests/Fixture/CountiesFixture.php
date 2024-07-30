@@ -22,8 +22,8 @@ class CountiesFixture extends TestFixture
                 'id' => 1,
                 'county_name' => 'Lorem ipsum dolor sit amet',
                 'org_unit' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:10',
-                'modified' => '2024-07-30 09:45:10',
+                'created' => '2024-07-30 10:20:32',
+                'modified' => '2024-07-30 10:20:32',
             ],
         ];
         parent::init();

@@ -21,9 +21,9 @@ class ImportsFixture extends TestFixture
             [
                 'id' => 1,
                 'filename' => 'Lorem ipsum dolor sit amet',
-                'deleted' => '2024-07-30 09:45:17',
-                'created' => '2024-07-30 09:45:17',
-                'modified' => '2024-07-30 09:45:17',
+                'deleted' => '2024-07-30 10:20:37',
+                'created' => '2024-07-30 10:20:37',
+                'modified' => '2024-07-30 10:20:37',
             ],
         ];
         parent::init();

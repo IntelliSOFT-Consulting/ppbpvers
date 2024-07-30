@@ -9,7 +9,7 @@ use Cake\ORM\Entity;
  * Role Entity
  *
  * @property int $id
- * @property string|null $name
+ * @property string $name
  * @property string|null $description
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
@@ -34,4 +34,10 @@ class Role extends Entity
         'modified' => true,
         'users' => true,
     ];
+
+
+    public function parentNode()
+    {
+        return null;
+    }
 }

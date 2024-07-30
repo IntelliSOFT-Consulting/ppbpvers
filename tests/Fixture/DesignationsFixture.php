@@ -22,8 +22,8 @@ class DesignationsFixture extends TestFixture
                 'id' => 1,
                 'name' => 'Lorem ipsum dolor sit amet',
                 'category' => 1,
-                'created' => '2024-07-30 09:45:11',
-                'modified' => '2024-07-30 09:45:11',
+                'created' => '2024-07-30 10:20:33',
+                'modified' => '2024-07-30 10:20:33',
             ],
         ];
         parent::init();

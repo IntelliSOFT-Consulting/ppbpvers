@@ -28,8 +28,8 @@ class HelpInfosFixture extends TestFixture
                 'content' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
                 'help_text' => 'Lorem ipsum dolor sit amet',
                 'type' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:16',
-                'modified' => '2024-07-30 09:45:16',
+                'created' => '2024-07-30 10:20:37',
+                'modified' => '2024-07-30 10:20:37',
             ],
         ];
         parent::init();

@@ -26,9 +26,9 @@ class PocketsFixture extends TestFixture
                 'item_number' => 1,
                 'type' => '',
                 'deleted' => 1,
-                'deleted_date' => '2024-07-30 09:45:22',
-                'created' => '2024-07-30 09:45:22',
-                'modified' => '2024-07-30 09:45:22',
+                'deleted_date' => '2024-07-30 10:20:42',
+                'created' => '2024-07-30 10:20:42',
+                'modified' => '2024-07-30 10:20:42',
             ],
         ];
         parent::init();

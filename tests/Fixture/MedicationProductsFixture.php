@@ -35,8 +35,8 @@ class MedicationProductsFixture extends TestFixture
                 'manufacturer_ii' => 'Lorem ipsum dolor sit amet',
                 'strength_ii' => 'Lorem ipsum dolor sit amet',
                 'container_ii' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:18',
-                'modifed' => '2024-07-30 09:45:18',
+                'created' => '2024-07-30 10:20:39',
+                'modifed' => '2024-07-30 10:20:39',
             ],
         ];
         parent::init();

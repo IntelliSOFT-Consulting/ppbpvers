@@ -27,8 +27,8 @@ class PadrListOfMedicinesFixture extends TestFixture
                 'expiry_date' => 'Lorem ipsum dolor sit amet',
                 'start_date' => '2024-07-30',
                 'end_date' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:20',
-                'modifed' => '2024-07-30 09:45:20',
+                'created' => '2024-07-30 10:20:41',
+                'modifed' => '2024-07-30 10:20:41',
             ],
         ];
         parent::init();

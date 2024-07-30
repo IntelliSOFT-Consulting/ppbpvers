@@ -24,8 +24,8 @@ class RemindersFixture extends TestFixture
                 'model' => 'Lorem ipsum dolor sit amet',
                 'user_id' => 1,
                 'reminder_type' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-07-30 09:45:23',
-                'modified' => '2024-07-30 09:45:23',
+                'created' => '2024-07-30 10:20:43',
+                'modified' => '2024-07-30 10:20:43',
             ],
         ];
         parent::init();

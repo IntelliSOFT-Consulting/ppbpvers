@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
+use Cake\Event\EventInterface;
 
 /**
  * Application Controller
@@ -72,39 +73,116 @@ class AppController extends Controller
          */
         //$this->loadComponent('FormProtection');
 
-        // $this->loadComponent('Auth', [
-        //     'authorize' => [
-        //         'Acl.Actions' => ['actionPath' => 'controllers/']
-        //     ],
-        //     'loginAction' => [
-        //         'plugin' => false,
-        //         'prefix' => false,
-        //         'controller' => 'Users',
-        //         'action' => 'login'
-        //     ],
-        //     'loginRedirect' => [
-        //         'plugin' => false,
-        //         'prefix' => false,
-        //         'controller' => 'Users',
-        //         'action' => 'home'
-        //     ],
-        //     'logoutRedirect' => [
-        //         'plugin' => false,
-        //         'prefix' => false,
-        //         'controller' => 'Users',
-        //         'action' => 'login'
-        //     ],
-        //     'unauthorizedRedirect' => [
-        //         'controller' => 'pages',
-        //         'action' => 'home',
-        //         'prefix' => false,
-        //         'plugin' => false
-        //     ],
-        //     'authError' => 'You are not authorized to access that location.',
-        //     'loginError' => 'You are not authorized to access that location.',
-        //     'flash' => [
-        //         'element' => 'error'
-        //     ]
-        // ]);
+
+        $this->loadComponent('Acl', [
+            'className' => 'Acl.Acl'
+        ]);
+
+        $this->loadComponent('Auth', [
+            'authorize' => [
+                'Acl.Actions' => ['actionPath' => 'controllers/']
+            ],
+            'loginAction' => [
+                'plugin' => false,
+                'prefix' => false,
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            'loginRedirect' => [
+                'plugin' => false,
+                'prefix' => false,
+                'controller' => 'Users',
+                'action' => 'home'
+            ],
+            'logoutRedirect' => [
+                'plugin' => false,
+                'prefix' => false,
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+            'unauthorizedRedirect' => [
+                'controller' => 'pages',
+                'action' => 'home',
+                'prefix' => false,
+                'plugin' => false
+            ],
+            'authError' => 'You are not authorized to access that location.',
+            'loginError' => 'You are not authorized to access that location.',
+            'flash' => [
+                'element' => 'error'
+            ]
+        ]);
     }
+
+    // public function beforeRender(EventInterface $event)
+    // {
+    //     $this->set('_serialize', true);
+    // }
+
+       /*1. Ported from 1.2*/
+    //    public function beforeFilter(EventInterface $event)
+    //    {
+    //        parent::beforeFilter($event);
+    //        $this->Auth->allow('display');
+    //        //if admin prefix, redirect to admin
+    //        // $this->viewBuilder()->setLayout('admin');
+    //        if (
+    //            $this->request->getParam('prefix') or $this->request->session()->read('Auth.User.role_id') == 1
+    //            or $this->request->session()->read('Auth.User.role_id') == 2 or $this->request->session()->read('Auth.User.role_id') == 4
+    //            or $this->request->session()->read('Auth.User.role_id') == 5
+    //        ) {
+    //            $this->viewBuilder()->setLayout('admin');
+    //        }
+    //    }
+
+    public function beforeFilter(EventInterface $event): void
+{
+    parent::beforeFilter($event);
+
+    $roleId = $this->request->getSession()->read('Auth.User.role_id');
+    $allowedRoles = [1, 2, 4, 5]; // List of roles allowed to use the admin layout
+
+    if ($this->request->getParam('prefix') || in_array($roleId, $allowedRoles)) {
+        $this->viewBuilder()->setLayout('admin');
+    }
+}
+       /*end 1*/
+   
+   
+       /**
+        * Before render callback.
+        *
+        * @param \Cake\Event\Event $event The beforeRender event.
+        * @return \Cake\Http\Response|null|void
+        */
+        public function beforeRender(EventInterface $event)
+        {
+            $this->set('_serialize', true);
+        
+           // Note: These defaults are just to get started quickly with development
+           // and should not be used in production. You should instead set "_serialize"
+           // in each action as required.
+        //    if (
+        //        !array_key_exists('_serialize', $this->viewVars) &&
+        //        in_array($this->response->type(), ['application/json', 'application/xml'])
+        //    ) {
+        //        $this->set('_serialize', true);
+        //    }
+   
+           //pass prefix to all controllers
+           $prefix = null;
+           if ($this->request->getSession()->read('Auth.User.role_id') == 1) {
+               $prefix = 'admin';
+           }
+           if ($this->request->getSession()->read('Auth.User.role_id') == 2) {
+               $prefix = 'manager';
+           }
+           if ($this->request->getSession()->read('Auth.User.role_id') == 4) {
+               $prefix = 'evaluator';
+           }
+           if ($this->request->getSession()->read('Auth.User.role_id') == 5) {
+               $prefix = 'institution';
+           }
+           $this->set(['prefix' => $prefix]);
+       }
 }

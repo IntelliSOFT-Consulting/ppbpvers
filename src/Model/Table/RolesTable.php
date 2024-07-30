@@ -47,6 +47,8 @@ class RolesTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->addBehavior('Acl.Acl', ['type' => 'requester']);
+
         $this->hasMany('Users', [
             'foreignKey' => 'role_id',
         ]);
@@ -62,12 +64,12 @@ class RolesTable extends Table
     {
         $validator
             ->scalar('name')
-            ->maxLength('name', 255)
-            ->allowEmptyString('name');
+            ->maxLength('name', 100)
+            ->requirePresence('name', 'create')
+            ->notEmptyString('name');
 
         $validator
             ->scalar('description')
-            ->maxLength('description', 255)
             ->allowEmptyString('description');
 
         return $validator;
