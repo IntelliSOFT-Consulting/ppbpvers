@@ -16,7 +16,7 @@ use Cake\ORM\Entity;
  * @property string|null $confirm_password
  * @property string|null $name
  * @property string $email
- * @property int|null $role_id
+ * @property int $group_id
  * @property string|null $name_of_institution
  * @property string|null $institution_address
  * @property string|null $institution_code
@@ -24,20 +24,39 @@ use Cake\ORM\Entity;
  * @property string|null $institution_contact
  * @property string|null $ward
  * @property string|null $phone_no
- * @property string|null $forgot_password
- * @property string|null $initial_email
+ * @property int|null $forgot_password
+ * @property int|null $initial_email
  * @property bool|null $is_active
  * @property bool|null $is_admin
  * @property bool|null $deleted
  * @property \Cake\I18n\FrozenTime|null $deleted_date
+ * @property \Cake\I18n\FrozenTime|null $created
+ * @property \Cake\I18n\FrozenTime|null $modified
  * @property string|null $user_type
  * @property string|null $sponsor_email
  * @property string|null $health_program
- * @property \Cake\I18n\FrozenTime|null $active_date
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\FrozenDate|null $active_date
  *
- * @property \App\Model\Entity\Role $role
+ * @property \App\Model\Entity\Designation $designation
+ * @property \App\Model\Entity\County $county
+ * @property \App\Model\Entity\Group $group
+ * @property \App\Model\Entity\Aefi[] $aefis
+ * @property \App\Model\Entity\Aggregate[] $aggregates
+ * @property \App\Model\Entity\Ce2b[] $ce2bs
+ * @property \App\Model\Entity\Comment[] $comments
+ * @property \App\Model\Entity\Device[] $devices
+ * @property \App\Model\Entity\Feedback[] $feedbacks
+ * @property \App\Model\Entity\Medication[] $medications
+ * @property \App\Model\Entity\Notification[] $notifications
+ * @property \App\Model\Entity\Padr[] $padrs
+ * @property \App\Model\Entity\Pqmp[] $pqmps
+ * @property \App\Model\Entity\Reminder[] $reminders
+ * @property \App\Model\Entity\Review[] $reviews
+ * @property \App\Model\Entity\SadrFollowup[] $sadr_followups
+ * @property \App\Model\Entity\Sadr[] $sadrs
+ * @property \App\Model\Entity\Saefi[] $saefis
+ * @property \App\Model\Entity\Sae[] $saes
+ * @property \App\Model\Entity\Transfusion[] $transfusions
  */
 class User extends Entity
 {
@@ -58,7 +77,7 @@ class User extends Entity
         'confirm_password' => true,
         'name' => true,
         'email' => true,
-        'role_id' => true,
+        'group_id' => true,
         'name_of_institution' => true,
         'institution_address' => true,
         'institution_code' => true,
@@ -72,13 +91,32 @@ class User extends Entity
         'is_admin' => true,
         'deleted' => true,
         'deleted_date' => true,
+        'created' => true,
+        'modified' => true,
         'user_type' => true,
         'sponsor_email' => true,
         'health_program' => true,
         'active_date' => true,
-        'created' => true,
-        'modified' => true,
-        'role' => true,
+        'designation' => true,
+        'county' => true,
+        'group' => true,
+        'aefis' => true,
+        'aggregates' => true,
+        'ce2bs' => true,
+        'comments' => true,
+        'devices' => true,
+        'feedbacks' => true,
+        'medications' => true,
+        'notifications' => true,
+        'padrs' => true,
+        'pqmps' => true,
+        'reminders' => true,
+        'reviews' => true,
+        'sadr_followups' => true,
+        'sadrs' => true,
+        'saefis' => true,
+        'saes' => true,
+        'transfusions' => true,
     ];
 
     /**

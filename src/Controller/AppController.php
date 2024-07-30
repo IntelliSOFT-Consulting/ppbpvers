@@ -36,7 +36,29 @@ class AppController extends Controller
      * e.g. `$this->loadComponent('FormProtection');`
      *
      * @return void
+     * 
      */
+
+    //  public $components = [
+    //     'Acl' => [
+    //         'className' => 'Acl.Acl'
+    //     ],
+    //     'RequestHandler',
+    //     'Crud.Crud' => [
+    //         'actions' => [
+    //             'Crud.Index',
+    //             'Crud.View',
+    //             'Crud.Add',
+    //             'Crud.Edit',
+    //             'Crud.Delete'
+    //         ],
+    //         'listeners' => [
+    //             'Crud.Api',
+    //             'Crud.ApiPagination',
+    //             'Crud.ApiQueryLog'
+    //         ]
+    //     ]
+    // ];
     public function initialize(): void
     {
         parent::initialize();
@@ -49,5 +71,40 @@ class AppController extends Controller
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
         //$this->loadComponent('FormProtection');
+
+        // $this->loadComponent('Auth', [
+        //     'authorize' => [
+        //         'Acl.Actions' => ['actionPath' => 'controllers/']
+        //     ],
+        //     'loginAction' => [
+        //         'plugin' => false,
+        //         'prefix' => false,
+        //         'controller' => 'Users',
+        //         'action' => 'login'
+        //     ],
+        //     'loginRedirect' => [
+        //         'plugin' => false,
+        //         'prefix' => false,
+        //         'controller' => 'Users',
+        //         'action' => 'home'
+        //     ],
+        //     'logoutRedirect' => [
+        //         'plugin' => false,
+        //         'prefix' => false,
+        //         'controller' => 'Users',
+        //         'action' => 'login'
+        //     ],
+        //     'unauthorizedRedirect' => [
+        //         'controller' => 'pages',
+        //         'action' => 'home',
+        //         'prefix' => false,
+        //         'plugin' => false
+        //     ],
+        //     'authError' => 'You are not authorized to access that location.',
+        //     'loginError' => 'You are not authorized to access that location.',
+        //     'flash' => [
+        //         'element' => 'error'
+        //     ]
+        // ]);
     }
 }

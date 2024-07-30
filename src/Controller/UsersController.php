@@ -19,7 +19,7 @@ class UsersController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Roles'],
+            'contain' => ['Designations', 'Counties', 'Groups'],
         ];
         $users = $this->paginate($this->Users);
 
@@ -36,7 +36,7 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['Roles'],
+            'contain' => ['Designations', 'Counties', 'Groups', 'Aefis', 'Aggregates', 'Ce2bs', 'Comments', 'Devices', 'Feedbacks', 'Medications', 'Notifications', 'Padrs', 'Pqmps', 'Reminders', 'Reviews', 'SadrFollowups', 'Sadrs', 'Saefis', 'Saes', 'Transfusions'],
         ]);
 
         $this->set(compact('user'));
@@ -59,8 +59,10 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $roles = $this->Users->Roles->find('list', ['limit' => 200])->all();
-        $this->set(compact('user', 'roles'));
+        $designations = $this->Users->Designations->find('list', ['limit' => 200])->all();
+        $counties = $this->Users->Counties->find('list', ['limit' => 200])->all();
+        $groups = $this->Users->Groups->find('list', ['limit' => 200])->all();
+        $this->set(compact('user', 'designations', 'counties', 'groups'));
     }
 
     /**
@@ -84,8 +86,10 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
-        $roles = $this->Users->Roles->find('list', ['limit' => 200])->all();
-        $this->set(compact('user', 'roles'));
+        $designations = $this->Users->Designations->find('list', ['limit' => 200])->all();
+        $counties = $this->Users->Counties->find('list', ['limit' => 200])->all();
+        $groups = $this->Users->Groups->find('list', ['limit' => 200])->all();
+        $this->set(compact('user', 'designations', 'counties', 'groups'));
     }
 
     /**

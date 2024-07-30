@@ -2,7 +2,9 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
- * @var \Cake\Collection\CollectionInterface|string[] $roles
+ * @var \Cake\Collection\CollectionInterface|string[] $designations
+ * @var \Cake\Collection\CollectionInterface|string[] $counties
+ * @var \Cake\Collection\CollectionInterface|string[] $groups
  */
 ?>
 <div class="row">
@@ -18,14 +20,14 @@
             <fieldset>
                 <legend><?= __('Add User') ?></legend>
                 <?php
-                    echo $this->Form->control('designation_id');
-                    echo $this->Form->control('county_id');
+                    echo $this->Form->control('designation_id', ['options' => $designations, 'empty' => true]);
+                    echo $this->Form->control('county_id', ['options' => $counties, 'empty' => true]);
                     echo $this->Form->control('username');
                     echo $this->Form->control('password');
                     echo $this->Form->control('confirm_password');
                     echo $this->Form->control('name');
                     echo $this->Form->control('email');
-                    echo $this->Form->control('role_id', ['options' => $roles, 'empty' => true]);
+                    echo $this->Form->control('group_id', ['options' => $groups]);
                     echo $this->Form->control('name_of_institution');
                     echo $this->Form->control('institution_address');
                     echo $this->Form->control('institution_code');

@@ -11,7 +11,26 @@ use Cake\Validation\Validator;
 /**
  * Users Model
  *
- * @property \App\Model\Table\RolesTable&\Cake\ORM\Association\BelongsTo $Roles
+ * @property \App\Model\Table\DesignationsTable&\Cake\ORM\Association\BelongsTo $Designations
+ * @property \App\Model\Table\CountiesTable&\Cake\ORM\Association\BelongsTo $Counties
+ * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
+ * @property \App\Model\Table\AefisTable&\Cake\ORM\Association\HasMany $Aefis
+ * @property \App\Model\Table\AggregatesTable&\Cake\ORM\Association\HasMany $Aggregates
+ * @property \App\Model\Table\Ce2bsTable&\Cake\ORM\Association\HasMany $Ce2bs
+ * @property \App\Model\Table\CommentsTable&\Cake\ORM\Association\HasMany $Comments
+ * @property \App\Model\Table\DevicesTable&\Cake\ORM\Association\HasMany $Devices
+ * @property \App\Model\Table\FeedbacksTable&\Cake\ORM\Association\HasMany $Feedbacks
+ * @property \App\Model\Table\MedicationsTable&\Cake\ORM\Association\HasMany $Medications
+ * @property \App\Model\Table\NotificationsTable&\Cake\ORM\Association\HasMany $Notifications
+ * @property \App\Model\Table\PadrsTable&\Cake\ORM\Association\HasMany $Padrs
+ * @property \App\Model\Table\PqmpsTable&\Cake\ORM\Association\HasMany $Pqmps
+ * @property \App\Model\Table\RemindersTable&\Cake\ORM\Association\HasMany $Reminders
+ * @property \App\Model\Table\ReviewsTable&\Cake\ORM\Association\HasMany $Reviews
+ * @property \App\Model\Table\SadrFollowupsTable&\Cake\ORM\Association\HasMany $SadrFollowups
+ * @property \App\Model\Table\SadrsTable&\Cake\ORM\Association\HasMany $Sadrs
+ * @property \App\Model\Table\SaefisTable&\Cake\ORM\Association\HasMany $Saefis
+ * @property \App\Model\Table\SaesTable&\Cake\ORM\Association\HasMany $Saes
+ * @property \App\Model\Table\TransfusionsTable&\Cake\ORM\Association\HasMany $Transfusions
  *
  * @method \App\Model\Entity\User newEmptyEntity()
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
@@ -47,8 +66,66 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Roles', [
-            'foreignKey' => 'role_id',
+        $this->belongsTo('Designations', [
+            'foreignKey' => 'designation_id',
+        ]);
+        $this->belongsTo('Counties', [
+            'foreignKey' => 'county_id',
+        ]);
+        $this->belongsTo('Groups', [
+            'foreignKey' => 'group_id',
+            'joinType' => 'INNER',
+        ]);
+        $this->hasMany('Aefis', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Aggregates', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Ce2bs', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Comments', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Devices', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Feedbacks', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Medications', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Notifications', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Padrs', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Pqmps', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Reminders', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Reviews', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('SadrFollowups', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Sadrs', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Saefis', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Saes', [
+            'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Transfusions', [
+            'foreignKey' => 'user_id',
         ]);
     }
 
@@ -72,46 +149,46 @@ class UsersTable extends Table
             ->scalar('username')
             ->maxLength('username', 255)
             ->requirePresence('username', 'create')
-            ->notEmptyString('username');
+            ->notEmptyString('username')
+            ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->scalar('password')
-            ->maxLength('password', 255)
+            ->maxLength('password', 140)
             ->requirePresence('password', 'create')
             ->notEmptyString('password');
 
         $validator
             ->scalar('confirm_password')
-            ->maxLength('confirm_password', 255)
+            ->maxLength('confirm_password', 140)
             ->allowEmptyString('confirm_password');
 
         $validator
             ->scalar('name')
-            ->maxLength('name', 255)
+            ->maxLength('name', 100)
             ->allowEmptyString('name');
 
         $validator
             ->email('email')
-            ->requirePresence('email', 'create')
             ->notEmptyString('email');
 
         $validator
-            ->integer('role_id')
-            ->allowEmptyString('role_id');
+            ->integer('group_id')
+            ->notEmptyString('group_id');
 
         $validator
             ->scalar('name_of_institution')
-            ->maxLength('name_of_institution', 255)
+            ->maxLength('name_of_institution', 100)
             ->allowEmptyString('name_of_institution');
 
         $validator
             ->scalar('institution_address')
-            ->maxLength('institution_address', 255)
+            ->maxLength('institution_address', 100)
             ->allowEmptyString('institution_address');
 
         $validator
             ->scalar('institution_code')
-            ->maxLength('institution_code', 255)
+            ->maxLength('institution_code', 100)
             ->allowEmptyString('institution_code');
 
         $validator
@@ -121,27 +198,23 @@ class UsersTable extends Table
 
         $validator
             ->scalar('institution_contact')
-            ->maxLength('institution_contact', 255)
+            ->maxLength('institution_contact', 100)
             ->allowEmptyString('institution_contact');
 
         $validator
             ->scalar('ward')
-            ->maxLength('ward', 255)
+            ->maxLength('ward', 100)
             ->allowEmptyString('ward');
 
         $validator
             ->scalar('phone_no')
-            ->maxLength('phone_no', 20)
+            ->maxLength('phone_no', 100)
             ->allowEmptyString('phone_no');
 
         $validator
-            ->scalar('forgot_password')
-            ->maxLength('forgot_password', 255)
             ->allowEmptyString('forgot_password');
 
         $validator
-            ->scalar('initial_email')
-            ->maxLength('initial_email', 255)
             ->allowEmptyString('initial_email');
 
         $validator
@@ -162,22 +235,22 @@ class UsersTable extends Table
 
         $validator
             ->scalar('user_type')
-            ->maxLength('user_type', 255)
+            ->maxLength('user_type', 55)
             ->allowEmptyString('user_type');
 
         $validator
             ->scalar('sponsor_email')
-            ->maxLength('sponsor_email', 255)
+            ->maxLength('sponsor_email', 55)
             ->allowEmptyString('sponsor_email');
 
         $validator
             ->scalar('health_program')
-            ->maxLength('health_program', 255)
+            ->maxLength('health_program', 105)
             ->allowEmptyString('health_program');
 
         $validator
-            ->dateTime('active_date')
-            ->allowEmptyDateTime('active_date');
+            ->date('active_date')
+            ->allowEmptyDate('active_date');
 
         return $validator;
     }
@@ -193,7 +266,9 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['username']), ['errorField' => 'username']);
         $rules->add($rules->isUnique(['email']), ['errorField' => 'email']);
-        $rules->add($rules->existsIn('role_id', 'Roles'), ['errorField' => 'role_id']);
+        $rules->add($rules->existsIn('designation_id', 'Designations'), ['errorField' => 'designation_id']);
+        $rules->add($rules->existsIn('county_id', 'Counties'), ['errorField' => 'county_id']);
+        $rules->add($rules->existsIn('group_id', 'Groups'), ['errorField' => 'group_id']);
 
         return $rules;
     }
