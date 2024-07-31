@@ -52,18 +52,14 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', ['viewClassMap' => ['csv' => 'CsvView.Csv']]);
         // $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
-
+        // $this->loadHelper('Tools.Captcha', [
+        //     'type' => 'active'
+        // ]);
         /*
          * Enable the following component for recommended CakePHP form protection settings.
          * see https://book.cakephp.org/4/en/controllers/components/form-protection.html
          */
-        //$this->loadComponent('FormProtection');
-
-        // Load the Authorization component
-        // $this->loadComponent('Authorization.Authorization');
-
-        // Configure default authorization rules for controllers
-        // $this->Authorization->skipAuthorization(); 
+        //$this->loadComponent('FormProtection'); 
 
         $this->loadComponent('Acl', [
             'className' => 'Acl.Acl'

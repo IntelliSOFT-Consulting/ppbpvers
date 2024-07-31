@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -7,6 +8,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * Users Model
@@ -66,6 +69,8 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Acl.Acl', ['type' => 'requester']);
+        // $this->addBehavior('Acl.Acl', ['type' => 'requester']);
+
 
         $this->belongsTo('Designations', [
             'foreignKey' => 'designation_id',
@@ -274,12 +279,14 @@ class UsersTable extends Table
         return $rules;
     }
 
-    public function beforeSave(\Cake\Event\Event $event, \Cake\ORM\Entity $entity, 
-    \ArrayObject $options)
-{
-    $hasher = new DefaultPasswordHasher;
-    if(!empty($entity->password)) $entity->password = $hasher->hash($entity->password);
-    if(!empty($entity->confirm_password)) $entity->confirm_password = $hasher->hash($entity->confirm_password);
-    return true;
-}  
+    public function beforeSave(
+        \Cake\Event\Event $event,
+        \Cake\ORM\Entity $entity,
+        \ArrayObject $options
+    ) {
+        $hasher = new DefaultPasswordHasher();
+        if (!empty($entity->password)) $entity->password = $hasher->hash($entity->password);
+        if (!empty($entity->confirm_password)) $entity->confirm_password = $hasher->hash($entity->confirm_password);
+        return true;
+    }
 }

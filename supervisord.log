@@ -89,3 +89,29 @@
 2024-07-30 12:19:50,208 INFO spawned: 'cake_queue_worker' with pid 52
 2024-07-30 12:19:50,294 WARN exited: cake_queue_worker (exit status 1; not expected)
 2024-07-30 12:19:51,295 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-31 07:52:58,852 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-31 07:52:58,855 INFO supervisord started with pid 1
+2024-07-31 07:52:59,865 INFO spawned: 'apache' with pid 7
+2024-07-31 07:52:59,869 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-31 07:53:00,412 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:53:01,414 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-31 07:53:01,415 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-31 07:53:01,547 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:53:03,554 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-31 07:53:03,884 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:53:06,891 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-31 07:53:07,192 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:53:08,193 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly
+2024-07-31 07:55:52,878 CRIT Supervisor is running as root.  Privileges were not dropped because no user is specified in the config file.  If you intend to run as root, you can set user=root in the config file to avoid this message.
+2024-07-31 07:55:52,883 INFO supervisord started with pid 1
+2024-07-31 07:55:53,889 INFO spawned: 'apache' with pid 7
+2024-07-31 07:55:53,891 INFO spawned: 'cake_queue_worker' with pid 8
+2024-07-31 07:55:54,047 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:55:55,048 INFO success: apache entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-07-31 07:55:55,050 INFO spawned: 'cake_queue_worker' with pid 27
+2024-07-31 07:55:55,195 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:55:57,198 INFO spawned: 'cake_queue_worker' with pid 39
+2024-07-31 07:55:57,348 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:56:00,352 INFO spawned: 'cake_queue_worker' with pid 51
+2024-07-31 07:56:00,480 WARN exited: cake_queue_worker (exit status 1; not expected)
+2024-07-31 07:56:01,480 INFO gave up: cake_queue_worker entered FATAL state, too many start retries too quickly

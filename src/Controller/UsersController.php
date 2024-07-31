@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -34,14 +35,16 @@ class UsersController extends AppController
         'Notifications' => ['scope' => 'notification'],
     ];
 
-    public function initialize():void
+
+
+    public function initialize(): void
     {
         parent::initialize();
         $this->loadComponent('Paginator');
         $this->Auth->allow('logout', 'activate');
     }
 
-    public function beforeFilter(EventInterface $event):void
+    public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
         $this->Auth->allow([
@@ -70,7 +73,6 @@ class UsersController extends AppController
 
     public function guest()
     {
-
     }
 
     //Login with username or password
@@ -82,15 +84,16 @@ class UsersController extends AppController
 
         if ($this->request->is('post')) {
 
-            if (Validation::email($this->request->data['username'])) {
+            $username = $this->request->getData('username');
+            if (Validation::email($this->request->getData('username'))) {
                 $this->Auth->config('authenticate', [
                     'Form' => [
                         'fields' => ['username' => 'email']
                     ]
                 ]);
                 $this->Auth->constructAuthenticate();
-                $this->request->data['email'] = $this->request->data['username'];
-                unset($this->request->data['username']);
+                $request = $this->request->withData('email', $username)
+                    ->withoutData('username');
             }
 
             $user = $this->Auth->identify();
@@ -119,15 +122,12 @@ class UsersController extends AppController
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'admin', 'plugin' => false]);
                     } elseif ($user['role_id'] == 2) {
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'manager', 'plugin' => false]);
+                    } elseif ($user['role_id'] == 3) {
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'reporter', 'plugin' => false]);
                     } elseif ($user['role_id'] == 4) {
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'evaluator', 'plugin' => false]);
                     } elseif ($user['role_id'] == 5) {
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'institution', 'plugin' => false]);
-                    }
-
-                    // Added for technical user
-                    elseif ($user['role_id'] == 6) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'technical', 'plugin' => false]);
                     }
                 }
                 return $this->redirect($this->Auth->redirectUrl());
@@ -147,96 +147,123 @@ class UsersController extends AppController
 
     public function register()
     {
-        $this->Users->addBehavior('Captcha.Captcha');
+        // $this->Users->addBehavior('Captcha.Captcha');
         if ($this->Auth->user()) {
             return $this->redirect($this->Auth->redirectUrl());
         }
 
-        $user = $this->Users->newEntity();
+        $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
 
-            if ($user->errors()) {
-                $this->response->body('Failure');
-                $this->response->statusCode(403);
+            if ($user->hasErrors()) {
+                $this->response->getBody('Failure');
+                $this->response->getStatusCode(403);
                 $this->set([
-                    'errors' => $user->errors(),
+                    'errors' => $user->getErrors(),
                     'message' => 'Validation errors',
                     '_serialize' => ['errors', 'message']
                 ]);
             }
 
+            // $aro = $this->Acl->Aro->newEmptyEntity();
+            // $aro->parent_id = null; // or the ID of the parent node if any
+            // $aro->model = 'Role';
+            // $aro->foreign_key = 3; // Replace with the actual role ID
+            // $aro->alias = 'Users'; // Replace with the actual role name
+
+            // if ($this->Acl->Aro->save($aro)) {
+            //     $this->Flash->success(__('The ARO has been saved.'));
+            // } else {
+            //     $this->Flash->error(__('The ARO could not be saved. Please, try again.'));
+            // }
+
+
             $user->role_id = 3;
+
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('Registration successful.'));
+                $this->Flash->success(__('The user has been saved.'));
 
-                $user->activation_key = $this->Util->generateXOR($user->id);
-                $query = $this->Users->query();
-                $query->update()
-                    ->set(['activation_key' => $this->Util->generateXOR($user->id), 'last_password' => date('Y-m-d H:i:s')])
-                    ->where(['id' => $user->id])
-                    ->execute();
-
-                //Send registration confirm email
-                $this->loadModel('Queue.QueuedJobs');
-                $data = [
-                    'email_address' => $user->email, 'user_id' => $user->id, 'type' => 'registration_email', 'model' => 'Users',
-                    'foreign_key' => $user->id, 'vars' =>  $user->toArray()
-                ];
-                $html = new HtmlHelper(new \Cake\View\View());
-                $data['vars']['name'] = (isset($user->name)) ? $user->name : 'Sir/Madam';
-                $data['vars']['pv_site'] = $html->link('MCAZ PV website', ['controller' => 'Pages', 'action' => 'home', '_full' => true, 'prefix' => false]);
-                $data['vars']['activation_link'] = $html->link('ACTIVATE', [
-                    'controller' => 'Users', 'action' => 'activate', $user->activation_key,
-                    '_full' => true, 'prefix' => false
-                ]);
-                $this->QueuedJobs->createJob('GenericEmail', $data);
-                //Send registration notification
-                $data['type'] = 'registration_notification';
-                $this->QueuedJobs->createJob('GenericNotification', $data);
-                //
-                //Send email and notification to institution
-                if (!empty($user->name_of_institution)) {
-                    $institution = $this->Users->find('all', ['conditions' => ['role_id' => 5, 'lower(Users.name_of_institution) LIKE' => strtolower($user->name_of_institution)]])->first();
-                    if (!empty($institution->email)) {
-                        $data = [
-                            'email_address' => $institution->email, 'user_id' => $institution->id, 'type' => 'registration_institution_email', 'model' => 'Users',
-                            'foreign_key' => $institution->id, 'vars' =>  $institution->toArray()
-                        ];
-                        $data['vars']['name'] = (isset($institution->name)) ? $institution->name : 'Sir/Madam';
-                        $this->QueuedJobs->createJob('GenericEmail', $data);
-                        //Send registration notification
-                        $data['type'] = 'registration_institution_notification';
-                        $this->QueuedJobs->createJob('GenericNotification', $data);
-                    }
-                }
-
-
-                $this->Flash->success(__('You have successfully registered. Please click on the link sent to your email address to
-                    activate your account. Check your spam folder if you
-                    don\'t see it in your inbox.'));
-
-
-                if ($this->request->is('json')) {
-                    $this->set([
-                        'message' => 'Registration successfull. Click on link sent on email to complete registration',
-                        '_serialize' => ['message']
-                    ]);
-                    return;
-                }
-
-                return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-
-                //return $this->redirect('/');
-            } else {
-                $this->Flash->error(__('The user could not be registered. Please, try again.'));
-                // $user->success = false;
-                // $user->message =            
+                return $this->redirect(['action' => 'index']);
             }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+
+
+            // if ($this->Users->save($user)) {
+            //     $this->Flash->success(__('Registration successful.'));
+
+            //     $user->activation_key = $this->Util->generateXOR($user->id);
+            //     $query = $this->Users->query();
+            //     $query->update()
+            //         ->set(['activation_key' => $this->Util->generateXOR($user->id), 'last_password' => date('Y-m-d H:i:s')])
+            //         ->where(['id' => $user->id])
+            //         ->execute();
+
+            //     //Send registration confirm email
+            //     $this->loadModel('Queue.QueuedJobs');
+            //     $data = [
+            //         'email_address' => $user->email, 'user_id' => $user->id, 'type' => 'registration_email', 'model' => 'Users',
+            //         'foreign_key' => $user->id, 'vars' =>  $user->toArray()
+            //     ];
+            //     $html = new HtmlHelper(new \Cake\View\View());
+            //     $data['vars']['name'] = (isset($user->name)) ? $user->name : 'Sir/Madam';
+            //     $data['vars']['pv_site'] = $html->link('PvERS PV website', ['controller' => 'Pages', 'action' => 'home', '_full' => true, 'prefix' => false]);
+            //     $data['vars']['activation_link'] = $html->link('ACTIVATE', [
+            //         'controller' => 'Users', 'action' => 'activate', $user->activation_key,
+            //         '_full' => true, 'prefix' => false
+            //     ]);
+            //     $this->QueuedJobs->createJob('GenericEmail', $data);
+            //     //Send registration notification
+            //     $data['type'] = 'registration_notification';
+            //     $this->QueuedJobs->createJob('GenericNotification', $data);
+            //     //
+            //     //Send email and notification to institution
+            //     if (!empty($user->name_of_institution)) {
+            //         $institution = $this->Users->find('all', ['conditions' => ['role_id' => 5, 'lower(Users.name_of_institution) LIKE' => strtolower($user->name_of_institution)]])->first();
+            //         if (!empty($institution->email)) {
+            //             $data = [
+            //                 'email_address' => $institution->email, 'user_id' => $institution->id, 'type' => 'registration_institution_email', 'model' => 'Users',
+            //                 'foreign_key' => $institution->id, 'vars' =>  $institution->toArray()
+            //             ];
+            //             $data['vars']['name'] = (isset($institution->name)) ? $institution->name : 'Sir/Madam';
+            //             $this->QueuedJobs->createJob('GenericEmail', $data);
+            //             //Send registration notification
+            //             $data['type'] = 'registration_institution_notification';
+            //             $this->QueuedJobs->createJob('GenericNotification', $data);
+            //         }
+            //     }
+
+
+            //     $this->Flash->success(__('You have successfully registered. Please click on the link sent to your email address to
+            //         activate your account. Check your spam folder if you
+            //         don\'t see it in your inbox.'));
+
+
+            //     if ($this->request->is('json')) {
+            //         $this->set([
+            //             'message' => 'Registration successfull. Click on link sent on email to complete registration',
+            //             '_serialize' => ['message']
+            //         ]);
+            //         return;
+            //     }
+
+            //     return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+            // } else {
+            //     $errorMessages = [];
+            //     foreach ($user->getErrors() as $field => $errors) {
+            //         foreach ($errors as $error) {
+            //             $errorMessages[] = ucfirst($field) . ': ' . $error;
+            //         }
+            //     }
+            //     $errorString = implode(', ', $errorMessages);
+
+            //     $this->Flash->error(__('The user could not be registered. Please, try again.' . $errorString));
+            // }
         }
-        $designations = $this->Users->Designations->find('list', ['limit' => 200, 'order' => ['name' => 'ASC']]);
-        $provinces = $this->Users->Provinces->find('list', ['limit' => 200, 'order' => ['province_name' => 'ASC']]);
-        $this->set(compact('user', 'designations', 'provinces'));
+        $designations = $this->Users->Designations->find('list', ['limit' => 200, 'order' => ['name' => 'ASC']])->all();
+        $counties = $this->Users->Counties->find('list', array('order' => 'Counties.county_name ASC'))->all();
+        // dd($designations);
+        $this->set(compact('user', 'designations', 'counties'));
         $this->set('_serialize', ['user']);
     }
 
@@ -246,8 +273,8 @@ class UsersController extends AppController
     {
         if ($id) {
             $user = $this->Users->findByActivationKey($id)->first();
-             
-            if ($user) { 
+
+            if ($user) {
                 $query = $this->Users->query();
                 $query->update()
                     ->set(['is_active' => 1])
@@ -272,7 +299,7 @@ class UsersController extends AppController
     {
         if ($this->Auth->user()) {
             $this->Flash->success('You are logged in!');
-            $this->redirect('/', null, false);
+            $this->redirect('/', 0, false);
         }
         if ($this->request->is('post')) {
             $user = $this->Users->findByEmail($this->request->getData('email'))->first();

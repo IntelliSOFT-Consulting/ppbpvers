@@ -39,21 +39,6 @@ class County extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'county_name' => true,
-        'org_unit' => true,
-        'created' => true,
-        'modified' => true,
-        'aefis' => true,
-        'aggregates' => true,
-        'ce2bs' => true,
-        'devices' => true,
-        'medications' => true,
-        'padrs' => true,
-        'pqmps' => true,
-        'sadr_followups' => true,
-        'sadrs' => true,
-        'sub_counties' => true,
-        'transfusions' => true,
-        'users' => true,
+        '*' => true
     ];
 }

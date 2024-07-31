@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -11,6 +12,35 @@ namespace App\Controller;
  */
 class RolesController extends AppController
 {
+
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+        $this->Auth->allow('addone');
+    }
+
+    public function addone()
+    {
+        $role = $this->Roles->newEmptyEntity();
+        $data = array(
+
+            // 'name' => 'Administrators',
+            // 'description' => 'System wide Administrators with rights to almost everything'
+            // 'name'=>'Managers',
+            // 'description'=>'Middle level administrators'
+             'description'=>'End User Reporters',
+            'name'=>'Users'
+
+        );
+
+        // $role = $this->Roles->patchEntity($role, $data);
+        // if ($this->Roles->save($role)) {
+        //     dd('The role has been saved.');
+        // }
+        dd('The role could not be saved. Please, try again.');
+    }
     /**
      * Index method
      *
