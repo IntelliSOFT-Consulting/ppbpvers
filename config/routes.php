@@ -66,36 +66,35 @@ Router::prefix('api', function ($routes) {
 Router::prefix('admin', function ($routes) {
     // All routes here will be prefixed with `/admin`
     // And have the prefix => admin route element added.
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'admin']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
 
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('base', function ($routes) {
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'base']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Base']);
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('manager', function ($routes) {
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'manager']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
+
+    $routes->fallbacks(DashedRoute::class);
+});
+Router::prefix('reporter', function ($routes) {
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
 
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('institution', function ($routes) {
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'institution']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Institution']);
 
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('evaluator', function ($routes) {
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'evaluator']);
+    $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Evaluator']);
 
     $routes->fallbacks(DashedRoute::class);
 });
-
-// Technical Section 
-Router::prefix('technical', function ($routes) {
-    $routes->connect('/', ['controller' => 'users', 'action' => 'dashboard', 'prefix' => 'technical']);
-
-    $routes->fallbacks(DashedRoute::class);
-});
+ 
 
 //
 Router::scope('/', function (RouteBuilder $routes) {

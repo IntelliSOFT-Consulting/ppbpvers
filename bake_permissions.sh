@@ -19,3 +19,9 @@ echo "*************** Assign Admin Permissions  *******************"
 bin/cake acl grant Roles.1 controllers
 bin/cake acl grant Roles.1 controllers/Admin
 bin/cake acl deny Roles.1 controllers/Manager
+
+
+echo "*************** Assign Reporters Permissions  *******************"
+#Admin permissions
+bin/cake acl deny Roles.3 controllers
+bin/cake acl grant Roles.3 controllers/Reporter 

@@ -1,7 +1,7 @@
 <?php
 $this->assign('Home', 'active');
 echo $this->Html->css('upgrade', array('inline' => false));
- 
+echo $this->Flash->render();
 ?>
 <dev class="clint-logo-wrapper">
     <img class="client_logo" src="/img/coa.png" />

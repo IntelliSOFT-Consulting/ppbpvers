@@ -28,6 +28,24 @@ class UsersController extends AppController
         $this->set(compact('users'));
     }
 
+    public function dashboard(){
+
+        $users=[];
+        $this->set(compact('users'));
+        $sadrs=[];
+        $this->set(compact('sadrs'));
+        $aefis=[];
+        $this->set(compact('aefis'));
+        $pqmps=[];
+        $this->set(compact('pqmps'));
+        $devices=[];
+        $this->set(compact('devices'));
+        $medications=[];
+        $this->set(compact('medications'));
+        $transfusions=[];
+        $this->set(compact('transfusions'));
+
+    }
     /**
      * View method
      *
