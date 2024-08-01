@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Entity;
 
+use Cake\Auth\DefaultPasswordHasher;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
 
 /**
  * User Entity
@@ -74,6 +76,13 @@ class User extends Entity
         
     ];
 
+    // protected function _setPassword($password)
+    // {
+    //     if (strlen($password) > 0) {
+    //         return (new DefaultPasswordHasher())->hash($password);
+    //     }
+    // }
+
     /**
      * Fields that are excluded from JSON versions of the entity.
      *
@@ -92,7 +101,7 @@ class User extends Entity
         if (isset($this->role_id)) {
             $roleId = $this->role_id;
         } else {
-            $Users = TableRegistry::get('Users');
+            $Users = TableRegistry::get('users');
             $user = $Users->find('all', ['fields' => ['role_id']])->where(['id' => $this->id])->first();
             $roleId = $user->role_id;
         }

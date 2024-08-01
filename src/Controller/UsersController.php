@@ -14,6 +14,7 @@ use Cake\Core\Configure;
 use Cake\Filesystem\File;
 use Cake\I18n\Time;
 use Cake\Utility\Hash;
+use Cake\Utility\Text;
 
 /**
  * Users Controller
@@ -74,66 +75,129 @@ class UsersController extends AppController
     public function guest()
     {
     }
-
-    //Login with username or password
     public function login()
     {
-        if ($this->Auth->user()) {
-            return $this->redirect($this->Auth->redirectUrl());
+        if ($this->request->is('post')) {
+            // Get the data directly without the extra 'data' object
+            $data = $this->request->getData(); 
+
+            // Check if username is an email
+            if (Validation::email($data['username'])) {
+
+                $this->Auth->setConfig('authenticate', [
+                    'Form' => ['fields' => ['username' => 'email']]
+                ]);
+                $this->Auth->constructAuthenticate();
+                $data['email'] = $data['username'];
+                unset($data['username']);
+                $this->request = $this->request->withData('User.email', $data['email']);
+            }
+            // Attempt to identify the user
+            $user = $this->Auth->identify();
+            // dd($data);
+            // dd($user);
+            if ($user) {
+                $this->Auth->setUser($user);
+
+                // User is authenticated, handle redirect based on user group
+                switch ($user['role_id']) {
+                    case '1':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
+                    case '2':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
+                    case '3':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
+                    case '4':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Partner']);
+                    case '5':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reviewer']);
+                    default:
+                        $this->Flash->error('Invalid user group.');
+                        return $this->redirect($this->Auth->logout());
+                }
+            } else {
+                // Invalid credentials
+                $this->Flash->error('Your username or password is incorrect.');
+            }
+        }
+    }
+    //Login with username or password
+    public function login_old()
+    {
+
+        if ($this->request->getSession()->read('Auth.User')) {
+            $this->Session->setFlash('You are logged in!', 'alerts/flash_success');
+            // $this->redirect('/', false);
         }
 
         if ($this->request->is('post')) {
 
-            $username = $this->request->getData('username');
-            if (Validation::email($this->request->getData('username'))) {
-                $this->Auth->config('authenticate', [
-                    'Form' => [
-                        'fields' => ['username' => 'email']
-                    ]
+            $data = $this->request->getData();
+            $data = $data['data'];
+
+
+            if (Validation::email($data['User']['username'])) {
+                $this->Auth->setConfig('authenticate', [
+                    'Form' => ['fields' => ['username' => 'email']]
                 ]);
                 $this->Auth->constructAuthenticate();
-                $request = $this->request->withData('email', $username)
-                    ->withoutData('username');
+                $data['User']['email'] = $data['User']['username'];
+                unset($data['User']['username']);
+                $this->request = $this->request->withData('email', $data['User']['email']);
             }
 
-            $user = $this->Auth->identify();
+            // Before calling $this->Auth->identify();
+            debug($this->request->getData());
+            debug($this->Auth->getConfig());
 
+            $user = $this->Auth->identify();
+            dd($user);
             if ($user) {
                 $this->Auth->setUser($user);
 
-                $this->log($user['email'] . ' logged in at ' . date('d-m-Y H:i:s'), 'info', 'dblog');
-
-                $date = new \DateTime(Configure::read('password_expire_timeout'));
                 if ($user['is_active'] == 0) {
-                    $this->Flash->error('Your account is not activated! If you have just registered, please click the activation link sent to your email. Remember to check you spam folder too!');
-                    $this->redirect($this->Auth->logout());
+                    $this->Flash->error('Your account is not activated! If you have just registered, please click the activation link sent to your email. Remember to check your spam folder too!');
+                    return $this->redirect($this->Authentication->logout());
                 } elseif ($user['deactivated'] == 1) {
-                    $this->Flash->error('Your account has been deactivated! Please contact MCAZ.');
-                    $this->redirect($this->Auth->logout());
-                } elseif ($user['last_password'] <= $date->modify('-2 days')) {
-                    $this->Flash->error('Your password has expired. Click on forgot password to create new password.');
-                    $this->redirect($this->Auth->logout());
+                    $this->Flash->error('Your account has been deactivated! Please contact PPB.');
+                    return $this->redirect($this->Authentication->logout());
                 }
 
-                if (strlen($this->Auth->redirectUrl()) > 12) {
-                    return $this->redirect($this->Auth->redirectUrl());
-                } else {
-                    if ($user['role_id'] == 1) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'admin', 'plugin' => false]);
-                    } elseif ($user['role_id'] == 2) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'manager', 'plugin' => false]);
-                    } elseif ($user['role_id'] == 3) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'reporter', 'plugin' => false]);
-                    } elseif ($user['role_id'] == 4) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'evaluator', 'plugin' => false]);
-                    } elseif ($user['role_id'] == 5) {
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'institution', 'plugin' => false]);
+                // Check if it's the mini manager::: Check active date
+                if ($user['role_id'] == '5') {
+                    $active_date = $user['active_date'];
+                    if (!empty($active_date)) {
+                        $today = date('Y-m-d');
+                        $active_date_obj = date('Y-m-d', strtotime($active_date));
+
+                        if ($active_date_obj < $today) {
+                            $this->Flash->error('Your account has expired! Please contact PPB.');
+                            return $this->redirect($this->Authentication->logout());
+                        }
+                    } else {
+                        $this->Flash->error('Your account has expired! Please contact PPB.');
+                        return $this->redirect($this->Authentication->logout());
                     }
                 }
-                return $this->redirect($this->Auth->redirectUrl());
-            }
 
-            $this->Flash->error(__('Invalid username or password, try again'));
+                switch ($user['role_id']) {
+                    case '1':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
+                    case '2':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
+                    case '3':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
+                    case '4':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Partner']);
+                    case '5':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reviewer']);
+                    default:
+                        $this->Flash->error('Invalid user group.');
+                        return $this->redirect($this->Authentication->logout());
+                }
+            } else {
+                $this->Flash->error('Your username or password is incorrect.');
+            }
         }
     }
 
@@ -143,6 +207,16 @@ class UsersController extends AppController
         $this->Flash->success(__('Good-Bye'));
         $this->log($this->Auth->user('username') . ' logged out at ' . date('d-m-Y H:i:s'), 'info', 'dblog');
         $this->redirect($this->Auth->logout());
+    }
+    public function generateXOR($object_id)
+    {
+        return ($object_id * 121) ^ 21541124;
+    }
+
+
+    public function reverseXOR($xor_id)
+    {
+        return ($xor_id ^ 21541124) / 121;
     }
 
     public function register()
@@ -154,6 +228,8 @@ class UsersController extends AppController
 
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
+
+            // dd($this->request->getData());
             $user = $this->Users->patchEntity($user, $this->request->getData());
 
             if ($user->hasErrors()) {
@@ -166,103 +242,38 @@ class UsersController extends AppController
                 ]);
             }
 
-            // $aro = $this->Acl->Aro->newEmptyEntity();
-            // $aro->parent_id = null; // or the ID of the parent node if any
-            // $aro->model = 'Role';
-            // $aro->foreign_key = 3; // Replace with the actual role ID
-            // $aro->alias = 'Users'; // Replace with the actual role name
-
-            // if ($this->Acl->Aro->save($aro)) {
-            //     $this->Flash->success(__('The ARO has been saved.'));
-            // } else {
-            //     $this->Flash->error(__('The ARO could not be saved. Please, try again.'));
-            // }
-
 
             $user->role_id = 3;
-
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                $this->Flash->success(__('You have successfully registered. Please click on the link sent to your email address to
+                    activate your account. Check your spam folder if you
+                    don\'t see it in your inbox.'));
+
+
+                if ($this->request->is('json')) {
+                    $this->set([
+                        'message' => 'Registration successfull. Click on link sent on email to complete registration',
+                        '_serialize' => ['message']
+                    ]);
+                    return;
+                }
+
+                return $this->redirect(['controller' => 'Pages', 'action' => 'home']);
+            } else {
+                $errorMessages = [];
+                foreach ($user->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $errorMessages[] = ucfirst($field) . ': ' . $error;
+                    }
+                }
+                $errorString = implode(', ', $errorMessages);
+
+                $this->Flash->error(__('The user could not be registered. Please, try again.' . $errorString));
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
-
-
-            // if ($this->Users->save($user)) {
-            //     $this->Flash->success(__('Registration successful.'));
-
-            //     $user->activation_key = $this->Util->generateXOR($user->id);
-            //     $query = $this->Users->query();
-            //     $query->update()
-            //         ->set(['activation_key' => $this->Util->generateXOR($user->id), 'last_password' => date('Y-m-d H:i:s')])
-            //         ->where(['id' => $user->id])
-            //         ->execute();
-
-            //     //Send registration confirm email
-            //     $this->loadModel('Queue.QueuedJobs');
-            //     $data = [
-            //         'email_address' => $user->email, 'user_id' => $user->id, 'type' => 'registration_email', 'model' => 'Users',
-            //         'foreign_key' => $user->id, 'vars' =>  $user->toArray()
-            //     ];
-            //     $html = new HtmlHelper(new \Cake\View\View());
-            //     $data['vars']['name'] = (isset($user->name)) ? $user->name : 'Sir/Madam';
-            //     $data['vars']['pv_site'] = $html->link('PvERS PV website', ['controller' => 'Pages', 'action' => 'home', '_full' => true, 'prefix' => false]);
-            //     $data['vars']['activation_link'] = $html->link('ACTIVATE', [
-            //         'controller' => 'Users', 'action' => 'activate', $user->activation_key,
-            //         '_full' => true, 'prefix' => false
-            //     ]);
-            //     $this->QueuedJobs->createJob('GenericEmail', $data);
-            //     //Send registration notification
-            //     $data['type'] = 'registration_notification';
-            //     $this->QueuedJobs->createJob('GenericNotification', $data);
-            //     //
-            //     //Send email and notification to institution
-            //     if (!empty($user->name_of_institution)) {
-            //         $institution = $this->Users->find('all', ['conditions' => ['role_id' => 5, 'lower(Users.name_of_institution) LIKE' => strtolower($user->name_of_institution)]])->first();
-            //         if (!empty($institution->email)) {
-            //             $data = [
-            //                 'email_address' => $institution->email, 'user_id' => $institution->id, 'type' => 'registration_institution_email', 'model' => 'Users',
-            //                 'foreign_key' => $institution->id, 'vars' =>  $institution->toArray()
-            //             ];
-            //             $data['vars']['name'] = (isset($institution->name)) ? $institution->name : 'Sir/Madam';
-            //             $this->QueuedJobs->createJob('GenericEmail', $data);
-            //             //Send registration notification
-            //             $data['type'] = 'registration_institution_notification';
-            //             $this->QueuedJobs->createJob('GenericNotification', $data);
-            //         }
-            //     }
-
-
-            //     $this->Flash->success(__('You have successfully registered. Please click on the link sent to your email address to
-            //         activate your account. Check your spam folder if you
-            //         don\'t see it in your inbox.'));
-
-
-            //     if ($this->request->is('json')) {
-            //         $this->set([
-            //             'message' => 'Registration successfull. Click on link sent on email to complete registration',
-            //             '_serialize' => ['message']
-            //         ]);
-            //         return;
-            //     }
-
-            //     return $this->redirect(['controller' => 'Users', 'action' => 'login']);
-            // } else {
-            //     $errorMessages = [];
-            //     foreach ($user->getErrors() as $field => $errors) {
-            //         foreach ($errors as $error) {
-            //             $errorMessages[] = ucfirst($field) . ': ' . $error;
-            //         }
-            //     }
-            //     $errorString = implode(', ', $errorMessages);
-
-            //     $this->Flash->error(__('The user could not be registered. Please, try again.' . $errorString));
-            // }
         }
         $designations = $this->Users->Designations->find('list', ['limit' => 200, 'order' => ['name' => 'ASC']])->all();
         $counties = $this->Users->Counties->find('list', array('order' => 'Counties.county_name ASC'))->all();
-        // dd($designations);
         $this->set(compact('user', 'designations', 'counties'));
         $this->set('_serialize', ['user']);
     }
@@ -356,7 +367,7 @@ class UsersController extends AppController
             $user->password = date('smiYhd', strtotime($check->created));
             $user->confirm_password = date('smiYhd', strtotime($check->created));
             $user->forgot_password = 0;
-            $user->save();
+            // $user->save();
 
             // create the password history
 

@@ -409,19 +409,29 @@ return [
     ],
     // config/app_local.php or config/app.php
 
+    // 'Queue' => [
+    //     'default' => [
+    //         // 'url' => env('QUEUE_URL', 'redis://127.0.0.1:6379'), // Example for Redis
+    //         'url' => env('QUEUE_URL', 'mysql://root:hatua.@localhost/pharmacovigilance'), // Example for MySQL
+    //         'storeFailedJobs' => true,
+    //         'receiveTimeout' => 10000,
+    //         'logger' => 'stdout',
+    //         'queue' => 'default',
+    //         'uniqueCache' => [
+    //             'engine' => 'File',
+    //         ],
+    //     ],
+    //     // Other configurations as needed
+    // ],
     'Queue' => [
         'default' => [
-            // 'url' => env('QUEUE_URL', 'redis://127.0.0.1:6379'), // Example for Redis
-            'url' => env('QUEUE_URL', 'mysql://root:hatua.@localhost/pharmacovigilance'), // Example for MySQL
-            'storeFailedJobs' => true,
-            'receiveTimeout' => 10000,
-            'logger' => 'stdout',
+            'className' => \Cake\Queue\Job\Queue::class,
             'queue' => 'default',
-            'uniqueCache' => [
-                'engine' => 'File',
+            'transport' => [
+                'className' => \Cake\Queue\Transport\CakeQueueTransport::class,
+                'queue' => 'default',
             ],
         ],
-        // Other configurations as needed
     ],
 
 ];

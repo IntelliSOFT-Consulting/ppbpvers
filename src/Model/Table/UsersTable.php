@@ -69,7 +69,6 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Acl.Acl', ['type' => 'requester']);
-        // $this->addBehavior('Acl.Acl', ['type' => 'requester']);
 
 
         $this->belongsTo('Designations', [
@@ -162,6 +161,15 @@ class UsersTable extends Table
             ->scalar('password')
             ->maxLength('password', 140)
             ->requirePresence('password', 'create')
+            ->minLength('password', 6, 'Password must be at least 6 characters long')
+            ->add('password', 'custom', [
+                'rule' => function ($value, $context) {
+                    // Validate that 'password' and 'confirm_password' match
+                    return !empty($context['data']['confirm_password']) && $value === $context['data']['confirm_password'];
+                },
+                'message' => 'Passwords do not match'
+            ])
+
             ->notEmptyString('password');
 
         $validator
@@ -285,8 +293,9 @@ class UsersTable extends Table
         \ArrayObject $options
     ) {
         $hasher = new DefaultPasswordHasher();
-        if (!empty($entity->password)) $entity->password = $hasher->hash($entity->password);
-        if (!empty($entity->confirm_password)) $entity->confirm_password = $hasher->hash($entity->confirm_password);
+        $password = $hasher->hash($entity->password);
+        if (!empty($entity->password)) $entity->password = $password;
+        if (!empty($entity->confirm_password)) $entity->confirm_password = $password;
         return true;
     }
 }

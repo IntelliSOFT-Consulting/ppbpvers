@@ -46,16 +46,16 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
 
           <ul class="nav pull-right">
             <?php
-            // if ($this->getSession->read('Auth.User')) {
-              // echo '<li class="' . $this->fetch('Profile') . '">' . $this->Html->link('<i class="fa fa-user-circle-o"></i> ' . $this->Session->read('Auth.User.username'), array('controller' => 'users', 'action' => 'changePassword', 'admin' => false), array('escape' => false)) . '</li>';
+            if ($this->request->getSession()->read('Auth.User')) {
+              echo '<li class="' . $this->fetch('Profile') . '">' . $this->Html->link('<i class="fa fa-user-circle-o"></i> ' . $this->request->getSession()->read('Auth.User.username'), array('controller' => 'users', 'action' => 'changePassword', 'admin' => false), array('escape' => false)) . '</li>';
               echo '<li class="active">' . $this->Html->link('<i class="fa fa-sign-out"></i> Logout', array('controller' => 'users', 'action' => 'logout', 'admin' => false), array('escape' => false)) . '</li>';
-            // } else {
+            } else {
               echo '<li class="' . $this->fetch('Login') . '">' . $this->Html->link('<i class="fa fa-sign-in"></i> Login', array('controller' => 'users', 'action' => 'login'), array('escape' => false)) . '</li>';
               echo '<li class="' . $this->fetch('Register') . '">' . $this->Html->link('<i class="fa fa-edit"></i> Register', array('controller' => 'users', 'action' => 'register'), array('escape' => false)) . '</li>';
               echo '<li class="' . $this->fetch('Guest') . '">' . $this->Html->link('<i class="fa fa-user"></i> Guest', array('controller' => 'users', 'action' => 'guest'), array('escape' => false)) . '</li>';
             ?>
  
-            <?php // }
+            <?php  }
             ?>
 
           </ul>
@@ -63,9 +63,9 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
             <li class="<?php echo $this->fetch('Home'); ?>"><a href="/"><i class="fa fa-home"></i> Home</a></li>
             <li class="<?php echo $this->fetch('About'); ?>"><a href="/pages/about"><i class="fa fa-book"></i> About</a></li>
           <?php 
-            //  if (!$this->getSession->read('Auth.User')) { 
-            //   echo '<li class="' . $this->fetch('PADR') . '">' . $this->Html->link('<i class="fa fa-pencil"></i> Report', array('controller' => 'padrs', 'action' => 'add'), array('escape' => false)) . '</li>';
-            // }
+             if (!$this->request->getSession()->read('Auth.User')) { 
+              echo '<li class="' . $this->fetch('PADR') . '">' . $this->Html->link('<i class="fa fa-pencil"></i> Report', array('controller' => 'padrs', 'action' => 'add'), array('escape' => false)) . '</li>';
+            }
              ?>
            <li class="<?php echo $this->fetch('Summaries'); ?>"><a href="/reports/index"><i class="fa fa-bar-chart" aria-hidden="true"></i> Summaries</a></li>
             <li class="<?php echo $this->fetch('Faqs'); ?>"><a href="/pages/faqs"><i class="fa fa-question-circle-o" aria-hidden="true"></i> Faqs</a></li>

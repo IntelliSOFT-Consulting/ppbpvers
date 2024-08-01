@@ -66,10 +66,18 @@ class AppController extends Controller
         ]);
 
         $this->loadComponent('Auth', [
-            // 'authorize' => [
-            //     'Acl.Actions' => ['actionPath' => 'controllers/']
-            // ],
-            'authorize' => false,
+            'authorize' => [
+                'Acl.Actions' => ['actionPath' => 'controllers/']
+            ],
+            'authenticate' => [
+                'Form' => [
+                    'fields' => [
+                        'username' => 'username',  // Ensure this matches your field name
+                        'password' => 'password'
+                    ]
+                ]
+            ],
+            // 'authorize' => false,
             'loginAction' => [
                 'plugin' => false,
                 'prefix' => false,
@@ -146,6 +154,9 @@ class AppController extends Controller
         }
         if ($this->request->getSession()->read('Auth.User.role_id') == 2) {
             $prefix = 'manager';
+        }
+        if ($this->request->getSession()->read('Auth.User.role_id') == 3) {
+            $prefix = 'reporter';
         }
         if ($this->request->getSession()->read('Auth.User.role_id') == 4) {
             $prefix = 'evaluator';

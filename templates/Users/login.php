@@ -30,7 +30,7 @@ echo $this->Html->css('upgrade', array('inline' => false));
 
                         <?php
                         echo $this->Flash->render();
-                        echo $this->Form->create();
+                        echo $this->Form->create(null,['type'=>'post']);
                         ?>
                         <div class="logincontainer">
                             <div style="display:none;"><input type="hidden" value="POST" name="_method"></div>
@@ -38,14 +38,14 @@ echo $this->Html->css('upgrade', array('inline' => false));
                                 <div class="clearfix">
                                     <label for="username">Username</label>
                                     <div class="input">
-                                        <input type="text" id="UserUsername" placeholder="Username/Email" maxlength="255" class="span10" name="data[User][username]">
+                                        <input type="text" id="UserUsername" placeholder="Username/Email" maxlength="255" class="span10" name="username">
                                     </div>
                                 </div>
 
                                 <div class="clearfix">
                                     <label for="password">Password:</label>
                                     <div class="input">
-                                        <input type="password" id="UserPassword" placeholder="Password" class="span10" name="data[User][password]">
+                                        <input type="password" id="UserPassword" placeholder="Password" class="span10" name="password">
                                     </div>
                                 </div>
 

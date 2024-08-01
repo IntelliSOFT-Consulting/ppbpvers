@@ -22,24 +22,31 @@ class RolesController extends AppController
     }
 
     public function addone()
-    {
-        $role = $this->Roles->newEmptyEntity();
-        $data = array(
-
-            // 'name' => 'Administrators',
-            // 'description' => 'System wide Administrators with rights to almost everything'
-            // 'name'=>'Managers',
-            // 'description'=>'Middle level administrators'
-             'description'=>'End User Reporters',
-            'name'=>'Users'
-
+    { 
+        // Define an array of data sets for the two roles
+        $dataSets = array(
+            array(
+                'name' => 'Administrators',
+                'description' => 'System wide Administrators with rights to almost everything'
+            ), array(
+                'name' => 'Managers',
+                'description' => 'Middle level administrators'
+            ), array(
+                'name' => 'Users',
+                'description' => 'End User Reporters'
+            )
         );
 
-        // $role = $this->Roles->patchEntity($role, $data);
-        // if ($this->Roles->save($role)) {
-        //     dd('The role has been saved.');
-        // }
-        dd('The role could not be saved. Please, try again.');
+        // Loop through each data set and create the corresponding role
+        foreach ($dataSets as $data) {
+            $role = $this->Roles->newEmptyEntity(); // Create a new empty entity for each role
+            $role = $this->Roles->patchEntity($role, $data);
+            if ($this->Roles->save($role)) {
+                echo 'The role ' . $data['name'] . ' has been saved.' . PHP_EOL;
+            } else {
+                echo 'The role ' . $data['name'] . ' could not be saved. Please, try again.' . PHP_EOL;
+            }
+        }
     }
     /**
      * Index method
