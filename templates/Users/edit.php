@@ -1,59 +1,85 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\User $user
- * @var string[]|\Cake\Collection\CollectionInterface $designations
- * @var string[]|\Cake\Collection\CollectionInterface $counties
- * @var string[]|\Cake\Collection\CollectionInterface $groups
- */
+$this->assign('LOGIN', 'active');
+echo $this->Html->script('widgets', array('inline' => false));
+echo $this->Html->script('user', array('inline' => false));
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $user->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Users'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="users form content">
-            <?= $this->Form->create($user) ?>
-            <fieldset>
-                <legend><?= __('Edit User') ?></legend>
+
+<div class="row-fluid">
+    <div class="span12">
+
+        <div class="whmcscontainer">
+            <div class="contentpadded">
+
+                <div class="page-header">
+                    <div class="styled_title">
+                        <h2>Update Registration Details</h2>
+                    </div>
+                </div>
                 <?php
-                    echo $this->Form->control('designation_id', ['options' => $designations, 'empty' => true]);
-                    echo $this->Form->control('county_id', ['options' => $counties, 'empty' => true]);
-                    echo $this->Form->control('username');
-                    echo $this->Form->control('password');
-                    echo $this->Form->control('confirm_password');
-                    echo $this->Form->control('name');
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('group_id', ['options' => $groups]);
-                    echo $this->Form->control('name_of_institution');
-                    echo $this->Form->control('institution_address');
-                    echo $this->Form->control('institution_code');
-                    echo $this->Form->control('institution_email');
-                    echo $this->Form->control('institution_contact');
-                    echo $this->Form->control('ward');
-                    echo $this->Form->control('phone_no');
-                    echo $this->Form->control('forgot_password');
-                    echo $this->Form->control('initial_email');
-                    echo $this->Form->control('is_active');
-                    echo $this->Form->control('is_admin');
-                    echo $this->Form->control('deleted');
-                    echo $this->Form->control('deleted_date', ['empty' => true]);
-                    echo $this->Form->control('user_type');
-                    echo $this->Form->control('sponsor_email');
-                    echo $this->Form->control('health_program');
-                    echo $this->Form->control('active_date', ['empty' => true]);
+                echo $this->Flash->render();
+                echo $this->Form->create($user);
+                echo $this->Form->control('id');
                 ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+
+
+
+                <div class="row-fluid">
+                    <div class="span6">
+                        <?php
+                        echo $this->Form->control('name', array('label' => array('class' => 'control-label', 'text' => 'Name'),));
+                        echo $this->Form->control('email', array(
+                            'type' => 'email',
+                            'div' => array('class' => 'control-group required'),
+                            'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS')
+                        ));
+                        echo $this->Form->control('phone_no', array('label' => array('class' => 'control-label', 'text' => 'Phone Number'),));
+                        echo $this->Form->control('designation_id', array('label' => array('class' => 'control-label', 'text' => 'Designation'),));
+                        echo $this->Form->control('name_of_institution', array(
+                            'label' => array('class' => 'control-label name_of_institution', 'text' => 'Name of Institution'),
+                            'after' => '<p class="help-block"> Start typing and suggestions will appear </p></div>',
+                        ));
+                        echo $this->Form->control('institution_code', array(
+                            'label' => array('class' => 'control-label institution_code', 'text' => 'Institution Code'),
+                            'after' => '<p class="help-block"> Start typing and suggestions will appear </p></div>',
+                        ));
+                        echo $this->Form->control('sponsor_email', array('type' => 'email', 'label' => array('class' => 'control-label', 'text' => 'Company email'),));
+                        ?>
+                    </div><!--/span-->
+                    <div class="span6">
+                        <?php
+                        echo $this->Form->control('institution_address', array('label' => array('class' => 'control-label institution_address', 'text' => 'Institution Address'),));
+                        echo $this->Form->control('institution_contact', array('label' => array('class' => 'control-label', 'text' => 'Institution Contacts'),));                        
+                        echo $this->Form->control('county_id', array(
+                            'label' => array('class' => 'control-label required', 'text' => 'County '),
+                            'empty' => true, 'between' => '<div class="controls ui-widget">',
+                        ));
+                        echo $this->Form->control('initial_email', array(
+                            'type' => 'checkbox',  'class' => false, 'hiddenField' => false,
+                            'label' => array('class' => 'control-label', 'text' => 'Turn off Notification Email?'),
+                            'between' => '<div class="controls"> <control type="hidden" value="0" id="UserInitialEmail_" name="data[User][initial_email]">
+																	<label class="checkbox" style="color:#C09853; font-weight:normal">',
+                            'after' => 'Turn on/off the initial email sent after you create a report. Only the successful submit confirmation
+																email will be sent. Check to turn off. Changes will take effect on next login.</label> </div>',
+                        ));
+                        ?>
+                    </div><!--/span-->
+                </div><!--/row-->
+                <hr>
+                <?php
+                echo $this->Html->div(
+                    'form-actions',
+                    $this->Form->button('Save', [
+                        'type' => 'Submit',
+                        'class' => 'btn btn-primary',
+                        'id' => 'SadrSaveChanges'
+                    ])
+                );
+
+                echo $this->Form->end();
+
+                ?>
+
+            </div>
         </div>
     </div>
 </div>

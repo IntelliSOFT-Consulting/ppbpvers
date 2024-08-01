@@ -39,21 +39,6 @@ class Designation extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'name' => true,
-        'category' => true,
-        'created' => true,
-        'modified' => true,
-        'aefis' => true,
-        'aggregates' => true,
-        'ce2bs' => true,
-        'devices' => true,
-        'medications' => true,
-        'padrs' => true,
-        'pqmps' => true,
-        'sadr_followups' => true,
-        'sadrs' => true,
-        'saefis' => true,
-        'transfusions' => true,
-        'users' => true,
+        '*' => true, 
     ];
 }

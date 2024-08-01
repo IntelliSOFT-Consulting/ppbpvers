@@ -47,8 +47,8 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
           <ul class="nav pull-right">
             <?php
             if ($this->request->getSession()->read('Auth.User')) {
-              echo '<li class="' . $this->fetch('Profile') . '">' . $this->Html->link('<i class="fa fa-user-circle-o"></i> ' . $this->request->getSession()->read('Auth.User.username'), array('controller' => 'users', 'action' => 'changePassword', 'admin' => false), array('escape' => false)) . '</li>';
-              echo '<li class="active">' . $this->Html->link('<i class="fa fa-sign-out"></i> Logout', array('controller' => 'users', 'action' => 'logout', 'admin' => false), array('escape' => false)) . '</li>';
+              echo '<li class="' . $this->fetch('Profile') . '">' . $this->Html->link('<i class="fa fa-user-circle-o"></i> ' . $this->request->getSession()->read('Auth.User.username'), array('controller' => 'users', 'action' => 'changePassword', 'prefix' => false), array('escape' => false)) . '</li>';
+              echo '<li class="active">' . $this->Html->link('<i class="fa fa-sign-out"></i> Logout', array('controller' => 'users', 'action' => 'logout', 'prefix' => false), array('escape' => false)) . '</li>';
             } else {
               echo '<li class="' . $this->fetch('Login') . '">' . $this->Html->link('<i class="fa fa-sign-in"></i> Login', array('controller' => 'users', 'action' => 'login'), array('escape' => false)) . '</li>';
               echo '<li class="' . $this->fetch('Register') . '">' . $this->Html->link('<i class="fa fa-edit"></i> Register', array('controller' => 'users', 'action' => 'register'), array('escape' => false)) . '</li>';

@@ -6,12 +6,12 @@ namespace App\Controller\Admin;
 use App\Controller\AppController;
 
 /**
- * Meddras Controller
+ * Roles Controller
  *
- * @property \App\Model\Table\MeddrasTable $Meddras
- * @method \App\Model\Entity\Meddra[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ * @property \App\Model\Table\RolesTable $Roles
+ * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
  */
-class MeddrasController extends AppController
+class RolesController extends AppController
 {
     /**
      * Index method
@@ -20,24 +20,25 @@ class MeddrasController extends AppController
      */
     public function index()
     {
-        $meddras = $this->paginate($this->Meddras);  
-        $this->set(compact('meddras'));
+        $roles = $this->paginate($this->Roles);
+
+        $this->set(compact('roles'));
     }
 
     /**
      * View method
      *
-     * @param string|null $id Meddra id.
+     * @param string|null $id Role id.
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
-        $meddra = $this->Meddras->get($id, [
-            'contain' => [],
+        $role = $this->Roles->get($id, [
+            'contain' => ['Aros', 'Users'],
         ]);
 
-        $this->set(compact('meddra'));
+        $this->set(compact('role'));
     }
 
     /**
@@ -47,58 +48,58 @@ class MeddrasController extends AppController
      */
     public function add()
     {
-        $meddra = $this->Meddras->newEmptyEntity();
+        $role = $this->Roles->newEmptyEntity();
         if ($this->request->is('post')) {
-            $meddra = $this->Meddras->patchEntity($meddra, $this->request->getData());
-            if ($this->Meddras->save($meddra)) {
-                $this->Flash->success(__('The meddra has been saved.'));
+            $role = $this->Roles->patchEntity($role, $this->request->getData());
+            if ($this->Roles->save($role)) {
+                $this->Flash->success(__('The role has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The meddra could not be saved. Please, try again.'));
+            $this->Flash->error(__('The role could not be saved. Please, try again.'));
         }
-        $this->set(compact('meddra'));
+        $this->set(compact('role'));
     }
 
     /**
      * Edit method
      *
-     * @param string|null $id Meddra id.
+     * @param string|null $id Role id.
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $meddra = $this->Meddras->get($id, [
+        $role = $this->Roles->get($id, [
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $meddra = $this->Meddras->patchEntity($meddra, $this->request->getData());
-            if ($this->Meddras->save($meddra)) {
-                $this->Flash->success(__('The meddra has been saved.'));
+            $role = $this->Roles->patchEntity($role, $this->request->getData());
+            if ($this->Roles->save($role)) {
+                $this->Flash->success(__('The role has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The meddra could not be saved. Please, try again.'));
+            $this->Flash->error(__('The role could not be saved. Please, try again.'));
         }
-        $this->set(compact('meddra'));
+        $this->set(compact('role'));
     }
 
     /**
      * Delete method
      *
-     * @param string|null $id Meddra id.
+     * @param string|null $id Role id.
      * @return \Cake\Http\Response|null|void Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $meddra = $this->Meddras->get($id);
-        if ($this->Meddras->delete($meddra)) {
-            $this->Flash->success(__('The meddra has been deleted.'));
+        $role = $this->Roles->get($id);
+        if ($this->Roles->delete($role)) {
+            $this->Flash->success(__('The role has been deleted.'));
         } else {
-            $this->Flash->error(__('The meddra could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The role could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);

@@ -42,8 +42,47 @@ class UsersController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Paginator');
-        $this->Auth->allow('logout', 'activate');
+        $this->Auth->allow('logout', 'activate', 'admin');
     }
+    public function admin()
+    {
+        $data = array(
+            "designation_id" => "1",
+            "county_id" => 1,
+            'username' => 'admin',
+            'password' => 'administrator',
+            'confirm_password' => 'administrator',
+            'name' => 'Kiprotich Japheth',
+            'email' => 'keeprawteachjapheth@gmail.com',
+            'role_id' => '1',
+            'name_of_institution' => '',
+            'institution_address' => '',
+            'institution_code' => '',
+            'institution_email' => '',
+            'institution_contact' => '',
+            'ward' => '',
+            'phone_no' => '254724743788',
+            'forgot_password' => '',
+            'initial_email' => '',
+            'is_active' => '1',
+            'is_admin' => '1',
+            'deleted' => '',
+            'deleted_date' => '',
+            'user_type' => '',
+            'sponsor_email' => '',
+            'health_program' => '',
+            'active_date' => date('Y-m-d')
+        );
+        $user = $this->Users->newEmptyEntity();
+        $user = $this->Users->patchEntity($user, $data);
+
+        if ($this->Users->save($user)) {
+            dd("Admin Successfully Created");
+        }
+
+        dd("Failed to create admin account");
+    }
+
 
     public function beforeFilter(EventInterface $event): void
     {
@@ -79,7 +118,7 @@ class UsersController extends AppController
     {
         if ($this->request->is('post')) {
             // Get the data directly without the extra 'data' object
-            $data = $this->request->getData(); 
+            $data = $this->request->getData();
 
             // Check if username is an email
             if (Validation::email($data['username'])) {
@@ -121,84 +160,36 @@ class UsersController extends AppController
             }
         }
     }
-    //Login with username or password
-    public function login_old()
+    public function changePassword()
     {
-
-        if ($this->request->getSession()->read('Auth.User')) {
-            $this->Session->setFlash('You are logged in!', 'alerts/flash_success');
-            // $this->redirect('/', false);
+        if (!$this->Auth->User('id')) {
+            $this->Session->setFlash(__('You are NOT logged in! Please login to change your password'), 'flash_info');
+            $this->redirect('/', 0, false);
         }
+        if ($this->request->is('post')  || $this->request->is('put')) {
+            $userId = $this->getRequest()->getSession()->read('Auth.User.id');
+            $user = $this->Users->get($userId);
 
-        if ($this->request->is('post')) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
 
-            $data = $this->request->getData();
-            $data = $data['data'];
-
-
-            if (Validation::email($data['User']['username'])) {
-                $this->Auth->setConfig('authenticate', [
-                    'Form' => ['fields' => ['username' => 'email']]
-                ]);
-                $this->Auth->constructAuthenticate();
-                $data['User']['email'] = $data['User']['username'];
-                unset($data['User']['username']);
-                $this->request = $this->request->withData('email', $data['User']['email']);
-            }
-
-            // Before calling $this->Auth->identify();
-            debug($this->request->getData());
-            debug($this->Auth->getConfig());
-
-            $user = $this->Auth->identify();
-            dd($user);
-            if ($user) {
-                $this->Auth->setUser($user);
-
-                if ($user['is_active'] == 0) {
-                    $this->Flash->error('Your account is not activated! If you have just registered, please click the activation link sent to your email. Remember to check your spam folder too!');
-                    return $this->redirect($this->Authentication->logout());
-                } elseif ($user['deactivated'] == 1) {
-                    $this->Flash->error('Your account has been deactivated! Please contact PPB.');
-                    return $this->redirect($this->Authentication->logout());
-                }
-
-                // Check if it's the mini manager::: Check active date
-                if ($user['role_id'] == '5') {
-                    $active_date = $user['active_date'];
-                    if (!empty($active_date)) {
-                        $today = date('Y-m-d');
-                        $active_date_obj = date('Y-m-d', strtotime($active_date));
-
-                        if ($active_date_obj < $today) {
-                            $this->Flash->error('Your account has expired! Please contact PPB.');
-                            return $this->redirect($this->Authentication->logout());
-                        }
-                    } else {
-                        $this->Flash->error('Your account has expired! Please contact PPB.');
-                        return $this->redirect($this->Authentication->logout());
-                    }
-                }
-
-                switch ($user['role_id']) {
-                    case '1':
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
-                    case '2':
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
-                    case '3':
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
-                    case '4':
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Partner']);
-                    case '5':
-                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reviewer']);
-                    default:
-                        $this->Flash->error('Invalid user group.');
-                        return $this->redirect($this->Authentication->logout());
-                }
+            if ($this->Users->save($user)) {
+                $this->Flash->success(__('The password has been changed.'));
+                return $this->redirect(['action' => 'changePassword']);
             } else {
-                $this->Flash->error('Your username or password is incorrect.');
+                $this->Flash->error(__('The password could not be changed. Please, try again.'));
             }
+           
         }
+        $user = $this->Auth->User(); 
+        $user = $this->Users->find('all', array(
+            'contain' => array(
+                'Designations', 'Counties'
+            ),
+            'conditions'=>array(
+                'Users.id'=>$this->Auth->user('id')
+            )
+        ))->first(); 
+        $this->set('user', $user);
     }
 
     public function logout()
@@ -449,15 +440,33 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
+                $userId = $this->getRequest()->getSession()->read('Auth.User.id');
+                $user = $this->Users->get($userId);
+                // Redirecting to the dashboard
+                switch ($user['role_id']) {
+                    case '1':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
+                    case '2':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
+                    case '3':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
+                    case '4':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Partner']);
+                    case '5':
+                        return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reviewer']);
+                    default:
+                        $this->Flash->error('Invalid user group.');
+                        return $this->redirect($this->Auth->logout());
+                }
 
-                return $this->redirect(['action' => 'index']);
+                // return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $designations = $this->Users->Designations->find('list', ['limit' => 200])->all();
         $counties = $this->Users->Counties->find('list', ['limit' => 200])->all();
-        $groups = $this->Users->Groups->find('list', ['limit' => 200])->all();
-        $this->set(compact('user', 'designations', 'counties', 'groups'));
+        $roles = $this->Users->Roles->find('list', ['limit' => 200])->all();
+        $this->set(compact('user', 'designations', 'counties', 'roles'));
     }
 
     /**

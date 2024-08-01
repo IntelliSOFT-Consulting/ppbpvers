@@ -6,7 +6,7 @@ $(document).ready(function() {
 	});
 
 	var cache2 = {},	lastXhr;
-	$( "#UserInstitutionCode" ).autocomplete({
+	$( ".institution_code" ).autocomplete({
 		source: function( request, response ) {
 			var term = request.term;
 			if ( term in cache2 ) {
@@ -22,10 +22,10 @@ $(document).ready(function() {
 			});
 		},
 		select: function( event, ui ) {
-			$( "#UserNameOfInstitution" ).val( ui.item.label );
-			$( "#UserInstitutionCode" ).val( ui.item.value );
-			$( "#UserInstitutionAddress" ).val( ui.item.addr );
-			$("#UserCountyId").combobox('autocomplete', ui.item.desc);
+			$( ".name_of_institution" ).val( ui.item.label );
+			$( ".institution_code" ).val( ui.item.value );
+			$( ".institution_address" ).val( ui.item.addr );
+			$(".county_id").combobox('autocomplete', ui.item.desc);
 			return false;
 		}
 	})

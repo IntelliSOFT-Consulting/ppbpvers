@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Admin;
@@ -13,6 +14,14 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
+
+
+    public function dashboard()
+    {
+        // $this->request->withData(['Feedbacks']['user_id'], $this->Auth->User('id'));
+        // $this->Users->Feedbacks->recursive = -1;
+        $this->set('previous_messages', $this->Users->Feedbacks->find('all', array('limit' => 3, 'order' => array('id' => 'desc'))));
+    }
     /**
      * Index method
      *

@@ -131,4 +131,12 @@ class UsersController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function logout()
+    {
+        //Leave empty for now.
+        $this->Flash->success(__('Good-Bye'));
+        $this->log($this->Auth->user('username') . ' logged out at ' . date('d-m-Y H:i:s'), 'info', 'dblog');
+        $this->redirect($this->Auth->logout());
+    }
 }
