@@ -53,6 +53,15 @@ use Cake\Auth\DefaultPasswordHasher;
  */
 class UsersTable extends Table
 {
+
+
+    public $filterArgs = array(
+        array('name' => 'username', 'type' => 'like'),
+        array('name' => 'name', 'type' => 'like'),
+        array('name' => 'email', 'type' => 'like'),
+		array('name' => 'range', 'type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'Users.created BETWEEN ? AND ?'),
+    );
+
     /**
      * Initialize method
      *

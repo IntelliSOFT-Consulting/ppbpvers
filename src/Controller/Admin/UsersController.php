@@ -33,6 +33,7 @@ class UsersController extends AppController
             'contain' => ['Designations', 'Counties', 'Roles'],
         ];
         $users = $this->paginate($this->Users);
+        // dd($users);
 
         $this->set(compact('users'));
     }
