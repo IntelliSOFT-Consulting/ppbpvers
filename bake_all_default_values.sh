@@ -18,8 +18,8 @@ if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <action>"
   echo "Actions:"
   echo "1 - Execute SQL script from $SQL_FILE_ACTION_1"
-  echo "2 - Another action (e.g., backup database) using $SQL_FACILITY_CODES"
-  echo "3 - Another action (e.g., restore database) using $SQL_FILE_ACTION_3"
+  echo "2 - Executing Facility Codes from script $SQL_FACILITY_CODES"
+  echo "3 - Executing Doses from script  $SQL_DOSES"
   exit 1
 fi
 
@@ -47,11 +47,14 @@ case $ACTION in
     ;;
   3)
     # Perform action 3 with the provided SQL file
-    if [ ! -f "$SQL_FILE_ACTION_3" ]; then
-      echo "SQL file for action 3 does not exist: $SQL_FILE_ACTION_3"
+    if [ ! -f "$SQL_DOSES" ]; then
+      echo "SQL file for action 3 does not exist: $SQL_DOSES"
       exit 1
     fi
-    echo "Performing action 3 with SQL file $SQL_FILE_ACTION_3."
+
+     mysql -u "$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" < "$SQL_DOSES"
+     echo "Successfully inserted doses"
+    echo "Performing action 3 with SQL file $SQL_DOSES."
     # Add your logic for action 3 using the SQL file
     ;;
   *)

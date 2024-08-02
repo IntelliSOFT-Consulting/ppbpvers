@@ -1,29 +1,67 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Country $country
- */
+<?php 
+	$this->assign('CMS', 'active');
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Countries'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="countries form content">
-            <?= $this->Form->create($country) ?>
-            <fieldset>
-                <legend><?= __('Add Country') ?></legend>
-                <?php
-                    echo $this->Form->control('code');
-                    echo $this->Form->control('name');
-                    echo $this->Form->control('name_fr');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-</div>
+
+      <!-- CMS
+    ================================================== -->
+	<h3>Content Management System <small>(ADD A NEW COUNTRY)</small></h3>
+		<p>Highly unlikely that you would need to add a country, but then again....</p>	
+		<hr>
+	<div class="row-fluid" style="margin-bottom: 9px;">	
+		<div class="span2 columns">
+			<div class="row-fluid">
+				<div class="span12">
+					  <?php echo $this->element('admin/contentmenu')?>				  
+				</div><!--/span-->
+			</div><!--/row-->	
+		</div> <!-- /span5 -->
+
+		<div class="span10 columns">			
+			<div class="row-fluid"> 	
+				<div class="span12"> 	
+					<div class="whmcscontainer">
+					<div class="contentpadded">
+						<div class="page-header">
+							<div class="styled_title"><h1>Add A New Country</h1></div>
+						</div>	
+						<?php										
+							echo $this->Form->create($country);
+                           
+							
+						?>					
+						<div class="row-fluid">
+							<div class="span12">
+								<?php								
+									echo $this->Form->control('code', array(
+										'label' => array('class' => 'control-label', 'text' => 'Country Code'),
+										'class'=>'control-xlarge'));					
+									echo $this->Form->control('name', array(
+										'label' => array('class' => 'control-label', 'text' => 'Country Name'),
+										'class'=>'control-xlarge'));
+								?>
+							</div>
+						</div>
+						 <hr>						
+                         <?php
+                         echo $this->Html->div(
+                            'form-actions', 
+                            $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
+                                'escapeTitle' => false,
+                                'type' => 'Submit',
+                                'class' => 'btn btn-primary',
+                                'id' => 'SadrSaveChanges'
+                            ])
+                        );
+
+                        // Close the form
+                        echo $this->Form->end();
+							?>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- /row-fluid -->
+				
+	</div> <!-- /span6 -->		
+</div> <!-- /row-fluid -->

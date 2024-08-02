@@ -12,23 +12,23 @@ if ($this->request->getParam('controller') == 'help_infos') {
     else $cC = 'active';
 } else if ($this->request->getParam('controller') == 'Counties') {
     $dC = 'active';
-} else if ($this->request->getParam('controller') == 'countries') {
+} else if ($this->request->getParam('controller') == 'Countries') {
     $eC = 'active';
 } else if ($this->request->getParam('controller') == 'FacilityCodes') {
     $fC = 'active';
-} else if ($this->request->getParam('controller') == 'doses') {
+} else if ($this->request->getParam('controller') == 'Doses') {
     $gC = 'active';
-} else if ($this->request->getParam('controller') == 'frequencies') {
+} else if ($this->request->getParam('controller') == 'Frequencies') {
     $hC = 'active';
-} else if ($this->request->getParam('controller') == 'routes') {
+} else if ($this->request->getParam('controller') == 'Routes') {
     $iC = 'active';
-} else if ($this->request->getParam('controller') == 'drug_dictionaries') {
+} else if ($this->request->getParam('controller') == 'DrugDictionaries') {
     $jC = 'active';
-} else if ($this->request->getParam('controller') == 'who_drugs') {
+} else if ($this->request->getParam('controller') == 'WhoDrugs') {
     $kC = 'active';
-} else if ($this->request->getParam('controller') == 'vaccines') {
+} else if ($this->request->getParam('controller') == 'Vaccines') {
     $oC = 'active';
-} else if ($this->request->getParam('controller') == 'auto_drugs') {
+} else if ($this->request->getParam('controller') == 'AutoDrugs') {
     $auto = 'active';
 }
 ?>

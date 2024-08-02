@@ -1,52 +1,115 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Dose> $doses
- */
+$this->assign('CMS', 'active');
 ?>
-<div class="doses index content">
-    <?= $this->Html->link(__('New Dose'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Doses') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('value') ?></th>
-                    <th><?= $this->Paginator->sort('icsr_code') ?></th>
-                    <th><?= $this->Paginator->sort('name') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($doses as $dose): ?>
-                <tr>
-                    <td><?= $this->Number->format($dose->id) ?></td>
-                    <td><?= h($dose->value) ?></td>
-                    <td><?= h($dose->icsr_code) ?></td>
-                    <td><?= h($dose->name) ?></td>
-                    <td><?= h($dose->created) ?></td>
-                    <td><?= h($dose->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $dose->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $dose->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $dose->id], ['confirm' => __('Are you sure you want to delete # {0}?', $dose->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
-</div>
+
+<!-- CMS
+    ================================================== -->
+<h3>Content Management System <small>(DOSES)</small></h3>
+<p>Search for the content that you wish to modify and change accordingly.</p>
+<hr>
+<div class="row-fluid" style="margin-bottom: 9px;">
+	<div class="span2 columns">
+		<div class="row-fluid">
+			<div class="span12">
+				<?php echo $this->element('admin/contentmenu') ?>
+			</div><!--/span-->
+		</div><!--/row-->
+	</div> <!-- /span5 -->
+
+	<div class="span10 columns">
+		<?php
+		echo $this->Form->create();
+
+
+		?>
+		<div class="row-fluid">
+			<div class="span2 columns">
+				<?php
+				echo $this->Html->link('Add A Dose', array('controller' => 'doses', 'action' => 'add', 'admin' => true), array('class' => 'btn btn-info'));
+				?>
+			</div>
+			<div class="span6 columns">
+				<?php
+				echo $this->Form->control('name', array('div' => false, 'class' => 'span10', 'label' => array('class' => 'required', 'text' => 'Name')));
+				?>
+			</div>
+			<div class="span4 columns">
+				<p class="muted">Search on any field.</p>
+				<?php
+				echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+					'escapeTitle' => false,
+					'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false,
+				));
+				echo $this->Form->end();
+				?>
+			</div>
+		</div>
+
+		<div class="row-fluid">
+
+			<?php
+			if (count($doses) >  0) { ?>
+				<p>
+					<?php
+					echo $this->Paginator->counter(
+						__('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                            showing <span class="badge">{{current}}</span> Doses out of 
+                            <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                            ending on <span class="badge">{{end}}</span>')
+					);
+					?>
+				</p>
+				<div class="pagination">
+					<ul>
+						<?= $this->Paginator->first('<< ' . __('first')) ?>
+						<?= $this->Paginator->prev('< ' . __('previous')) ?>
+						<?= $this->Paginator->numbers() ?>
+						<?= $this->Paginator->next(__('next') . ' >') ?>
+						<?= $this->Paginator->last(__('last') . ' >>') ?>
+
+					</ul>
+				</div>
+				<hr>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th><?php echo $this->Paginator->sort('id'); ?></th>
+							<th><?php echo $this->Paginator->sort('value'); ?></th>
+							<th><?php echo $this->Paginator->sort('name'); ?></th>
+							<th><?php echo $this->Paginator->sort('icsr_code'); ?></th>
+							<th><?php echo __('Actions'); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						foreach ($doses as $dose) : ?>
+							<tr>
+								<td><?php echo h($dose['id']); ?>&nbsp;</td>
+								<td><?php echo h($dose['value']); ?>&nbsp;</td>
+								<td><?php echo h($dose['name']); ?>&nbsp;</td>
+								<td><?php echo h($dose['icsr_code']); ?>&nbsp;</td>
+								<td>
+									<?php echo $this->Html->link(
+										'<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>',
+										array('controller' => 'doses', 'action' => 'edit', $dose['id']),
+										array('escape' => false)
+									); ?>&nbsp;
+									<?php echo $this->Form->postLink(
+										__('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'),
+										array('action' => 'delete', $dose['id']),
+										array('escape' => false),
+										__('Are you sure you want to delete # %s?', $dose['id'])
+									); ?>&nbsp;
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+
+			<?php } else { ?>
+				<p>There were no reports that met your search criteria.</p>
+			<?php } ?>
+		</div> <!-- /row-fluid -->
+	</div> <!-- /span6 -->
+
+</div> <!-- /row-fluid -->

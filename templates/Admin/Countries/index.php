@@ -1,48 +1,110 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Country> $countries
- */
+$this->assign('CMS', 'active');
 ?>
-<div class="countries index content">
-    <?= $this->Html->link(__('New Country'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Countries') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('code') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($countries as $country): ?>
-                <tr>
-                    <td><?= $this->Number->format($country->id) ?></td>
-                    <td><?= h($country->code) ?></td>
-                    <td><?= h($country->created) ?></td>
-                    <td><?= h($country->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $country->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $country->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $country->id], ['confirm' => __('Are you sure you want to delete # {0}?', $country->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
-</div>
+
+<!-- CMS
+    ================================================== -->
+<h3>Content Management System <small>(COUNTRIES)</small></h3>
+<p>Search for the content that you wish to modify and change accordingly.</p>
+<hr>
+<div class="row-fluid" style="margin-bottom: 9px;">
+    <div class="span2 columns">
+        <div class="row-fluid">
+            <div class="span12">
+                <?php echo $this->element('admin/contentmenu') ?>
+
+            </div><!--/span-->
+        </div><!--/row-->
+    </div> <!-- /span5 -->
+
+    <div class="span10 columns">
+        <?php
+        echo $this->Form->create();
+       
+        ?>
+        <div class="row-fluid">
+            <div class="span2 columns">
+                <?php
+                echo $this->Html->link('Add a Country', array('controller' => 'countries', 'action' => 'add', 'admin' => true), array('class' => 'btn btn-info'));
+                ?>
+            </div>
+            <div class="span6 columns">
+                <?php
+                echo $this->Form->control('name', array('div' => false, 'class' => 'span10', 'label' => array('class' => 'required', 'text' => 'Country Name')));
+                ?>
+            </div>
+            <div class="span4 columns">
+                <p class="muted">Search on any field.</p>
+                <?php 
+                echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+                    'escapeTitle'=>false,
+                    'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false,
+                ));
+                echo $this->Form->end();
+                ?>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+
+            <?php
+            if (count($countries) >  0) { ?>
+                <p>
+                    <?php
+                    echo $this->Paginator->counter(
+                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                                showing <span class="badge">{{current}}</span> Counties out of 
+                                <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                                ending on <span class="badge">{{end}}</span>')
+                    );
+                    ?>
+                </p>
+                <div class="pagination">
+                    <ul>
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+                    </ul>
+                </div>
+                <hr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->Paginator->sort('id'); ?></th>
+                            <th><?php echo $this->Paginator->sort('name'); ?></th>
+                            <th><?php echo __('Actions'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($countries as $country) : ?>
+                            <tr>
+                                <td><?php echo h($country['id']); ?>&nbsp;</td>
+                                <td><?php echo h($country['name']); ?>&nbsp;</td>
+                                <td>
+                                    <?php echo $this->Html->link(
+                                        '<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>',
+                                        array('controller' => 'countries', 'action' => 'edit', $country['id']),
+                                        array('escape' => false)
+                                    ); ?>&nbsp;
+                                    <?php echo $this->Form->postLink(
+                                        __('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'),
+                                        array('action' => 'delete', $country['id']),
+                                        array('escape' => false),
+                                        __('Are you sure you want to delete # %s?', $country['id'])
+                                    ); ?>&nbsp;
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+            <?php } else { ?>
+                <p>There were no reports that met your search criteria.</p>
+            <?php } ?>
+        </div> <!-- /row-fluid -->
+    </div> <!-- /span6 -->
+
+</div> <!-- /row-fluid -->

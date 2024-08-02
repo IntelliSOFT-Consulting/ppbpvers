@@ -55,7 +55,7 @@
 							
 						 <?php
                          echo $this->Html->div(
-                            'form-actions',
+                            'form-actions', 
                             $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
                                 'escapeTitle' => false,
                                 'type' => 'Submit',

@@ -1,34 +1,69 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Frequency $frequency
- */
+<?php 
+	$this->assign('CMS', 'active');
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $frequency->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $frequency->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Frequencies'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="frequencies form content">
-            <?= $this->Form->create($frequency) ?>
-            <fieldset>
-                <legend><?= __('Edit Frequency') ?></legend>
-                <?php
-                    echo $this->Form->control('value');
-                    echo $this->Form->control('name');
-                    echo $this->Form->control('icsr_code');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-</div>
+
+      <!-- CMS
+    ================================================== -->
+	<h3>Content Management System <small>(ADD A NEW DRUG FREQUENCY)</small></h3>
+		<p>Please ensure the code corresponds to the ICSR specified code and that the code does not already exist.</p>	
+		<hr>
+	<div class="row-fluid" style="margin-bottom: 9px;">	
+		<div class="span2 columns">
+			<div class="row-fluid">
+				<div class="span12">
+					  <?php echo $this->element('admin/contentmenu')?>				  
+				</div><!--/span-->
+			</div><!--/row-->	
+		</div> <!-- /span5 -->
+
+		<div class="span10 columns">			
+			<div class="row-fluid"> 	
+				<div class="span12"> 	
+					<div class="whmcscontainer">
+					<div class="contentpadded">
+						<div class="page-header">
+							<div class="styled_title"><h1>Edit Frequency</h1></div>
+						</div>	
+						<?php										
+							echo $this->Form->create($frequency);
+                           
+							
+						?>					
+						<div class="row-fluid">
+							<div class="span12">
+								<?php								
+									echo $this->Form->control('id');
+									echo $this->Form->control('value', array(
+										'label' => array('class' => 'control-label', 'text' => 'Value'),
+										'class'=>'control-xlarge'));													
+									echo $this->Form->control('name', array(
+										'label' => array('class' => 'control-label', 'text' => 'Frequency Name'),
+										'class'=>'control-xlarge'));
+								?>
+							</div>
+						</div>
+						 <hr>						
+							
+                         <?php
+                         echo $this->Html->div(
+                            'form-actions', 
+                            $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
+                                'escapeTitle' => false,
+                                'type' => 'Submit',
+                                'class' => 'btn btn-primary',
+                                'id' => 'SadrSaveChanges'
+                            ])
+                        );
+
+                        // Close the form
+                        echo $this->Form->end();
+                        ?>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- /row-fluid -->
+				
+	</div> <!-- /span6 -->		
+</div> <!-- /row-fluid -->

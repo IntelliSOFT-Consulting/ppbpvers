@@ -1,54 +1,87 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Vaccine> $vaccines
- */
+$this->assign('CMS', 'active');
 ?>
-<div class="vaccines index content">
-    <?= $this->Html->link(__('New Vaccine'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Vaccines') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('vaccine_name') ?></th>
-                    <th><?= $this->Paginator->sort('health_program') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th><?= $this->Paginator->sort('deleted') ?></th>
-                    <th><?= $this->Paginator->sort('deleted_date') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($vaccines as $vaccine): ?>
-                <tr>
-                    <td><?= $this->Number->format($vaccine->id) ?></td>
-                    <td><?= h($vaccine->vaccine_name) ?></td>
-                    <td><?= h($vaccine->health_program) ?></td>
-                    <td><?= h($vaccine->created) ?></td>
-                    <td><?= h($vaccine->modified) ?></td>
-                    <td><?= h($vaccine->deleted) ?></td>
-                    <td><?= h($vaccine->deleted_date) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $vaccine->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $vaccine->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $vaccine->id], ['confirm' => __('Are you sure you want to delete # {0}?', $vaccine->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+<!-- CMS
+    ================================================== -->
+<h3>Content Management System <small>(Vaccines)</small></h3>
+<hr>
+
+<div class="row-fluid" style="margin-bottom: 9px;">
+    <div class="span2 columns">
+        <div class="row-fluid">
+            <div class="span12">
+                <?php echo $this->element('admin/contentmenu') ?>
+
+            </div><!--/span-->
+        </div><!--/row-->
+    </div> <!-- /span5 -->
+
+    <div class="span10 columns">
+        <?php
+        echo $this->Html->link('Add A Vaccine', array('controller' => 'vaccines', 'action' => 'add', 'admin' => true), array('class' => 'btn btn-info'));
+        ?>
+        <div class="row-fluid">
+
+            <?php
+            if (count($vaccines) >  0) { ?>
+                <p>
+                    <?php
+                    echo $this->Paginator->counter(
+                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                            showing <span class="badge">{{current}}</span> Vaccines out of 
+                            <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                            ending on <span class="badge">{{end}}</span>')
+                    );
+                    ?>
+                </p>
+                <div class="pagination">
+                    <ul>
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+                    </ul>
+                </div>
+                <hr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->Paginator->sort('id', 'ID'); ?></th>
+                            <th><?php echo $this->Paginator->sort('vaccine_name'); ?></th>
+                            <th><?php echo $this->Paginator->sort('description'); ?></th>
+                            <th><?php echo $this->Paginator->sort('health_program'); ?></th>
+                            <th><?php echo __('Actions'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($vaccines as $vaccine) : ?>
+                            <tr>
+                                <td><?php echo h($vaccine['id']); ?>&nbsp;</td>
+                                <td><?php echo h($vaccine['vaccine_name']); ?>&nbsp;</td>
+                                <td><?php echo h($vaccine['description']); ?>&nbsp;</td>
+                                <td><?php echo h($vaccine['health_program']); ?>&nbsp;</td>
+                                <td>
+                                    <?php echo $this->Html->link(
+                                        '<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>',
+                                        array('controller' => 'vaccines', 'action' => 'edit', $vaccine['id']),
+                                        array('escape' => false)
+                                    ); ?>&nbsp;
+                                    <?php echo $this->Form->postLink(
+                                        __('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'),
+                                        array('action' => 'delete', $vaccine['id']),
+                                        array('escape' => false),
+                                        __('Are you sure you want to delete # %s?', $vaccine['id'])
+                                    ); ?>&nbsp;
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php } else { ?>
+                <p>There were no reports that met your search criteria.</p>
+            <?php } ?>
+        </div> <!-- /row-fluid -->
     </div>
 </div>
