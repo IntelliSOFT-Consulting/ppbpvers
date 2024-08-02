@@ -46,15 +46,14 @@ COPY . /var/www/html/
 WORKDIR /var/www/html
 
 # Install Composer
-# COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Install PHP dependencies
 # RUN composer install --no-interaction --optimize-autoloader --no-dev
 
 
 # Update PHP dependencies
-# RUN composer update --no-interaction --optimize-autoloader --no-dev
+RUN composer update --no-interaction --optimize-autoloader --no-dev
 
 # Install Supervisor
 RUN apt-get update && apt-get install -y supervisor

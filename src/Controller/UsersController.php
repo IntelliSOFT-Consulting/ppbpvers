@@ -77,10 +77,17 @@ class UsersController extends AppController
         $user = $this->Users->patchEntity($user, $data);
 
         if ($this->Users->save($user)) {
-            dd("Admin Successfully Created");
+            debug("Admin Successfully Created");
+            exit;
+        }else{
+            $errors = $user->getErrors();
+            debug("Failed to create admin");
+            debug($errors);
+            exit;
         }
 
-        dd("Failed to create admin account");
+        debug("Failed to create admin account");
+        exit;
     }
 
 
