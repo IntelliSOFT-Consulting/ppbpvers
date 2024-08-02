@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Event\EventInterface;
 
 /**
  * FacilityCodes Controller
@@ -11,6 +14,94 @@ namespace App\Controller;
  */
 class FacilityCodesController extends AppController
 {
+
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow('index', 'autocomplete');
+    }
+    public function wards()
+    {
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        $coders = $this->FacilityCodes->finder($term, $type); // Assuming `finder` is a custom method
+
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->facility_code,
+                'label' => $value->facility_name,
+                'sub_county' => $value->district,
+                'desc' => $value->county,
+                'addr' => $value->official_address,
+                'phone' => $value->official_mobile
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]);
+
+        // $this->RequestHandler->setContent('json', 'application/json');
+        // if (is_numeric($this->request->query['term'])) {
+        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'N');
+        // } else {
+        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'A');
+        // }
+        // $codes = array();
+        // foreach ($coders as $key => $value) {
+        //     $codes[] = array(
+        //         'value' => $value['FacilityCode']['facility_code'], 'label' => $value['FacilityCode']['facility_name'],  'sub_county' => $value['FacilityCode']['district'],
+        //         'desc' => $value['FacilityCode']['county'], 'addr' => $value['FacilityCode']['official_address'], 'phone' => $value['FacilityCode']['official_mobile']
+        //     );
+        // }
+        // $this->set('codes', $codes);
+        // $this->set('_serialize', 'codes');
+    }
+    public function autocomplete()
+    {
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        $coders = $this->FacilityCodes->finder($term, $type); // Assuming `finder` is a custom method
+
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->facility_code,
+                'label' => $value->facility_name,
+                'sub_county' => $value->district,
+                'desc' => $value->county,
+                'addr' => $value->official_address,
+                'phone' => $value->official_mobile
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]);
+
+        // $this->RequestHandler->setContent('json', 'application/json');
+        // if (is_numeric($this->request->query['term'])) {
+        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'N');
+        // } else {
+        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'A');
+        // }
+        // $codes = array();
+        // foreach ($coders as $key => $value) {
+        //     $codes[] = array(
+        //         'value' => $value['FacilityCode']['facility_code'], 'label' => $value['FacilityCode']['facility_name'],  'sub_county' => $value['FacilityCode']['district'],
+        //         'desc' => $value['FacilityCode']['county'], 'addr' => $value['FacilityCode']['official_address'], 'phone' => $value['FacilityCode']['official_mobile']
+        //     );
+        // }
+        // $this->set('codes', $codes);
+        // $this->set('_serialize', 'codes');
+    }
     /**
      * Index method
      *
@@ -18,11 +109,60 @@ class FacilityCodesController extends AppController
      */
     public function index()
     {
-        $facilityCodes = $this->paginate($this->FacilityCodes);
+        // $facilityCodes = $this->paginate($this->FacilityCodes);
 
-        $this->set(compact('facilityCodes'));
+        // $this->set(compact('facilityCodes'));
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        $coders = $this->FacilityCodes->find('byTerm', ['term' => $term, 'type' => $type])->toArray();
+
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->facility_code,
+                'label' => $value->facility_name,
+                'sub_county' => $value->district,
+                'desc' => $value->county,
+                'addr' => $value->official_address,
+                'phone' => $value->official_mobile
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]);
     }
+    public function index1()
+    {
+        // $facilityCodes = $this->paginate($this->FacilityCodes);
 
+        // $this->set(compact('facilityCodes'));
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        $coders = $this->FacilityCodes->find('byTerm', ['term' => $term, 'type' => $type])->toArray();
+
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->facility_code,
+                'label' => $value->facility_name,
+                'sub_county' => $value->district,
+                'desc' => $value->county,
+                'addr' => $value->official_address,
+                'phone' => $value->official_mobile
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]);
+    }
     /**
      * View method
      *

@@ -1,28 +1,77 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\County $county
- */
+<?php 
+	$this->assign('CMS', 'active');
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Counties'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="counties form content">
-            <?= $this->Form->create($county) ?>
-            <fieldset>
-                <legend><?= __('Add County') ?></legend>
-                <?php
-                    echo $this->Form->control('county_name');
-                    echo $this->Form->control('org_unit');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
-</div>
+
+      <!-- CMS
+    ================================================== -->
+	<h3>Content Management System <small>(ADD A NEW COUNTY)</small></h3>
+		<p>Highly unlikely that you would need to add a county, but then again....</p>	
+		<hr>
+	<div class="row-fluid" style="margin-bottom: 9px;">	
+		<div class="span2 columns">
+			<div class="row-fluid">
+				<div class="span12">
+					  <?php echo $this->element('admin/contentmenu')?>				  
+				</div><!--/span-->
+			</div><!--/row-->	
+		</div> <!-- /span5 -->
+
+		<div class="span10 columns">			
+			<div class="row-fluid"> 	
+				<div class="span12"> 	
+					<div class="whmcscontainer">
+					<div class="contentpadded">
+						<div class="page-header">
+							<div class="styled_title"><h1>Add A New County</h1></div>
+						</div>	
+						<?php										
+							echo $this->Form->create();
+                            
+                            // 'County', array(
+							// 	'url' => array('action' => 'add', 'admin' => true ),
+							// 	'class' => 'form-horizontal',
+							// 	'controlDefaults' => array(
+							// 		'div' => array('class' => 'control-group'),
+							// 		'label' => array('class' => 'control-label'),
+							// 		'between' => '<div class="controls">',
+							// 		'after' => '</div>',
+							// 		'class' => '',
+							// 		'format' => array('before', 'label', 'between', 'control', 'after','error'),
+							// 		'error' => array('attributes' => array('class' => 'controls help-block')),
+							// 	 ),		
+							// ));
+							
+						?>					
+						<div class="row-fluid">
+							<div class="span12">
+								<?php								
+									echo $this->Form->control('county_name', array(
+										'label' => array('class' => 'control-label', 'text' => 'County Name'),
+										'class'=>'control-xlarge'));
+								?>
+							</div>
+						</div>
+						 <hr>						
+							
+						 <?php
+                         echo $this->Html->div(
+                            'form-actions',
+                            $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
+                                'escapeTitle' => false,
+                                'type' => 'Submit',
+                                'class' => 'btn btn-primary',
+                                'id' => 'SadrSaveChanges'
+                            ])
+                        );
+
+                        // Close the form
+                        echo $this->Form->end();
+							?>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div> <!-- /row-fluid -->
+				
+	</div> <!-- /span6 -->		
+</div> <!-- /row-fluid -->

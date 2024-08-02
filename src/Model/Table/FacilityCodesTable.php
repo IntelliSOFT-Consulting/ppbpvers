@@ -40,12 +40,27 @@ class FacilityCodesTable extends Table
         parent::initialize($config);
 
         $this->setTable('facility_codes');
-        $this->setDisplayField('id');
+        $this->setDisplayField('facility_name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
     }
 
+
+       // Custom finder method
+       public function findByTerm(Query $query, array $options): Query
+       {
+           $term = $options['term'] ?? '';
+           $type = $options['type'] ?? '';
+   
+           if ($type === 'N') {
+               // Example: searching by numeric term
+               return $query->where(['facility_code LIKE' => "%$term%"]);
+           } else {
+               // Example: searching by alphanumeric term
+               return $query->where(['facility_name LIKE' => "%$term%"]);
+           }
+       }
     /**
      * Default validation rules.
      *

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Admin;
@@ -21,7 +22,8 @@ class FacilityCodesController extends AppController
     public function index()
     {
         $facilityCodes = $this->paginate($this->FacilityCodes);
-
+        // debug($facilityCodes);
+        // exit;
         $this->set(compact('facilityCodes'));
     }
 

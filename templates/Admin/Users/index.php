@@ -119,7 +119,7 @@ $this->assign('USERS', 'active');
             <div class="span4">
                 <?php
                 echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
-                    'escapeTitle'=>false,
+                    'escapeTitle' => false,
                     'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false,
                 ));
                 ?>
@@ -145,30 +145,23 @@ $this->assign('USERS', 'active');
             if (count($users) >  0) { ?>
                 <p>
                     <?php
-                    // echo $this->Paginator->counter(array(
-                    //     'format' => __('Page <span class="badge">{:page}</span> of <span class="badge">{:pages}</span>, 
-                    // 				showing <span class="badge">{:current}</span> Users out of 
-                    // 				<span class="badge badge-inverse">{:count}</span> total, starting on record <span class="badge">{:start}</span>, 
-                    // 				ending on <span class="badge">{:end}</span>')
-                    // ));
+                    echo $this->Paginator->counter(
+                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                        showing <span class="badge">{{current}}</span> Users out of 
+                        <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                        ending on <span class="badge">{{end}}</span>')
+                    );
 
-                    // echo $this->Paginator->counter([
-                    //     'format' => __('Page <span class="badge">{:page}</span> of <span class="badge">{:pages}</span>, 
-                    //                   showing <span class="badge">{:current}</span> Users out of 
-                    //                   <span class="badge badge-inverse">{:count}</span> total, starting on record <span class="badge">{:start}</span>, 
-                    //                   ending on <span class="badge">{:end}</span>')
-                    // ]);
 
                     ?>
                 </p>
                 <div class="pagination">
                     <ul>
-                        <?php
-                        // echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), null, array('class' => 'disabled', 'tag' => 'li', 'escape' => false));
-                        // echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentClass' => 'active'));
-                        // echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), null, array('class' => 'disabled', 'tag' => 'li', 'escape' => false));
-
-                        ?>
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
                     </ul>
                 </div>
                 <table class="table table-striped">

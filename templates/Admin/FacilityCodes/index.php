@@ -1,150 +1,189 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\FacilityCode> $facilityCodes
- */
+$this->assign('CMS', 'active');
 ?>
-<div class="facilityCodes index content">
-    <?= $this->Html->link(__('New Facility Code'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Facility Codes') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('facility_code') ?></th>
-                    <th><?= $this->Paginator->sort('facility_name') ?></th>
-                    <th><?= $this->Paginator->sort('province') ?></th>
-                    <th><?= $this->Paginator->sort('county') ?></th>
-                    <th><?= $this->Paginator->sort('sub_county') ?></th>
-                    <th><?= $this->Paginator->sort('district') ?></th>
-                    <th><?= $this->Paginator->sort('division') ?></th>
-                    <th><?= $this->Paginator->sort('ward') ?></th>
-                    <th><?= $this->Paginator->sort('type') ?></th>
-                    <th><?= $this->Paginator->sort('owner') ?></th>
-                    <th><?= $this->Paginator->sort('location') ?></th>
-                    <th><?= $this->Paginator->sort('sub_location') ?></th>
-                    <th><?= $this->Paginator->sort('constituency') ?></th>
-                    <th><?= $this->Paginator->sort('nearest_town') ?></th>
-                    <th><?= $this->Paginator->sort('beds') ?></th>
-                    <th><?= $this->Paginator->sort('cots') ?></th>
-                    <th><?= $this->Paginator->sort('keph_level') ?></th>
-                    <th><?= $this->Paginator->sort('official_landline') ?></th>
-                    <th><?= $this->Paginator->sort('official_fax') ?></th>
-                    <th><?= $this->Paginator->sort('official_mobile') ?></th>
-                    <th><?= $this->Paginator->sort('official_email') ?></th>
-                    <th><?= $this->Paginator->sort('official_address') ?></th>
-                    <th><?= $this->Paginator->sort('official_alternate_number') ?></th>
-                    <th><?= $this->Paginator->sort('town') ?></th>
-                    <th><?= $this->Paginator->sort('post_code') ?></th>
-                    <th><?= $this->Paginator->sort('in_charge') ?></th>
-                    <th><?= $this->Paginator->sort('job_title_of_in_charge') ?></th>
-                    <th><?= $this->Paginator->sort('open_24hrs') ?></th>
-                    <th><?= $this->Paginator->sort('open_weekends') ?></th>
-                    <th><?= $this->Paginator->sort('operational_status') ?></th>
-                    <th><?= $this->Paginator->sort('anc') ?></th>
-                    <th><?= $this->Paginator->sort('art') ?></th>
-                    <th><?= $this->Paginator->sort('beoc') ?></th>
-                    <th><?= $this->Paginator->sort('blood') ?></th>
-                    <th><?= $this->Paginator->sort('caes_sec') ?></th>
-                    <th><?= $this->Paginator->sort('ceoc') ?></th>
-                    <th><?= $this->Paginator->sort('c_imci') ?></th>
-                    <th><?= $this->Paginator->sort('epi') ?></th>
-                    <th><?= $this->Paginator->sort('fp') ?></th>
-                    <th><?= $this->Paginator->sort('growm') ?></th>
-                    <th><?= $this->Paginator->sort('hbc') ?></th>
-                    <th><?= $this->Paginator->sort('hct') ?></th>
-                    <th><?= $this->Paginator->sort('ipd') ?></th>
-                    <th><?= $this->Paginator->sort('opd') ?></th>
-                    <th><?= $this->Paginator->sort('outreach') ?></th>
-                    <th><?= $this->Paginator->sort('pmtct') ?></th>
-                    <th><?= $this->Paginator->sort('rad_xray') ?></th>
-                    <th><?= $this->Paginator->sort('rhtc_rhdc') ?></th>
-                    <th><?= $this->Paginator->sort('tb_diag') ?></th>
-                    <th><?= $this->Paginator->sort('tb_labs') ?></th>
-                    <th><?= $this->Paginator->sort('tb_treat') ?></th>
-                    <th><?= $this->Paginator->sort('Youth') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($facilityCodes as $facilityCode): ?>
-                <tr>
-                    <td><?= $this->Number->format($facilityCode->id) ?></td>
-                    <td><?= h($facilityCode->facility_code) ?></td>
-                    <td><?= h($facilityCode->facility_name) ?></td>
-                    <td><?= h($facilityCode->province) ?></td>
-                    <td><?= h($facilityCode->county) ?></td>
-                    <td><?= h($facilityCode->sub_county) ?></td>
-                    <td><?= h($facilityCode->district) ?></td>
-                    <td><?= h($facilityCode->division) ?></td>
-                    <td><?= h($facilityCode->ward) ?></td>
-                    <td><?= h($facilityCode->type) ?></td>
-                    <td><?= h($facilityCode->owner) ?></td>
-                    <td><?= h($facilityCode->location) ?></td>
-                    <td><?= h($facilityCode->sub_location) ?></td>
-                    <td><?= h($facilityCode->constituency) ?></td>
-                    <td><?= h($facilityCode->nearest_town) ?></td>
-                    <td><?= h($facilityCode->beds) ?></td>
-                    <td><?= h($facilityCode->cots) ?></td>
-                    <td><?= h($facilityCode->keph_level) ?></td>
-                    <td><?= h($facilityCode->official_landline) ?></td>
-                    <td><?= h($facilityCode->official_fax) ?></td>
-                    <td><?= h($facilityCode->official_mobile) ?></td>
-                    <td><?= h($facilityCode->official_email) ?></td>
-                    <td><?= h($facilityCode->official_address) ?></td>
-                    <td><?= h($facilityCode->official_alternate_number) ?></td>
-                    <td><?= h($facilityCode->town) ?></td>
-                    <td><?= h($facilityCode->post_code) ?></td>
-                    <td><?= h($facilityCode->in_charge) ?></td>
-                    <td><?= h($facilityCode->job_title_of_in_charge) ?></td>
-                    <td><?= h($facilityCode->open_24hrs) ?></td>
-                    <td><?= h($facilityCode->open_weekends) ?></td>
-                    <td><?= h($facilityCode->operational_status) ?></td>
-                    <td><?= h($facilityCode->anc) ?></td>
-                    <td><?= h($facilityCode->art) ?></td>
-                    <td><?= h($facilityCode->beoc) ?></td>
-                    <td><?= h($facilityCode->blood) ?></td>
-                    <td><?= h($facilityCode->caes_sec) ?></td>
-                    <td><?= h($facilityCode->ceoc) ?></td>
-                    <td><?= h($facilityCode->c_imci) ?></td>
-                    <td><?= h($facilityCode->epi) ?></td>
-                    <td><?= h($facilityCode->fp) ?></td>
-                    <td><?= h($facilityCode->growm) ?></td>
-                    <td><?= h($facilityCode->hbc) ?></td>
-                    <td><?= h($facilityCode->hct) ?></td>
-                    <td><?= h($facilityCode->ipd) ?></td>
-                    <td><?= h($facilityCode->opd) ?></td>
-                    <td><?= h($facilityCode->outreach) ?></td>
-                    <td><?= h($facilityCode->pmtct) ?></td>
-                    <td><?= h($facilityCode->rad_xray) ?></td>
-                    <td><?= h($facilityCode->rhtc_rhdc) ?></td>
-                    <td><?= h($facilityCode->tb_diag) ?></td>
-                    <td><?= h($facilityCode->tb_labs) ?></td>
-                    <td><?= h($facilityCode->tb_treat) ?></td>
-                    <td><?= h($facilityCode->Youth) ?></td>
-                    <td><?= h($facilityCode->created) ?></td>
-                    <td><?= h($facilityCode->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $facilityCode->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $facilityCode->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $facilityCode->id], ['confirm' => __('Are you sure you want to delete # {0}?', $facilityCode->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+
+<!-- CMS
+    ================================================== -->
+<h3>Content Management System <small>(FACILITY CODES)</small></h3>
+<p>Search for the content that you wish to modify and change accordingly.</p>
+<hr>
+<div class="row-fluid" style="margin-bottom: 9px;">
+    <div class="span2 columns">
+        <div class="row-fluid">
+            <div class="span12">
+                <?php 
+                echo $this->element('admin/contentmenu')
+                ?>
+
+            </div><!--/span-->
+        </div><!--/row-->
+    </div> <!-- /span5 -->
+
+    <div class="span10 columns">
+        <?php
+        echo $this->Form->create();
+
+        // 'FacilityCode', array(
+        // 	'url' => array_merge(array('action' => 'admin_index', 'admin' => true), $this->params['pass']),
+        // 	'class' => 'well',
+        // ));
+        ?>
+        <div class="row-fluid">
+            <div class="span2 columns">
+                <?php
+
+                echo $this->Html->link(
+                    '<i class="icon-plus icon-white"></i> Add a Facility',
+                    array(
+                        'controller' => 'facility_codes',
+                        'action' => 'add',
+                        'admin' => true
+                    ),
+                    array('class' => 'btn btn-info', 'escape' => false),
+
+                );
+
+                echo $this->Html->link('<i class="icon-upload icon-white"></i>Upload Facilities', "#", array(
+                    'class' => 'btn btn-success',
+                    'data-toggle' => 'modal',
+                    'data-target' => '#uploadModal',
+                    'escape' => false
+                )
+            );
+
+                ?>
+            </div>
+            <!-- <div class="span3 columns"> -->
+                <?php
+                // echo $this->Form->control('facility_codes', array(
+                //     'div' => false,
+                //     'class' => 'span10',
+                //     'label' => array('class' => 'required', 'text' => 'Facility Codes')
+                // ));
+                ?>
+            <!-- </div> -->
+            <div class="span3 columns">
+                <?php
+                echo $this->Form->control('facility_name', array(
+                    'div' => false,
+                    'class' => 'span10',
+                    'label' => array('class' => 'required', 'text' => 'Facility Name')
+                ));
+                ?>
+            </div>
+            <div class="span4 columns">
+                <p class="muted">Search on any field.</p>
+                <?php
+                echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+                    'escapeTitle' => false,
+                    'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false,
+                ));
+                echo $this->Form->end();
+                ?>
+            </div>
+        </div>
+
+        <div class="row-fluid">
+
+            <?php
+            if (count($facilityCodes) >  0) { ?>
+                <p>
+                    <?php
+                    echo $this->Paginator->counter(
+                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                            showing <span class="badge">{{current}}</span> Facilities out of 
+                            <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                            ending on <span class="badge">{{end}}</span>')
+                    );
+                    ?>
+                </p>
+                <div class="pagination">
+                    <ul>
+
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+
+                    </ul>
+                </div>
+                <hr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->Paginator->sort('id'); ?></th>
+                            <th><?php echo $this->Paginator->sort('facility_code'); ?></th>
+                            <th><?php echo $this->Paginator->sort('facility_name'); ?></th>
+                            <th><?php echo $this->Paginator->sort('county'); ?></th>
+                            <th><?php echo $this->Paginator->sort('sub_county'); ?></th>
+                            <th><?php echo $this->Paginator->sort('ward'); ?></th>
+                            <th><?php echo __('Actions'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($facilityCodes as $facilityCode) : ?>
+                            <tr>
+                                <td><?php echo h($facilityCode['id']); ?>&nbsp;</td>
+                                <td><?php echo h($facilityCode['facility_code']); ?>&nbsp;</td>
+                                <td><?php echo h($facilityCode['facility_name']); ?>&nbsp;</td>
+                                <td><?php echo h($facilityCode['county']); ?>&nbsp;</td>
+                                <td><?php echo h($facilityCode['sub_county']); ?>&nbsp;</td>
+                                <td><?php echo h($facilityCode['ward']); ?>&nbsp;</td>
+                                <td>
+                                    <?php echo $this->Html->link(
+                                        '<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>',
+                                        array('controller' => 'facility_codes', 'action' => 'edit', $facilityCode['id']),
+                                        array('escape' => false)
+                                    ); ?>&nbsp;
+                                    <?php echo $this->Form->postLink(
+                                        __('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'),
+                                        array('action' => 'delete', $facilityCode['id']),
+                                        array('escape' => false),
+                                        __('Are you sure you want to delete # %s?', $facilityCode['id'])
+                                    ); ?>&nbsp;
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+
+            <?php } else { ?>
+                <p>There were no reports that met your search criteria.</p>
+            <?php } ?>
+        </div> <!-- /row-fluid -->
+    </div> <!-- /span6 -->
+
+</div> <!-- /row-fluid -->
+
+
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadModalLabel">Upload CSV</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?php echo $this->Form->create(); //'Upload', array('type' => 'file', 'url' => array('controller' => 'facility_codes', 'action' => 'upload'))); 
+                ?>
+
+                <?php echo $this->Form->control('csv_file', array('type' => 'file')); ?>
+            </div>
+            <div class="modal-footer">
+                <?php echo $this->Form->button('Upload', array('class' => 'btn btn-primary')); ?>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <?php echo $this->Form->end(); ?>
+            </div>
+        </div>
     </div>
 </div>
+<style>
+    .modal-header .close {
+        margin-top: -1.5rem;
+        margin-right: -0.5rem;
+    }
+</style>
