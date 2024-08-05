@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AppController;
+use Cake\Event\EventInterface;
 
 /**
  * Feedbacks Controller
@@ -13,6 +14,12 @@ use App\Controller\AppController;
  */
 class FeedbacksController extends AppController
 {
+
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+		$this->Auth->allow('add');
+	}
     /**
      * Index method
      *

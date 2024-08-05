@@ -90,7 +90,10 @@ $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Repo
       }
       ?>
      
-      <?php echo $this->fetch('content'); ?>
+      <?php 
+      
+      echo $this->Flash->render();
+      echo $this->fetch('content'); ?>
 
     </div>
     </div>

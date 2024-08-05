@@ -98,7 +98,7 @@ class UsersController extends AppController
             'register', 'login', 'logout', 'activate',
             'forgotPassword', 'resetPassword', 'view'
         ]);
-    }
+    } 
 
     public function dashboard()
     {

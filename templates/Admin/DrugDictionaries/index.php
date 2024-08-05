@@ -1,94 +1,113 @@
-<?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\DrugDictionary> $drugDictionaries
- */
-?>
-<div class="drugDictionaries index content">
-    <?= $this->Html->link(__('New Drug Dictionary'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Drug Dictionaries') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('MedId') ?></th>
-                    <th><?= $this->Paginator->sort('drug_record_number') ?></th>
-                    <th><?= $this->Paginator->sort('sequence_no_1') ?></th>
-                    <th><?= $this->Paginator->sort('sequence_no_2') ?></th>
-                    <th><?= $this->Paginator->sort('sequence_no_3') ?></th>
-                    <th><?= $this->Paginator->sort('sequence_no_4') ?></th>
-                    <th><?= $this->Paginator->sort('trade_name') ?></th>
-                    <th><?= $this->Paginator->sort('generic') ?></th>
-                    <th><?= $this->Paginator->sort('drug_name') ?></th>
-                    <th><?= $this->Paginator->sort('health_program') ?></th>
-                    <th><?= $this->Paginator->sort('name_specifier') ?></th>
-                    <th><?= $this->Paginator->sort('market_authorization_number') ?></th>
-                    <th><?= $this->Paginator->sort('market_authorization_date') ?></th>
-                    <th><?= $this->Paginator->sort('market_authorization_withdrawal_date') ?></th>
-                    <th><?= $this->Paginator->sort('country') ?></th>
-                    <th><?= $this->Paginator->sort('company') ?></th>
-                    <th><?= $this->Paginator->sort('marketing_authorization_holder') ?></th>
-                    <th><?= $this->Paginator->sort('source_code') ?></th>
-                    <th><?= $this->Paginator->sort('source_country') ?></th>
-                    <th><?= $this->Paginator->sort('source_year') ?></th>
-                    <th><?= $this->Paginator->sort('product_type') ?></th>
-                    <th><?= $this->Paginator->sort('product_group') ?></th>
-                    <th><?= $this->Paginator->sort('create_date') ?></th>
-                    <th><?= $this->Paginator->sort('date_changed') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($drugDictionaries as $drugDictionary): ?>
-                <tr>
-                    <td><?= $this->Number->format($drugDictionary->id) ?></td>
-                    <td><?= h($drugDictionary->MedId) ?></td>
-                    <td><?= h($drugDictionary->drug_record_number) ?></td>
-                    <td><?= h($drugDictionary->sequence_no_1) ?></td>
-                    <td><?= h($drugDictionary->sequence_no_2) ?></td>
-                    <td><?= h($drugDictionary->sequence_no_3) ?></td>
-                    <td><?= h($drugDictionary->sequence_no_4) ?></td>
-                    <td><?= h($drugDictionary->trade_name) ?></td>
-                    <td><?= h($drugDictionary->generic) ?></td>
-                    <td><?= h($drugDictionary->drug_name) ?></td>
-                    <td><?= h($drugDictionary->health_program) ?></td>
-                    <td><?= h($drugDictionary->name_specifier) ?></td>
-                    <td><?= h($drugDictionary->market_authorization_number) ?></td>
-                    <td><?= h($drugDictionary->market_authorization_date) ?></td>
-                    <td><?= h($drugDictionary->market_authorization_withdrawal_date) ?></td>
-                    <td><?= h($drugDictionary->country) ?></td>
-                    <td><?= h($drugDictionary->company) ?></td>
-                    <td><?= h($drugDictionary->marketing_authorization_holder) ?></td>
-                    <td><?= h($drugDictionary->source_code) ?></td>
-                    <td><?= h($drugDictionary->source_country) ?></td>
-                    <td><?= h($drugDictionary->source_year) ?></td>
-                    <td><?= h($drugDictionary->product_type) ?></td>
-                    <td><?= h($drugDictionary->product_group) ?></td>
-                    <td><?= h($drugDictionary->create_date) ?></td>
-                    <td><?= h($drugDictionary->date_changed) ?></td>
-                    <td><?= h($drugDictionary->created) ?></td>
-                    <td><?= h($drugDictionary->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $drugDictionary->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $drugDictionary->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $drugDictionary->id], ['confirm' => __('Are you sure you want to delete # {0}?', $drugDictionary->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
-</div>
+<?php 
+	$this->assign('CMS', 'active');
+ ?>
+
+      <!-- CMS
+    ================================================== -->
+	<h3>Content Management System <small>(PPB Drug Dictionary)</small></h3>
+		<p>Search for the content that you wish to modify and change accordingly.</p>	
+		<hr>
+	<div class="row-fluid" style="margin-bottom: 9px;">	
+		<div class="span2 columns">
+			<div class="row-fluid">
+				<div class="span12">
+					  <?php echo $this->element('admin/contentmenu')?>
+					  
+				</div><!--/span-->
+			</div><!--/row-->	
+		</div> <!-- /span5 -->
+
+		<div class="span10 columns">
+				<?php 	
+					echo $this->Form->create();
+                    
+				?>
+				<div class="row-fluid">
+					<div class="span2 columns">
+					<?php
+						echo $this->Html->link('Add A Drug', array('controller' => 'drug_dictionaries', 'action' => 'add', 'admin' => true ), array('class' => 'btn btn-info'));
+					?>
+					</div>
+					<div class="span3 columns">
+					<?php
+						echo $this->Form->control('id', array('div' => false, 'class' => 'span10', 'type' => 'text', 'label' => array('class' => 'required', 'text' => 'WHO Med Product Id')));
+					?>
+					</div>
+					<div class="span3 columns">
+					<?php
+						echo $this->Form->control('drug_name', array('div' => false, 'class' => 'span10', 'label' => array('class' => 'required', 'text' => 'Drug Name')));
+					?>
+					</div>
+					<div class="span4 columns">
+					<p class="muted">Search on any field.</p>
+					<?php	 
+						echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+                            'escapeTitle'=>false,
+									'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false, 'formnovalidate' => 'formnovalidate',
+								));
+						echo $this->Form->end();
+					?>
+					</div>
+				</div>
+				
+				<div class="row-fluid">		
+					
+					<?php
+						if(count($drugDictionaries) >  0) { ?>
+					<p>
+					<?php
+						  echo $this->Paginator->counter(
+                            __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                                showing <span class="badge">{{current}}</span> Drug Dictioneries out of 
+                                <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                                ending on <span class="badge">{{end}}</span>')
+                        );
+					?>	
+					</p>
+					<div class="pagination">
+						<ul>
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+						</ul>
+					</div>	
+					<hr>
+						<table  class="table table-striped">		
+						<thead>
+							<tr>
+								<th><?php echo $this->Paginator->sort('id', 'WHO Med ID');?></th>
+								<th><?php echo $this->Paginator->sort('generic', 'Generic(Y/N)');?></th>
+								<th><?php echo $this->Paginator->sort('drug_name');?></th>
+								<th><?php echo $this->Paginator->sort('country');?></th>
+								<th><?php echo $this->Paginator->sort('health_program');?></th>
+								<th><?php echo __('Actions');?></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						foreach ($drugDictionaries as $drugDictionary): ?>
+							<tr>
+								<td><?php echo h($drugDictionary['id']); ?>&nbsp;</td>
+								<td><?php echo h($drugDictionary['generic']); ?>&nbsp;</td>
+								<td><?php echo h($drugDictionary['drug_name']); ?>&nbsp;</td>
+								<td><?php echo h($drugDictionary['country']); ?>&nbsp;</td>
+								<td><?php echo h($drugDictionary['health_program']); ?>&nbsp;</td>
+								<td>
+									<?php echo $this->Html->link('<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>' , 
+											array('controller' => 'drug_dictionaries', 'action' => 'edit', $drugDictionary['id']), array('escape' => false)); ?>&nbsp;
+									<?php echo $this->Form->postLink(__('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'), 
+											array('action' => 'delete', $drugDictionary['id']), array('escape' => false), __('Are you sure you want to delete # %s?', $drugDictionary['id'])); ?>&nbsp;
+								</td>
+							</tr>
+						<?php endforeach; ?>		
+						</tbody>
+						</table>
+						<?php } else { ?>
+							<p>There were no reports that met your search criteria.</p>
+						<?php } ?>	
+				</div> <!-- /row-fluid -->
+			</div> <!-- /span6 -->
+		
+	   </div> <!-- /row-fluid -->
