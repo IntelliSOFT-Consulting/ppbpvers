@@ -1,8 +1,8 @@
 <?php 
-	$this->assign('CMS', 'active');
+	$this->assign('Content', 'active');
 ?>
 
-      <!-- CMS
+      <!-- Content
     ================================================== -->
 	<h3>Content Management System <small>(ADD A NEW PPB DRUG)</small></h3>
 		<p>You may refer to the WHO DRUG DICTIONARY to get the drug.</p>	

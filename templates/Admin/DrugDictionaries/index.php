@@ -1,8 +1,8 @@
 <?php 
-	$this->assign('CMS', 'active');
+	$this->assign('Content', 'active');
  ?>
 
-      <!-- CMS
+      <!-- Content
     ================================================== -->
 	<h3>Content Management System <small>(PPB Drug Dictionary)</small></h3>
 		<p>Search for the content that you wish to modify and change accordingly.</p>	

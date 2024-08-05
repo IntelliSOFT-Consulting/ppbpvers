@@ -1,8 +1,8 @@
 <?php
-$this->assign('CMS', 'active');
+$this->assign('Content', 'active');
 ?>
 
-<!-- CMS
+<!-- Content
     ================================================== -->
 <h4>Drug Administration Routes </h4>
 <div class="row-fluid" style="margin-bottom: 9px;">

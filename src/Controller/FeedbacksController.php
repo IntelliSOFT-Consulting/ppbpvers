@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -18,12 +19,17 @@ class FeedbacksController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Users'],
-        ];
-        $feedbacks = $this->paginate($this->Feedbacks);
 
-        $this->set(compact('feedbacks'));
+        $userId = $this->Auth->user('id');
+        $this->paginate = [
+            'contain' => array('Users'),
+            'conditions' => array(
+                'Feedbacks.user_id' => $userId
+            )
+        ];
+        $previous_messages = $this->paginate($this->Feedbacks);
+
+        $this->set(compact('previous_messages'));
     }
 
     /**
@@ -49,6 +55,7 @@ class FeedbacksController extends AppController
      */
     public function add()
     {
+        $previous_messages = array();
         $feedback = $this->Feedbacks->newEmptyEntity();
         if ($this->request->is('post')) {
             $feedback = $this->Feedbacks->patchEntity($feedback, $this->request->getData());
@@ -59,8 +66,18 @@ class FeedbacksController extends AppController
             }
             $this->Flash->error(__('The feedback could not be saved. Please, try again.'));
         }
+
+        if ($this->Auth->User('id')) {
+            $this->paginate['limit'] = 5;
+            $previous_messages = $this->paginate($this->Feedbacks);
+            // $this->paginate['conditions'] = array('user_id' => $this->Auth->User('id'));
+            // 
+            // $previous_messages = $this->Feedback->find('all', array('conditions' => array('id' => $this->Auth->User('id'))));
+            // $previous_messages = $this->paginate();
+        }
         $users = $this->Feedbacks->Users->find('list', ['limit' => 200])->all();
         $this->set(compact('feedback', 'users'));
+        $this->set('previous_messages', $previous_messages);
     }
 
     /**

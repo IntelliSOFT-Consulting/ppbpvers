@@ -20,8 +20,9 @@ class MessagesController extends AppController
      */
     public function index()
     {
+        $page_options = array('25' => '25', '20' => '20');
         $messages = $this->paginate($this->Messages); 
-
+        $this->set('page_options', $page_options);
         $this->set(compact('messages'));
     }
 

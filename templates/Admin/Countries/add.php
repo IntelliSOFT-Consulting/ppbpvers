@@ -1,8 +1,8 @@
 <?php 
-	$this->assign('CMS', 'active');
+	$this->assign('Content', 'active');
 ?>
 
-      <!-- CMS
+      <!-- Content
     ================================================== -->
 	<h3>Content Management System <small>(ADD A NEW COUNTRY)</small></h3>
 		<p>Highly unlikely that you would need to add a country, but then again....</p>	

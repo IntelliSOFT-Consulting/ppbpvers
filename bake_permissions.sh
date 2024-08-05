@@ -25,3 +25,5 @@ echo "*************** Assign Reporters Permissions  *******************"
 #Admin permissions
 bin/cake acl deny Roles.3 controllers
 bin/cake acl grant Roles.3 controllers/Reporter 
+bin/cake acl grant Roles.3 controllers/Feedbacks 
+bin/cake acl grant Roles.3 controllers/Users 

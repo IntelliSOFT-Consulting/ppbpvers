@@ -1,7 +1,7 @@
 <?php
-$this->assign('CMS', 'active');
+$this->assign('Content', 'active');
 ?>
-<!-- CMS
+<!-- Content
     ================================================== -->
 <h3>Content Management System <small>(Vaccines)</small></h3>
 <hr>

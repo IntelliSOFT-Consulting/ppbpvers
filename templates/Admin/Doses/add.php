@@ -1,8 +1,8 @@
 <?php 
-	$this->assign('CMS', 'active');
+	$this->assign('Content', 'active');
 ?>
 
-      <!-- CMS
+      <!-- Content
     ================================================== -->
 	<h3>Content Management System <small>(ADD A NEW DOSE)</small></h3>
 		<p>Please ensure the code corresponds to the ICSR specified code and that the code does not already exist.</p>	

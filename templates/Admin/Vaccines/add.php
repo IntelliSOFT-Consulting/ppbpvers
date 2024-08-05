@@ -1,8 +1,8 @@
 <?php 
-	$this->assign('CMS', 'active');
+	$this->assign('Content', 'active');
 ?>
 
-      <!-- CMS
+      <!-- Content
     ================================================== -->
 	<h3>Vaccines <small>(ADD NEW VACCINES)</small></h3>
 

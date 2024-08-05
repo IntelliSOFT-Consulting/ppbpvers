@@ -1,54 +1,106 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Feedback> $feedbacks
- */
+$this->assign('Contact-Us', 'active');
 ?>
-<div class="feedbacks index content">
-    <?= $this->Html->link(__('New Feedback'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Feedbacks') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('email') ?></th>
-                    <th><?= $this->Paginator->sort('user_id') ?></th>
-                    <th><?= $this->Paginator->sort('foreign_key') ?></th>
-                    <th><?= $this->Paginator->sort('subject') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($feedbacks as $feedback): ?>
-                <tr>
-                    <td><?= $this->Number->format($feedback->id) ?></td>
-                    <td><?= h($feedback->email) ?></td>
-                    <td><?= $feedback->has('user') ? $this->Html->link($feedback->user->name, ['controller' => 'Users', 'action' => 'view', $feedback->user->id]) : '' ?></td>
-                    <td><?= $feedback->foreign_key === null ? '' : $this->Number->format($feedback->foreign_key) ?></td>
-                    <td><?= h($feedback->subject) ?></td>
-                    <td><?= h($feedback->created) ?></td>
-                    <td><?= h($feedback->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $feedback->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $feedback->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $feedback->id], ['confirm' => __('Are you sure you want to delete # {0}?', $feedback->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Contact us <small>:PPB will get back to you using the provided email address.</small> </h3>
+        <hr>
+        <?php
+
+        echo $this->Form->create();
+        ?>
+
+        <div class="row-fluid">
+            <div class="span6">
+                <?php
+                echo $this->Form->control(
+                    'email',
+                    array(
+                        'label' => array('class' => 'control-label required', 'text' => 'Email <span class="sterix">*</span>'),
+                        'escape'=>false,
+                        'type' => 'email', 'value' => $this->request->getSession()->read('Auth.User.email')
+                    )
+                );
+                echo $this->Form->control(
+                    'user_id',
+                    array(
+                        'label' => array('class' => 'control-label required', 'text' => 'Email <span class="sterix">*</span>'),
+                        'escape'=>false,
+                        'type' => 'hidden', 'value' => $this->request->getSession()->read('Auth.User.id')
+                    )
+                );
+                echo $this->Form->control(
+                    'subject',
+                    array('label' => array('class' => 'control-label required', 'text' => 'Subject <span class="sterix">*</span>'),  'escape'=>false,)
+                );
+                echo $this->Form->control(
+                    'feedback',
+                    array(
+                        'label' => array('class' => 'control-label required', 'text' => 'Feedback <span class="sterix">*</span>'),  'escape'=>false,
+                        'class' => 'control-large',
+                    )
+                );
+
+                ?>
+
+                <?php
+
+                echo $this->Html->div(
+                    'form-actions',
+                    $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
+                        'escapeTitle' => false,
+                        'type' => 'Submit',
+                        'class' => 'btn btn-primary',
+                        'id' => 'SadrSaveChanges'
+                    ])
+                );
+                echo $this->Form->end();
+                ?>
+            </div><!--/span-->
+            <div class="span6">
+                <div style="margin-left: 20px;">
+                    <?php if (count($previous_messages) > 0) { ?>
+                        <h4 style="text-decoration: underline;">My Previous Comments</h4>
+                        <dl>
+                            <?php
+                            $count = 1;
+                            foreach ($previous_messages as $previous_message) {
+                                echo "<dt>" . $count . ". " . $previous_message['subject'] . " <small class='muted'> created on " . date('d-m-Y H:i:s', strtotime($previous_message['created'])) . "</small></dt>";
+                                echo "<dd class='morecontent'>" . $previous_message['feedback'] . "</dd>";
+                                $count++;
+                            }
+                            ?>
+                        </dl>
+                        <div class="pagination pull-right">
+                            <ul>
+                                <?= $this->Paginator->first('<< ' . __('first')) ?>
+                                <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                                <?= $this->Paginator->numbers() ?>
+                                <?= $this->Paginator->next(__('next') . ' >') ?>
+                                <?= $this->Paginator->last(__('last') . ' >>') ?>
+                            </ul>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div><!--/span-->
+        </div><!--/row-->
+        <hr>
+
     </div>
 </div>
+<div class="row-fluid">
+    <div class="blank_contact"></div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    jQuery('.creload').on('click', function() {
+        var mySrc = $(this).prev().attr('src');
+        var glue = '?';
+        if (mySrc.indexOf('?') != -1) {
+            glue = '&';
+        }
+        $(this).prev().attr('src', mySrc + glue + new Date().getTime());
+        return false;
+    });
+</script>

@@ -65,8 +65,8 @@ $this->assign('Dashboard', 'active');
                 <?php
                 $count = 1;
                 foreach ($previous_messages as $previous_message) {
-                    echo "<dt>" . $count . ". " . $previous_message['Feedback']['subject'] . " <small class='muted'> created on " . date('d-m-Y H:i:s', strtotime($previous_message['Feedback']['created'])) . "</small></dt>";
-                    echo "<dd class='morecontent'>" . $previous_message['Feedback']['feedback'] . "</dd>";
+                    echo "<dt>" . $count . ". " . $previous_message['subject'] . " <small class='muted'> created on " . date('d-m-Y H:i:s', strtotime($previous_message['created'])) . "</small></dt>";
+                    echo "<dd class='morecontent'>" . $previous_message['feedback'] . "</dd>";
                     $count++;
                 }
                 ?>

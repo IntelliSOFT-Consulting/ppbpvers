@@ -1,8 +1,8 @@
 <?php
-$this->assign('CMS', 'active');
+$this->assign('Content', 'active');
 ?>
 
-<!-- CMS
+<!-- Content
     ================================================== -->
 <h3>Content Management System <small>(ADD A NEW FACILITY)</small></h3>
 <p>This is from the Ministry of Health List of Health facilities in Kenya.</p>

@@ -1,54 +1,93 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Feedback> $feedbacks
- */
-?>
-<div class="feedbacks index content">
-    <?= $this->Html->link(__('New Feedback'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Feedbacks') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('email') ?></th>
-                    <th><?= $this->Paginator->sort('user_id') ?></th>
-                    <th><?= $this->Paginator->sort('foreign_key') ?></th>
-                    <th><?= $this->Paginator->sort('subject') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($feedbacks as $feedback): ?>
-                <tr>
-                    <td><?= $this->Number->format($feedback->id) ?></td>
-                    <td><?= h($feedback->email) ?></td>
-                    <td><?= $feedback->has('user') ? $this->Html->link($feedback->user->name, ['controller' => 'Users', 'action' => 'view', $feedback->user->id]) : '' ?></td>
-                    <td><?= $feedback->foreign_key === null ? '' : $this->Number->format($feedback->foreign_key) ?></td>
-                    <td><?= h($feedback->subject) ?></td>
-                    <td><?= h($feedback->created) ?></td>
-                    <td><?= h($feedback->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $feedback->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $feedback->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $feedback->id], ['confirm' => __('Are you sure you want to delete # {0}?', $feedback->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
-    </div>
-</div>
+	$this->assign('Content', 'active');
+ ?>
+
+      <!-- CMS
+    ================================================== -->
+	<h3>FEEDBACK <small>User Feedback from the front end. <br/><span class="label label-important">NOTE:</span> Where a report ID is included, the feedback was given after the user submitted a report.</small></h3>
+		<hr>
+	<div class="row-fluid" style="margin-bottom: 9px;">
+		<div class="span2 columns">
+			<div class="row-fluid">
+				<div class="span12">
+					<div class="well" style="padding: 8px 0;">
+						<ul class="nav nav-list">
+						<li class="nav-header"><i class="icon-glass"></i>  Filter Options </li>
+						<li class="divider"></li>
+						<li class="active">
+							<?php echo $this->Html->link('<i class="icon-book"></i> FEEDBACK',
+									array('controller' => 'feedbacks', 'action' => 'index', 'admin' => true),
+									array('escape' => false)); ?>
+						</li>
+						<li class="divider"></li>
+						</ul>
+				    </div> <!-- /well -->
+				</div><!--/span-->
+			</div><!--/row-->
+		</div> <!-- /span5 -->
+
+		<div class="span10 columns">
+				<?php  ?>
+
+				<div class="row-fluid">
+					<?php
+						if(count($feedbacks) >  0) { ?>
+					<p>
+					<?php
+						echo $this->Paginator->counter(
+                            __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                                showing <span class="badge">{{current}}</span> Feedbacks out of 
+                                <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                                ending on <span class="badge">{{end}}</span>')
+                        ); 
+					?>
+					</p>
+					<div class="pagination">
+						<ul>
+						<?= $this->Paginator->first('<< ' . __('first')) ?>
+						<?= $this->Paginator->prev('< ' . __('previous')) ?>
+						<?= $this->Paginator->numbers() ?>
+						<?= $this->Paginator->next(__('next') . ' >') ?>
+						<?= $this->Paginator->last(__('last') . ' >>') ?>
+						</ul>
+					</div>
+					<hr>
+						<table  class="table table-striped">
+						<thead>
+							<tr>
+								<th style="width:3%">#</th>
+								<th><?php echo $this->Paginator->sort('id');?></th>
+								<th><?php echo $this->Paginator->sort('email', "Email / Phone No.");?></th>
+								<th><?php echo $this->Paginator->sort('feedback', "Message");?></th>
+								<th><?php echo $this->Paginator->sort('created');?></th>
+								<th><?php echo __('Actions');?></th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						$counder = 0;//($this->request->paging['page'] - 1) * $this->request->paging['limit'];
+						foreach ($feedbacks as $feedback): ?>
+							<tr>
+								<td ><p class="tablenums"><?php $counder++; echo $counder;?>.</p></td>
+								<td><?php echo h($feedback['id']); ?>&nbsp;</td>
+								<td><?php echo h($feedback['email']); ?>&nbsp;</td>
+								<td><?php echo h($feedback['feedback']); ?>&nbsp;</td>
+								<td><?php echo h($feedback['created']); ?>&nbsp;</td>
+								<td>
+									<?php echo $this->Html->link('<span class="label label-success tooltipper" title="View"><i class="icon-plus-sign icon-white"></i> </span>',
+											array('action'=>'view', $feedback['id']), array('escape' => false)); ?>&nbsp;
+									<?php echo $this->Form->postLink(__('<span class="label label-important tooltipper" title="Delete"><i class="icon-trash icon-white"></i> </span>'),
+											array('action' => 'delete', $feedback['id']), array('escape' => false), __('Are you sure you want to Delete the Feedback Number %s?', $feedback['id'])); ?>&nbsp;
+								</td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+						</table>
+
+						<?php } else { ?>
+							<p>There were no reports that met your search criteria.</p>
+						<?php } ?>
+				</div> <!-- /row-fluid -->
+			</div> <!-- /span6 -->
+
+	   </div> <!-- /row-fluid -->
