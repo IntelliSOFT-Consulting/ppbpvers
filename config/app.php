@@ -55,6 +55,7 @@ return [
         'dir' => 'src',
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
+        'defaultTimezone' => 'UTC', 
         //'baseUrl' => env('SCRIPT_NAME'),
         'fullBaseUrl' => false,
         'imageBaseUrl' => 'img/',
@@ -423,15 +424,15 @@ return [
     //     ],
     //     // Other configurations as needed
     // ],
-    'Queue' => [
-        'default' => [
-            'className' => \Cake\Queue\Job\Queue::class,
-            'queue' => 'default',
-            'transport' => [
-                'className' => \Cake\Queue\Transport\CakeQueueTransport::class,
-                'queue' => 'default',
-            ],
-        ],
-    ],
+    // 'Queue' => [
+    //     'default' => [
+    //         'className' => \Cake\Queue\Job\Queue::class,
+    //         'queue' => 'default',
+    //         'transport' => [
+    //             'className' => \Cake\Queue\Transport\CakeQueueTransport::class,
+    //             'queue' => 'default',
+    //         ],
+    //     ],
+    // ],
 
 ];
