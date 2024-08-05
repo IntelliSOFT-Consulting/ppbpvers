@@ -55,7 +55,7 @@ return [
         'dir' => 'src',
         'webroot' => 'webroot',
         'wwwRoot' => WWW_ROOT,
-        'defaultTimezone' => 'UTC', 
+        'defaultTimezone' => 'Africa/Nairobi',
         //'baseUrl' => env('SCRIPT_NAME'),
         'fullBaseUrl' => false,
         'imageBaseUrl' => 'img/',

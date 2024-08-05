@@ -1,5 +1,5 @@
 <?php
-$aC = $bC = $cC = $dC = $eC = $fC =  $gC =  $hC =  $iC =  $jC = $kC = $lC = $mC = $nC = $oC = $auto = '';
+$aC = $bC = $cC = $dC = $eC = $fC = $esC= $gC =  $hC =  $iC =  $jC = $kC = $lC = $mC = $nC = $oC = $auto = '';
 // debug($this->request);
 if ($this->request->getParam('controller') == 'help_infos') {
 
@@ -14,6 +14,8 @@ if ($this->request->getParam('controller') == 'help_infos') {
     $dC = 'active';
 } else if ($this->request->getParam('controller') == 'Countries') {
     $eC = 'active';
+} else if ($this->request->getParam('controller') == 'SubCounties') {
+    $esC = 'active';
 } else if ($this->request->getParam('controller') == 'FacilityCodes') {
     $fC = 'active';
 } else if ($this->request->getParam('controller') == 'Doses') {
@@ -72,6 +74,15 @@ if ($this->request->getParam('controller') == 'help_infos') {
             echo $this->Html->link(
                 '<i class="icon-tag"></i> COUNTIES',
                 array('controller' => 'counties', 'action' => 'index', 'admin' => true),
+                array('escape' => false)
+            );
+            ?>
+        </li>
+        <li class="<?php echo $esC; ?>">
+            <?php
+            echo $this->Html->link(
+                '<i class="icon-tag"></i> SUB COUNTIES',
+                array('controller' => 'sub-counties', 'action' => 'index', 'admin' => true),
                 array('escape' => false)
             );
             ?>

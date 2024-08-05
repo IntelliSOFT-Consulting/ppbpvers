@@ -19,11 +19,7 @@ $this->assign('CMS', 'active');
 
     <div class="span10 columns">
         <?php
-        echo $this->Form->create();
-        // 'County', array(
-        // 	'url' => array_merge(array('action' => 'admin_index', 'admin' => true), $this->params['pass']),
-        // 	'class' => 'well',
-        // ));
+        echo $this->Form->create(); 
         ?>
         <div class="row-fluid">
             <div class="span2 columns">
