@@ -44,6 +44,7 @@ class AppController extends Controller
      * 
      */
 
+     public $Notifications;
 
     public function initialize(): void
     {
@@ -52,6 +53,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', ['viewClassMap' => ['csv' => 'CsvView.Csv']]);
         // $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+        $this->Notifications = $this->loadModel('Notifications');
 
         // $this->loadHelper('Tools.Captcha', [
         //     'type' => 'active'

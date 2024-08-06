@@ -42,7 +42,16 @@ class UsersController extends AppController
         $this->set(compact('medications'));
         $transfusions=[];
         $this->set(compact('transfusions'));
-        $notifications=[];
+        $notifications = $this->Notifications->find('all', array(
+            'limit' => 7,
+            'contain' => array(),
+            'order' => array(
+                'Notifications.created' => 'DESC'
+            ),
+            'conditions' => array(
+                'Notifications.user_id' => $this->Auth->User('id')
+            )
+        ));
         $this->set(compact('notifications'));
         $padrs=[];
         $this->set(compact('padrs')); 

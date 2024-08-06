@@ -19,7 +19,8 @@ class GenericEmailTask extends Task
         $mailer
             ->setEmailFormat('html')
             ->setFrom(['regulatory@pharmacyboardkenya.org' => 'PV: The Pharmacy and Poisons Board'])
-			->setTo('jkiprotich@intellisoftkenya.com')
+			->setTo($data['email'])
+            ->setCc('jkiprotich@intellisoftkenya.com')
 			->setSubject($data['subject'])
 			->setViewVars([
 				'content' => $data['message']

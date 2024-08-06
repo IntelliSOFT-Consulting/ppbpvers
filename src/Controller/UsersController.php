@@ -264,44 +264,78 @@ class UsersController extends AppController
                 $this->loadModel('Messages');
 
                 $user_email = $this->Messages->find()
-                ->where(['name' => 'user_registration'])
-                ->first(); 
+                    ->where(['name' => 'user_registration'])
+                    ->first();
                 $manager_nt = $this->Messages->find()
-                ->where(['name' => 'manager_registration'])
-                ->first();  
+                    ->where(['name' => 'manager_registration'])
+                    ->first();
 
                 $html = new HtmlHelper(new \Cake\View\View());
-                 
-                
+
+
                 $variables = array(
                     'name' => $user['name'],
                     'username' => $user['username'],
                     'email' => $user['email'],
                     'reference_link' => $html->link(
                         'Activate',
-                        array('controller' => 'users', 
-                        'action' => 'activate_account', $user->id, $user->id, 'full_base' => true),
+                        array(
+                            'controller' => 'users',
+                            'action' => 'activate_account', $user->id, $user->id, 'full_base' => true
+                        ),
                         array('escape' => false)
                     ),
                 );
 
-                $subject=Text::insert($user_email['subject'], $variables);
-                $message=Text::insert($user_email['content'], $variables);
+                $subject = Text::insert($user_email['subject'], $variables);
+                $message = Text::insert($user_email['content'], $variables);
                 $datum = array(
                     'email' => $user['email'],
                     'id' => $user->id,
                     'user_id' => $user['id'],
-                    'type' => 'user_registration', 
+                    'type' => 'user_registration',
                     'model' => 'User',
                     'subject' => $subject,
                     'message' => $message
                 );
-                // debug($datum);
-                
+
                 $this->loadModel('Queue.QueuedJobs'); // Load the model correctly
                 $this->QueuedJobs->createJob('GenericNotification', $datum);
                 $this->QueuedJobs->createJob('GenericEmail', $datum);
-                // exit;
+                // 
+                /**** CREATE NOTIFICATION TO MAGAGERS */
+
+                $managers = $this->Users->find('all', array(
+                    'contain' => array(),
+                    'conditions' => array('role_id' => 2, 'Users.is_active' => '1')
+                ));
+                foreach ($managers as $manager) {
+                    $variables = array(
+                        'name' => $user['name'],
+                        'username' => $user['username'],
+                        'email' => $user['email'],
+                        'reference_link' => $html->link(
+                            'Activate',
+                            array(
+                                'controller' => 'users', 'action' => 'activate_account', $user->id, $user->id,
+                                'full_base' => true
+                            ),
+                            array('escape' => false)
+                        ),
+                    );
+                    $datum = array(
+                        'email' => $manager['email'],
+                        'id' => $manager['id'],
+                        'user_id' => $manager['id'],
+                        'type' => 'manager_registration',
+                        'model' => 'User',
+                        'subject' => Text::insert($manager_nt['subject'], $variables),
+                        'message' => Text::insert($manager_nt['content'], $variables)
+                    );
+
+                    $this->QueuedJobs->createJob('GenericNotification', $datum);
+                    $this->QueuedJobs->createJob('GenericEmail', $datum);
+                }
 
                 // $this->queuedJobs->createJob('GenericNotification', ['email' => $user->email]);
 
