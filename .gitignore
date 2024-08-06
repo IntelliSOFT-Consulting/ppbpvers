@@ -4,6 +4,11 @@
 /config/bootstrap.php
 /config/.env
 .env
+bake_permissions.sh
+bake_all_templates.sh
+bake_all_models.sh
+bake_all_controllers.sh
+bake_all_default_values.sh
 /logs/*
 /tmp/*
 /vendor/*
