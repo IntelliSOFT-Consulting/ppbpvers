@@ -55,6 +55,8 @@ class UsersController extends AppController
         $this->set(compact('medications'));
         $transfusions=[];
         $this->set(compact('transfusions'));
+        $notifications=[];
+        $this->set(compact('notifications'));
 
     }
     /**

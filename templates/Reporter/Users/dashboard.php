@@ -498,7 +498,7 @@ echo $this->Html->script('dashboard', array('inline' => false));
                 array('escape' => false, 'class' => 'text-success')
               ); ?> <small>Actions that require your attention.</small></h4>
           <?php
-        //   echo $this->element('alerts/notifications', ['notifications' => $notifications]);
+          echo $this->element('flash/notifications', ['notifications' => $notifications]);
           ?>
         </div>
       </div>

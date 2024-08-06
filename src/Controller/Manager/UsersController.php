@@ -17,7 +17,37 @@ class UsersController extends AppController
 
     public function dashboard()
     {
-        
+        $users=[];
+        $this->set(compact('users'));
+       
+        $sadrs = $this->Users->Sadrs->find('all', array(
+            'limit' => 7, 
+            'contain' => array(),
+            'fields' => array('Sadrs.id', 'Sadrs.user_id', 'Sadrs.created', 'Sadrs.report_title', 'Sadrs.submitted', 'Sadrs.reference_no', 'Sadrs.created', 'Sadrs.serious'),
+            'order' => array('Sadrs.created' => 'desc'),
+            'conditions' => array(
+                // only show SADRs that have been not been deleted 
+                'Sadrs.deleted' => false,
+                'Sadrs.user_id' => $this->Auth->User('id')
+            ),
+        ));
+        $this->set(compact('sadrs'));
+        $aefis=[];
+        $this->set(compact('aefis'));
+        $pqmps=[];
+        $this->set(compact('pqmps'));
+        $devices=[];
+        $this->set(compact('devices'));
+        $medications=[];
+        $this->set(compact('medications'));
+        $transfusions=[];
+        $this->set(compact('transfusions'));
+        $notifications=[];
+        $this->set(compact('notifications'));
+        $padrs=[];
+        $this->set(compact('padrs')); 
+        $saes=[];
+        $this->set(compact('saes'));
     }
     /**
      * Index method
