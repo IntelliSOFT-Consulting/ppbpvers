@@ -163,7 +163,7 @@ class UsersTable extends Table
             ->scalar('username')
             ->maxLength('username', 255)
             ->requirePresence('username', 'create')
-            ->notEmptyString('username')
+            ->notEmptyString('username','Please provide username')
             ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
@@ -179,7 +179,7 @@ class UsersTable extends Table
                 'message' => 'Passwords do not match'
             ])
 
-            ->notEmptyString('password');
+            ->notEmptyString('password','Please provide password');
 
         $validator
             ->scalar('confirm_password')
@@ -193,11 +193,12 @@ class UsersTable extends Table
 
         $validator
             ->email('email')
-            ->notEmptyString('email');
+            ->notEmptyString('email','Please provide email address')
+            ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->integer('role_id')
-            ->notEmptyString('role_id');
+            ->notEmptyString('role_id','Please select a role');
 
         $validator
             ->scalar('name_of_institution')

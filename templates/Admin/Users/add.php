@@ -2,6 +2,7 @@
 $this->assign('LOGIN', 'active');
 echo $this->Html->script('widgets', array('inline' => false));
 echo $this->Html->script('user', array('inline' => false));
+echo $this->Html->css('user', array('inline' => false));
 ?>
 
 <div class="row-fluid">
@@ -42,7 +43,7 @@ echo $this->Html->script('user', array('inline' => false));
                             'label' => array('class' => 'control-label', 'text' => 'Hospital MFL Code'),
                             'after' => '<p class="help-block"> Only for group institution manager! </p></div>',
                         ));
-                   
+
                         ?>
                     </div>
                     <!--/span-->
@@ -76,13 +77,14 @@ echo $this->Html->script('user', array('inline' => false));
                     </div>
                     <span class="span4">
                         <?php
-                        
+
                         echo $this->Form->control('password', array(
                             'label' => array(
                                 'class' => 'control-label required',
                                 'text' => 'New Password' . ' <span style="color:red;">*</span>',
                                 'escape' => false
                             ),
+                            'error' => array('attributes' => array('class' => 'error-message'))
                         ));
                         echo $this->Form->control('confirm_password', array(
                             'type' => 'password',
@@ -91,6 +93,7 @@ echo $this->Html->script('user', array('inline' => false));
                                 'text' => 'Confirm New Password' . ' <span style="color:red;">*</span>',
                                 'escape' => false
                             ),
+                            'error' => ['attributes' => ['class' => 'error-message']]
                         ));
                         echo $this->Form->control('active_date', array(
                             'type' => 'text', 'class' => 'date-pick-field',
@@ -112,8 +115,9 @@ echo $this->Html->script('user', array('inline' => false));
                         ));
 
                         echo $this->Form->control('is_active', array(
-                            'type'=>'checkbox',
-                            'label' => array('class' => 'control-label', 'text' => 'Is Active?'),));
+                            'type' => 'checkbox',
+                            'label' => array('class' => 'control-label', 'text' => 'Is Active?'),
+                        ));
 
                         ?>
                     </span>

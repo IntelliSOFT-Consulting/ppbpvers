@@ -107,7 +107,7 @@ class CountiesTable extends Table
         $validator
             ->scalar('county_name')
             ->maxLength('county_name', 50)
-            ->allowEmptyString('county_name');
+            ->notEmptyString('county_name','please provide name');
 
         $validator
             ->scalar('org_unit')

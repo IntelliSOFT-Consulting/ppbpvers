@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	
 
 	$('.date-pick-field').datepicker({
 		minDate: new Date(), 
