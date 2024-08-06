@@ -52,6 +52,7 @@ class AppController extends Controller
         $this->loadComponent('RequestHandler', ['viewClassMap' => ['csv' => 'CsvView.Csv']]);
         // $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+
         // $this->loadHelper('Tools.Captcha', [
         //     'type' => 'active'
         // ]);

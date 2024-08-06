@@ -1,5 +1,5 @@
 <?php
-$this->assign('USERS', 'active');
+$this->assign('Users', 'active');
 echo $this->Html->script('jquery.jeditable', array('inline' => false));
 ?>
 <!-- USER LIST
@@ -24,8 +24,8 @@ echo $this->Html->script('jquery.jeditable', array('inline' => false));
                         </li>
                         <li class="active">
                             <?php echo $this->Html->link(
-                                '<i class="icon-tag"></i> Groups',
-                                array('controller' => 'groups', 'action' => 'index', 'admin' => true),
+                                '<i class="icon-tag"></i> Roles',
+                                array('controller' => 'roles', 'action' => 'index', 'admin' => true),
                                 array('escape' => false)
                             ); ?>
                         </li>

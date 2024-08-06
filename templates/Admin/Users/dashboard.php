@@ -1,7 +1,7 @@
 <?php
 $this->assign('Dashboard', 'active');
 ?>
-<div class="marketing">
+<div class="marketing"> 
     <h4>Administrators&rsquo; Dashboard <small class="text-error">(Restricted)</small></h4>
 </div>
 <hr class="soften" style="margin: 10px;">

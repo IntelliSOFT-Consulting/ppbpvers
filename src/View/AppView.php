@@ -44,6 +44,8 @@ class AppView extends View
             // $this->loadHelper('EdForm', ['templates' => 'app_form',]);
         }      
         // $this->loadHelper('Util');
+
+    $this->loadHelper('Text');
         $this->loadHelper('Paginator', ['templates' => 'paginator-templates']);
     }
 }

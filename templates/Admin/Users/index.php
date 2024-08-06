@@ -1,5 +1,5 @@
 <?php
-$this->assign('USERS', 'active');
+$this->assign('Users', 'active');
 ?>
 
 <h3>LIST OF REGISTERED USERS<small> Filter, Search, and edit USER Accounts</small></h3>

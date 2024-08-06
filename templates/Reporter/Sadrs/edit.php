@@ -1,4 +1,7 @@
 <?php
+ 
+    $this->assign('SADR', 'active');
+ 
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Sadr $sadr

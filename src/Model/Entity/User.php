@@ -72,7 +72,7 @@ class User extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        '*' => true,
+        '*' => true, 
         
     ];
 
