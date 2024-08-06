@@ -102,6 +102,13 @@ class SadrsTable extends Table
         $this->hasMany('Sadrs', [
             'foreignKey' => 'sadr_id',
         ]);
+
+        $this->hasMany('Attachment', [
+            'foreignKey' => 'foreign_key',
+            'conditions' => array('Attachment.model' => 'Sadr', 'Attachment.group' => 'attachment'),
+        ]);
+
+ 
     }
 
     /**

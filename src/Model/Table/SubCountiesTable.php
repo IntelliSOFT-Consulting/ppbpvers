@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -48,7 +49,7 @@ class SubCountiesTable extends Table
         parent::initialize($config);
 
         $this->setTable('sub_counties');
-        $this->setDisplayField('id');
+        $this->setDisplayField('sub_county_name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -143,5 +144,12 @@ class SubCountiesTable extends Table
         $rules->add($rules->existsIn('county_id', 'Counties'), ['errorField' => 'county_id']);
 
         return $rules;
+    }
+
+    public function findByCountyId(Query $query, array $options): Query
+    {
+        $term = $options['term'] ?? '';
+        // Example: searching by numeric term
+        return $query->where(['county_id LIKE' => "%$term%"]);
     }
 }

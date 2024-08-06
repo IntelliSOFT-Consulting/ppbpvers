@@ -40,8 +40,13 @@ class AppView extends View
         if ($this->request->getParam('action') === 'view' or $this->request->getParam('action') === 'followup' or $this->request->getParam('action') === 'download') {
             $this->loadHelper('Form', ['templates' => 'view_form',]);
         } else {
-            // $this->loadHelper('Form', ['templates' => 'app_form',]);
-            // $this->loadHelper('EdForm', ['templates' => 'app_form',]);
+            // $this->loadHelper('Form', ['templates' => 'app_form',]); 
+            // $this->loadHelper('Form', [
+            //     'templates' => [
+            //         'checkboxWrapper' => '<div class="checkbox {{attrs.class}}">{{input}}{{label}}</div>',
+            //         'checkboxContainer' => '{{label}}<div class="checkbox">{{input}}{{between}}{{after}}</div>'
+            //     ]
+            // ]);
         }      
         // $this->loadHelper('Util');
 

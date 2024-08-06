@@ -44,22 +44,7 @@ class FacilityCodesController extends AppController
             'codes' => $codes,
             '_serialize' => ['codes']
         ]);
-
-        // $this->RequestHandler->setContent('json', 'application/json');
-        // if (is_numeric($this->request->query['term'])) {
-        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'N');
-        // } else {
-        //     $coders = $this->FacilityCode->finder($this->request->query['term'], 'A');
-        // }
-        // $codes = array();
-        // foreach ($coders as $key => $value) {
-        //     $codes[] = array(
-        //         'value' => $value['FacilityCode']['facility_code'], 'label' => $value['FacilityCode']['facility_name'],  'sub_county' => $value['FacilityCode']['district'],
-        //         'desc' => $value['FacilityCode']['county'], 'addr' => $value['FacilityCode']['official_address'], 'phone' => $value['FacilityCode']['official_mobile']
-        //     );
-        // }
-        // $this->set('codes', $codes);
-        // $this->set('_serialize', 'codes');
+ 
     }
     public function autocomplete()
     {

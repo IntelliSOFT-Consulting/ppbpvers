@@ -16,21 +16,21 @@ echo $this->Html->script('dashboard', array('inline' => false));
             <?php
             echo '<ol>';
             foreach ($sadrs as $sadr) {
-              if ($sadr['Sadr']['submitted'] > 1) {
+              if ($sadr['submitted'] > 1) {
                 echo "<li>";
                 echo $this->Html->link(
-                  $sadr['Sadr']['report_title'] . ' <small class="muted">(' . $sadr['Sadr']['reference_no'] . ')</small>',
-                  array('controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id']),
-                  array('escape' => false, 'class' => 'text-' . ((isset($sadr['Sadr']['serious']) && $sadr['Sadr']['serious'] == 'Yes') ? 'error' : 'success'))
+                  $sadr['report_title'] . ' <small class="muted">(' . $sadr['reference_no'] . ')</small>',
+                  array('controller' => 'sadrs', 'action' => 'view', $sadr['id']),
+                  array('escape' => false, 'class' => 'text-' . ((isset($sadr['serious']) && $sadr['serious'] == 'Yes') ? 'error' : 'success'))
                 );
                 echo "&nbsp;";
-                echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'followup', $sadr['Sadr']['id']), array('escape' => false), __('Add a followup report?'));
+                echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'followup', $sadr['id']), array('escape' => false), __('Add a followup report?'));
                 echo "</li>";
               } else {
                 echo "<li>";
                 echo $this->Html->link(
-                  $sadr['Sadr']['reference_no'] . ' <small class="muted">(unsubmitted)</small>',
-                  array('controller' => 'sadrs', 'action' => 'edit', $sadr['Sadr']['id']),
+                  $sadr['reference_no'] . ' <small class="muted">(unsubmitted)</small>',
+                  array('controller' => 'sadrs', 'action' => 'edit', $sadr['id']),
                   array('escape' => false)
                 );
                 echo "</li>";
@@ -84,21 +84,21 @@ echo $this->Html->script('dashboard', array('inline' => false));
             <?php
             echo '<ol>';
             foreach ($sadrs as $sadr) {
-              if ($sadr['Sadr']['submitted'] > 1) {
+              if ($sadr['submitted'] > 1) {
                 echo "<li>";
                 echo $this->Html->link(
-                  $sadr['Sadr']['report_title'] . ' <small class="muted">(' . $sadr['Sadr']['reference_no'] . ')</small>',
-                  array('controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id']),
-                  array('escape' => false, 'class' => 'text-' . ((isset($sadr['Sadr']['serious']) && $sadr['Sadr']['serious'] == 'Yes') ? 'error' : 'success'))
+                  $sadr['report_title'] . ' <small class="muted">(' . $sadr['reference_no'] . ')</small>',
+                  array('controller' => 'sadrs', 'action' => 'view', $sadr['id']),
+                  array('escape' => false, 'class' => 'text-' . ((isset($sadr['serious']) && $sadr['serious'] == 'Yes') ? 'error' : 'success'))
                 );
                 echo "&nbsp;";
-                echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'followup', $sadr['Sadr']['id']), array('escape' => false), __('Add a followup report?'));
+                echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Add follow up report"> <i class="fa fa-facebook" aria-hidden="true"></i> </span>', array('controller' => 'sadrs', 'action' => 'followup', $sadr['id']), array('escape' => false), __('Add a followup report?'));
                 echo "</li>";
               } else {
                 echo "<li>";
                 echo $this->Html->link(
-                  $sadr['Sadr']['reference_no'] . ' <small class="muted">(unsubmitted)</small>',
-                  array('controller' => 'sadrs', 'action' => 'edit', $sadr['Sadr']['id']),
+                  $sadr['reference_no'] . ' <small class="muted">(unsubmitted)</small>',
+                  array('controller' => 'sadrs', 'action' => 'edit', $sadr['id']),
                   array('escape' => false)
                 );
                 echo "</li>";
@@ -357,13 +357,13 @@ echo $this->Html->script('dashboard', array('inline' => false));
               <?php
               echo ' <ol>';
               foreach ($serious_sadr as $adr) {
-                if ($adr['Sadr']['submitted'] > 1) {
+                if ($adr['submitted'] > 1) {
                   echo "<li>";
-                  $vname = (!empty($adr['Sadr']['report_title'])) ? $adr['Sadr']['report_title'] : $adr['Sadr']['reference_no'];
+                  $vname = (!empty($adr['report_title'])) ? $adr['report_title'] : $adr['reference_no'];
                   echo $this->Html->link(
-                    $vname . ' <small class="muted">(' . $adr['Sadr']['reference_no'] . ')</small>',
-                    array('controller' => 'sadrs', 'action' => 'view', $adr['Sadr']['id']),
-                    array('escape' => false, 'class' => 'text-' . ((isset($adr['Sadr']['serious']) && $adr['Sadr']['serious'] == 'Yes') ? 'error' : 'success'))
+                    $vname . ' <small class="muted">(' . $adr['reference_no'] . ')</small>',
+                    array('controller' => 'sadrs', 'action' => 'view', $adr['id']),
+                    array('escape' => false, 'class' => 'text-' . ((isset($adr['serious']) && $adr['serious'] == 'Yes') ? 'error' : 'success'))
                   );
                   echo "</li>";
                 }
