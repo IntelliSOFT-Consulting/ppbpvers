@@ -13,8 +13,11 @@ use Cake\View\Helper\HtmlHelper;
 use Cake\Core\Configure;
 use Cake\Filesystem\File;
 use Cake\I18n\Time;
+use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Utility\Text;
+use Queue\Lib\QueuedJobs;
+
 
 /**
  * Users Controller
@@ -79,7 +82,7 @@ class UsersController extends AppController
         if ($this->Users->save($user)) {
             debug("Admin Successfully Created");
             exit;
-        }else{
+        } else {
             $errors = $user->getErrors();
             debug("Failed to create admin");
             debug($errors);
@@ -96,9 +99,10 @@ class UsersController extends AppController
         parent::beforeFilter($event);
         $this->Auth->allow([
             'register', 'login', 'logout', 'activate',
+            // 'admin',
             'forgotPassword', 'resetPassword', 'view'
         ]);
-    } 
+    }
 
     public function dashboard()
     {
@@ -185,17 +189,16 @@ class UsersController extends AppController
             } else {
                 $this->Flash->error(__('The password could not be changed. Please, try again.'));
             }
-           
         }
-        $user = $this->Auth->User(); 
+        $user = $this->Auth->User();
         $user = $this->Users->find('all', array(
             'contain' => array(
                 'Designations', 'Counties'
             ),
-            'conditions'=>array(
-                'Users.id'=>$this->Auth->user('id')
+            'conditions' => array(
+                'Users.id' => $this->Auth->user('id')
             )
-        ))->first(); 
+        ))->first();
         $this->set('user', $user);
     }
 
@@ -256,6 +259,52 @@ class UsersController extends AppController
                     ]);
                     return;
                 }
+
+                /*******Sending Email to the user and managers */
+                $this->loadModel('Messages');
+
+                $user_email = $this->Messages->find()
+                ->where(['name' => 'user_registration'])
+                ->first(); 
+                $manager_nt = $this->Messages->find()
+                ->where(['name' => 'manager_registration'])
+                ->first();  
+
+                $html = new HtmlHelper(new \Cake\View\View());
+                 
+                
+                $variables = array(
+                    'name' => $user['name'],
+                    'username' => $user['username'],
+                    'email' => $user['email'],
+                    'reference_link' => $html->link(
+                        'Activate',
+                        array('controller' => 'users', 
+                        'action' => 'activate_account', $user->id, $user->id, 'full_base' => true),
+                        array('escape' => false)
+                    ),
+                );
+
+                $subject=Text::insert($user_email['subject'], $variables);
+                $message=Text::insert($user_email['content'], $variables);
+                $datum = array(
+                    'email' => $user['email'],
+                    'id' => $user->id,
+                    'user_id' => $user['id'],
+                    'type' => 'user_registration', 
+                    'model' => 'User',
+                    'subject' => $subject,
+                    'message' => $message
+                );
+                // debug($datum);
+                
+                $this->loadModel('Queue.QueuedJobs'); // Load the model correctly
+                $this->QueuedJobs->createJob('GenericNotification', $datum);
+                $this->QueuedJobs->createJob('GenericEmail', $datum);
+                // exit;
+
+                // $this->queuedJobs->createJob('GenericNotification', ['email' => $user->email]);
+
 
                 return $this->redirect(['controller' => 'Pages', 'action' => 'home']);
             } else {

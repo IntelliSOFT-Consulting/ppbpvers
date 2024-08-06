@@ -213,47 +213,33 @@ return [
      * appropriate file to src/Mailer/Transport. Transports should be named
      * 'YourTransport.php', where 'Your' is the name of the transport.
      */
+
+
     'EmailTransport' => [
         'default' => [
-            'className' => MailTransport::class,
-            /*
-             * The keys host, port, timeout, username, password, client and tls
-             * are used in SMTP transports
-             */
-            'host' => 'localhost',
-            'port' => 25,
-            'timeout' => 30,
-            /*
-             * It is recommended to set these options through your environment or app_local.php
-             */
-            //'username' => null,
-            //'password' => null,
+            'className' => 'Smtp',
+            'tls' => true,
             'client' => null,
-            'tls' => false,
-            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+            'host' => 'smtp.gmail.com',
+            'from' => array('regulatory@pharmacyboardkenya.org' => 'PV: The Pharmacy and Poisons Board'),
+            'port' => 587,
+            'timeout' => 30,
+            'username' => 'apps@intellisoftkenya.com',
+            'password' => 'ICL_23!!',
+            'transport' => 'Smtp'
         ],
     ],
-
-    /*
-     * Email delivery profiles
-     *
-     * Delivery profiles allow you to predefine various properties about email
-     * messages from your application and give the settings a name. This saves
-     * duplication across your application and makes maintenance and development
-     * easier. Each profile accepts a number of keys. See `Cake\Mailer\Email`
-     * for more information.
-     */
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
-            /*
-             * Will by default be set to config value of App.encoding, if that exists otherwise to UTF-8.
-             */
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
+            'from' => array('regulatory@pharmacyboardkenya.org' => 'PV: The Pharmacy and Poisons Board'),
+            'charset' => 'utf-8',
+            'headerCharset' => 'utf-8',
+            'emailFormat' => 'html',
         ],
     ],
+
+
 
     /*
      * Connection information used by the ORM to connect

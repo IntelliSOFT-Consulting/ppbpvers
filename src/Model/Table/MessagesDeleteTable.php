@@ -44,8 +44,18 @@ class MessagesDeleteTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Search.Search');
     }
+    public function searchManager()
+    {
+        $searchManager = $this->behaviors()->Search->searchManager();
+        $searchManager
+            ->like('name')
+            ->like('subject')
+            ->like('content', ['field' => ['content', 'description']]);
 
+        return $searchManager;
+    }
     /**
      * Default validation rules.
      *

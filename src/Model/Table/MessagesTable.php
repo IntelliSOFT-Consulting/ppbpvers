@@ -44,8 +44,25 @@ class MessagesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        // $this->addBehavior('Search.Search');
     }
 
+    public function search(Query $query, array $filters): Query
+    {
+        if (!empty($filters['name'])) {
+            $query->where(['Messages.name LIKE' => '%' . $filters['name'] . '%']);
+        }
+
+        // if (!empty($filters['email'])) {
+        //     $query->where(['Messages.email LIKE' => '%' . $filters['email'] . '%']);
+        // }
+
+        // if (isset($filters['status'])) {
+        //     $query->where(['Messages.status' => $filters['status']]);
+        // }
+
+        return $query;
+    }
     /**
      * Default validation rules.
      *

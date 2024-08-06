@@ -13,6 +13,11 @@ use App\Controller\AppController;
  */
 class MessagesController extends AppController
 {
+
+    // public function initialize() :void{
+    //     parent::initialize();
+    //     $this->loadComponent('Search.Prg', ['actions' => ['index']]);       
+    //  }
     /**
      * Index method
      *
@@ -20,10 +25,23 @@ class MessagesController extends AppController
      */
     public function index()
     {
+        // $page_options = array('25' => '25', '20' => '20');
+        // $messages = $this->paginate($this->Messages); 
+        // $this->set('page_options', $page_options);
+        // $this->set(compact('messages'));
+
+        $filters = [
+            'name' => $this->request->getQuery('name'),
+            // 'email' => $this->request->getQuery('email'),
+            // 'status' => $this->request->getQuery('status'),
+        ];
+
+        $query = $this->Messages->find();
+        $query = $this->Messages->search($query, $filters);
         $page_options = array('25' => '25', '20' => '20');
-        $messages = $this->paginate($this->Messages); 
-        $this->set('page_options', $page_options);
+        $messages = $this->paginate($query);
         $this->set(compact('messages'));
+        $this->set('page_options', $page_options);
     }
 
     /**

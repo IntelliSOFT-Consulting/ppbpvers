@@ -49,7 +49,7 @@ class Application extends BaseApplication
     {
         // Call parent to load bootstrap from files.
         parent::bootstrap();
-        $this->addPlugin('Queue'); 
+        $this->addPlugin('Queue', ['routes' => false]);
         $this->addPlugin('Migrations');
         $this->addPlugin('Acl');
  

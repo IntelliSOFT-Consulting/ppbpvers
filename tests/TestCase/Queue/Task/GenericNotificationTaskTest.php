@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Test\TestCase\Queue\Task;
+
+use Cake\TestSuite\TestCase;
+use App\Queue\Task\GenericNotificationTask;
+
+class GenericNotificationTaskTest extends TestCase {
+
+	/**
+	 * @var array<string>
+	 */
+	protected $fixtures = [
+		'plugin.Queue.QueuedJobs',
+		'plugin.Queue.QueueProcesses',
+	];
+
+	/**
+	 * @return void
+	 */
+	public function testRun(): void {
+		$task = new GenericNotificationTask();
+
+		//TODO
+		//$task->run($data, $jobId);
+	}
+
+}
