@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Manager;
@@ -20,14 +21,72 @@ class NotificationsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Users'],
-        ];
-        $notifications = $this->paginate($this->Notifications);
 
-        $this->set(compact('notifications'));
+        $page_options = ['20' => '20', '25' => '25'];
+
+        $passedArgs = $this->request->getQuery();
+        // if (!empty($passedArgs['start_date']) || !empty($passedArgs['end_date'])) {
+        //     $passedArgs['range'] = true;
+        // }
+        $queryParams = $this->request->getQuery();
+
+        // Example criteria handling
+        $criteria = [];
+        if (!empty($queryParams['start_date'])) {
+            $startDate = \DateTime::createFromFormat('d-m-Y', $queryParams['start_date']);
+            if ($startDate) {
+                $queryParams['start_date'] = $startDate->format('Y-m-d');
+            }
+        }
+        if (!empty($queryParams['end_date'])) {
+            $endDate = \DateTime::createFromFormat('d-m-Y', $queryParams['end_date']);
+            if ($endDate) {
+                $queryParams['end_date'] = $endDate->format('Y-m-d');
+            }
+            // debug($endDate);
+        }
+        $limit = $page_options['20']; // Default limit
+        if (!empty($passedArgs['pages']) && isset($page_options[$passedArgs['pages']])) {
+            $limit = $page_options[$passedArgs['pages']];
+        }
+        if (!empty($queryParams['start_date'])) {
+            $criteria['Notifications.created >='] = $queryParams['start_date'];
+        }
+        if (!empty($queryParams['end_date'])) {
+            $criteria['Notifications.created <='] = $queryParams['end_date'];
+        }
+        // debug($criteria);
+        // exit;
+        // Authentication: Get current user ID
+        $userId =   $this->Auth->User('id');
+
+        // $criteria = $this->Notifications->parseCriteria($passedArgs);
+        $criteria['user_id'] = $userId;
+
+        $query = $this->Notifications->find()
+            ->where($criteria)
+            ->contain(['Users'])
+            ->order(['Notifications.created' => 'desc']);
+
+        // CSV Export
+        $ext = $this->request->getParam('_ext');
+        if ($ext && $ext == 'csv') {
+            $this->csvExport($query);
+            return;
+        }
+
+        $notifications = $this->Paginator->paginate($query, [
+            'limit' => $limit
+        ]);
+
+        $this->set(compact('page_options', 'notifications'));
     }
 
+    // CSV export method placeholder
+    protected function csvExport($query)
+    {
+        // Implement CSV export logic here
+    }
     /**
      * View method
      *
