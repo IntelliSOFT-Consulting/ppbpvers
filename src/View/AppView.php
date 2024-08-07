@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -13,6 +14,7 @@ declare(strict_types=1);
  * @since     3.0.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\View;
 
 use Cake\View\View;
@@ -47,10 +49,12 @@ class AppView extends View
             //         'checkboxContainer' => '{{label}}<div class="checkbox">{{input}}{{between}}{{after}}</div>'
             //     ]
             // ]);
-        }      
+        }
         // $this->loadHelper('Util');
 
-    $this->loadHelper('Text');
+        $this->loadHelper('Text');
         $this->loadHelper('Paginator', ['templates' => 'paginator-templates']);
+        
+        $this->loadHelper('ValidationErrors');
     }
 }

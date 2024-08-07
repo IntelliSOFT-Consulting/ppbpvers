@@ -144,12 +144,21 @@ class UsersController extends AppController
             }
             // Attempt to identify the user
             $user = $this->Auth->identify();
-            // dd($data);
-            // dd($user);
+           
             if ($user) {
                 $this->Auth->setUser($user);
 
+                if ($this->Auth->User('is_active') == 0) {
+                    $this->Flash->error('Your account is not activated! If you have just registered, please click the activation link
+                        sent to your email. Remember to check you spam folder too!');
+                    $this->redirect($this->Auth->logout());
+                } elseif ($this->Auth->User('deactivated') == 1) {
+                    $this->Flash->error('Your account has been deactivated! Please contact PPB.');
+                    $this->redirect($this->Auth->logout());
+                }
+
                 // User is authenticated, handle redirect based on user group
+                
                 switch ($user['role_id']) {
                     case '1':
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
@@ -335,11 +344,7 @@ class UsersController extends AppController
 
                     $this->QueuedJobs->createJob('GenericNotification', $datum);
                     $this->QueuedJobs->createJob('GenericEmail', $datum);
-                }
-
-                // $this->queuedJobs->createJob('GenericNotification', ['email' => $user->email]);
-
-
+                } 
                 return $this->redirect(['controller' => 'Pages', 'action' => 'home']);
             } else {
                 $errorMessages = [];
