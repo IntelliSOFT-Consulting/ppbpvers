@@ -1,12 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use ArrayObject;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use DateTime;
 
 /**
  * PadrListOfMedicines Model
@@ -113,4 +118,5 @@ class PadrListOfMedicinesTable extends Table
 
         return $rules;
     }
+ 
 }

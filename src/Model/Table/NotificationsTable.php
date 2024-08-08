@@ -120,4 +120,29 @@ class NotificationsTable extends Table
 
         return $rules;
     }
+
+
+
+    public function filter(Query $query, array $filters): Query
+    {
+        if (!empty($filters['start_date'])) {
+            $startDate = \DateTime::createFromFormat('d-m-Y', $filters['start_date']);
+            if ($startDate) {
+                $query = $query->where(['Notifications.created >= ' => $startDate->format('Y-m-d')]);
+            }
+        }
+
+        if (!empty($filters['end_date'])) {
+            $endDate = \DateTime::createFromFormat('d-m-Y', $filters['end_date']);
+            if ($endDate) {
+                $query = $query->where(['Notifications.created <= ' => $endDate->format('Y-m-d')]);
+            }
+        }
+
+        if (!empty($filters['user_id'])) {
+            $query = $query->where(['Notifications.user_id' => $filters['user_id']]);
+        }
+
+        return $query;
+    }
 }

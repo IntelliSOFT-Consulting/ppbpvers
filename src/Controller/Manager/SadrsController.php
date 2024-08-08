@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Manager;
@@ -13,20 +14,30 @@ use App\Controller\AppController;
  */
 class SadrsController extends AppController
 {
+
+
+    public $page_options = array('25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
-    public function index()
-    {
-        $this->paginate = [
-            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
-        ];
-        $sadrs = $this->paginate($this->Sadrs);
 
-        $this->set(compact('sadrs'));
+    public function index()
+    { 
+        $criteria = array();
+        $criteria['Sadrs.deleted'] = false;
+        $criteria['Sadrs.archived'] = false;
+        $criteria['Sadrs.submitted'] = 2;
+        $criteria['Sadrs.copied !='] = '1';
+        $this->paginate = [
+            'contain' => array('Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'),
+            'conditions' => $criteria
+        ]; 
+        $this->set('sadrs', $this->paginate());
+        $this->set('page_options', $this->page_options);
     }
+
 
     /**
      * View method

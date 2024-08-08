@@ -1,7 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Event\EventInterface;
+use Cake\Utility\Security;
 
 /**
  * Padrs Controller
@@ -11,6 +15,21 @@ namespace App\Controller;
  */
 class PadrsController extends AppController
 {
+
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+        $this->Auth->allow('add');
+    }
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow([
+            'add','view'
+        ]);
+    }
     /**
      * Index method
      *
@@ -38,7 +57,7 @@ class PadrsController extends AppController
         $padr = $this->Padrs->get($id, [
             'contain' => ['Users', 'Counties', 'SubCounties', 'Designations', 'Padrs', 'PadrListOfMedicines'],
         ]);
-
+// 
         $this->set(compact('padr'));
     }
 
@@ -50,13 +69,31 @@ class PadrsController extends AppController
     public function add()
     {
         $padr = $this->Padrs->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $padr = $this->Padrs->patchEntity($padr, $this->request->getData());
+        if ($this->request->is('post')) { 
+        //    debug($this->request->getData());
+        //    exit;
+            $padr = $this->Padrs->patchEntity($padr, $this->request->getData(), [
+                'associated' => ['PadrListOfMedicines']
+            ]);
             if ($this->Padrs->save($padr)) {
+
+                $token = Security::hash(strval($padr['id'])); 
+                $dataTable = $this->getTableLocator()->get('padrs');
+                // Update the field using the query builder
+                $result = $dataTable->query()
+                    ->update()
+                    ->set(['token' => $token])
+                    ->where(['id' => $padr['id']])
+                    ->execute();
+                 
                 $this->Flash->success(__('The padr has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'view',$padr['id']]);
             }
+            // $errors = $padr->getErrors();
+            // debug($this->request->getData());
+            // debug($errors);
+            // exit;
             $this->Flash->error(__('The padr could not be saved. Please, try again.'));
         }
         $users = $this->Padrs->Users->find('list', ['limit' => 200])->all();

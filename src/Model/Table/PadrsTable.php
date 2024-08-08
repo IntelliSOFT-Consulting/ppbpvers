@@ -70,9 +70,11 @@ class PadrsTable extends Table
         ]);
         $this->hasMany('PadrListOfMedicines', [
             'foreignKey' => 'padr_id',
+            'cascadeCallbacks' => true, 
         ]);
         $this->hasMany('Padrs', [
             'foreignKey' => 'padr_id',
+            'cascadeCallbacks' => true, 
         ]);
     }
 
