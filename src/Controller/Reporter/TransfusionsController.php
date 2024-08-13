@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Reporter;
@@ -13,6 +14,8 @@ use App\Controller\AppController;
  */
 class TransfusionsController extends AppController
 {
+
+    public $page_options = array('25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -20,11 +23,15 @@ class TransfusionsController extends AppController
      */
     public function index()
     {
+        $criteria = array();
+        $criteria['Transfusions.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Counties', 'Designations'],
+            'conditions' => $criteria
         ];
         $transfusions = $this->paginate($this->Transfusions);
 
+        $this->set('page_options', $this->page_options);
         $this->set(compact('transfusions'));
     }
 
@@ -49,23 +56,29 @@ class TransfusionsController extends AppController
      *
      * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function add($id=null)
     {
         $transfusion = $this->Transfusions->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $transfusion = $this->Transfusions->patchEntity($transfusion, $this->request->getData());
-            if ($this->Transfusions->save($transfusion)) {
-                $this->Flash->success(__('The transfusion has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The transfusion could not be saved. Please, try again.'));
+        $data = [
+            'user_id' => $this->Auth->User('id'),
+            'reference_no' => 'new', //'BT/'.date('Y').'/'.$count,
+            'report_type' => 'Initial',
+            'pqmp_id' => $id,
+            'designation_id' => $this->Auth->User('designation_id'),
+            'county_id' => $this->Auth->User('county_id'),
+            'institution_code' => $this->Auth->User('institution_code'),
+            'address' => $this->Auth->User('institution_address'),
+            'reporter_name' => $this->Auth->User('name'),
+            'reporter_email' => $this->Auth->User('email'),
+            'reporter_phone' => $this->Auth->User('phone_no'),
+            'contact' => $this->Auth->User('institution_contact'),
+            'name_of_institution' => $this->Auth->User('name_of_institution')
+    ];
+        $transfusion = $this->Transfusions->patchEntity($transfusion, $data);
+        if ($this->Transfusions->save($transfusion)) {
+            $this->Flash->success(__('The Blood Transfusion Reaction has been saved.'));
+            $this->redirect(array('action' => 'edit', $transfusion->id));
         }
-        $users = $this->Transfusions->Users->find('list', ['limit' => 200])->all();
-        $pqmps = $this->Transfusions->Pqmps->find('list', ['limit' => 200])->all();
-        $counties = $this->Transfusions->Counties->find('list', ['limit' => 200])->all();
-        $designations = $this->Transfusions->Designations->find('list', ['limit' => 200])->all();
-        $this->set(compact('transfusion', 'users', 'pqmps', 'counties', 'designations'));
     }
 
     /**
