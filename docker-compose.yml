@@ -15,7 +15,7 @@ services:
       - mydb
     volumes:
       - ./db.sql:/docker-entrypoint-initdb.d/db.sql
-      - ~/pvers-4x-mysql-data:/var/lib/mysql
+      # - ~/pvers-4x-mysql-data:/var/lib/mysql
   web:
     build: .
     restart: always

@@ -1,63 +1,152 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
+-- MySQL dump 10.13  Distrib 8.0.39, for Linux (x86_64)
 --
--- Host: db
--- Generation Time: Jul 26, 2024 at 11:47 AM
--- Server version: 5.7.44
--- PHP Version: 8.2.8
-
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-
+-- Host: localhost    Database: pvers
+-- ------------------------------------------------------
+-- Server version	8.0.39-0ubuntu0.24.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Database: `pvers`
+-- Table structure for table `acl_phinxlog`
 --
 
--- --------------------------------------------------------
+DROP TABLE IF EXISTS `acl_phinxlog`;
+
+CREATE TABLE `acl_phinxlog` (
+  `version` bigint NOT NULL,
+  `migration_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `breakpoint` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
+-- Dumping data for table `acl_phinxlog`
+--
+ 
 
 --
 -- Table structure for table `acos`
 --
 
-CREATE TABLE `acos` (
-  `id` int(10) NOT NULL,
-  `parent_id` int(10) DEFAULT NULL,
-  `model` varchar(255) DEFAULT NULL,
-  `foreign_key` int(10) DEFAULT NULL,
-  `alias` varchar(255) DEFAULT NULL,
-  `lft` int(10) DEFAULT NULL,
-  `rght` int(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `acos`;
 
--- --------------------------------------------------------
+CREATE TABLE `acos` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `parent_id` int DEFAULT NULL,
+  `model` varchar(255) DEFAULT NULL,
+  `foreign_key` int DEFAULT NULL,
+  `alias` varchar(255) DEFAULT NULL,
+  `lft` int DEFAULT NULL,
+  `rght` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+ 
+
+--
+-- Table structure for table `aefi_descriptions`
+--
+
+DROP TABLE IF EXISTS `aefi_descriptions`;
+
+CREATE TABLE `aefi_descriptions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `aefi_id` int DEFAULT NULL,
+  `description` text,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+ 
+
+--
+-- Table structure for table `aefi_list_of_vaccines`
+--
+
+DROP TABLE IF EXISTS `aefi_list_of_vaccines`;
+
+CREATE TABLE `aefi_list_of_vaccines` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `aefi_id` int DEFAULT NULL,
+  `saefi_id` int DEFAULT NULL,
+  `vaccine_id` int DEFAULT NULL,
+  `vaccine_name` varchar(200) DEFAULT NULL,
+  `vaccination_date` datetime DEFAULT NULL,
+  `vaccination_time` varchar(10) DEFAULT NULL,
+  `vaccine_manufacturer` varchar(255) DEFAULT NULL,
+  `vaccination_route` varchar(255) DEFAULT NULL,
+  `vaccination_site` varchar(55) DEFAULT NULL,
+  `dosage` varchar(255) DEFAULT NULL,
+  `icsr_code` varchar(255) DEFAULT NULL,
+  `batch_number` varchar(255) DEFAULT NULL,
+  `expiry_date` date DEFAULT NULL,
+  `diluent_batch_number` varchar(55) DEFAULT NULL,
+  `diluent_manufacturer` varchar(255) DEFAULT NULL,
+  `diluent_expiry_date` date DEFAULT NULL,
+  `suspected_drug` tinyint(1) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+ 
+--
+-- Table structure for table `aefi_reactions`
+--
+
+DROP TABLE IF EXISTS `aefi_reactions`;
+
+CREATE TABLE `aefi_reactions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `aefi_id` int DEFAULT NULL,
+  `reaction_name` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+--
+-- Dumping data for table `aefi_reactions`
+--
+
+LOCK TABLES `aefi_reactions` WRITE;
+/*!40000 ALTER TABLE `aefi_reactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aefi_reactions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `aefis`
 --
 
+DROP TABLE IF EXISTS `aefis`;
+
 CREATE TABLE `aefis` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
   `reference_no` varchar(255) DEFAULT NULL,
-  `aefi_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sub_county_id` int(11) DEFAULT NULL,
+  `aefi_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
   `vigiflow_ref` varchar(55) DEFAULT NULL,
   `vigiflow_date` datetime DEFAULT NULL,
   `vigiflow_message` longtext,
   `webradr_ref` varchar(255) DEFAULT NULL,
   `webradr_date` datetime DEFAULT NULL,
   `webradr_message` varchar(255) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `report_type` varchar(20) DEFAULT NULL,
   `name_of_institution` varchar(100) DEFAULT NULL,
   `institution_code` varchar(100) DEFAULT NULL,
@@ -68,7 +157,7 @@ CREATE TABLE `aefis` (
   `patient_village` varchar(255) DEFAULT NULL,
   `ip_no` varchar(100) DEFAULT NULL,
   `date_of_birth` varchar(20) DEFAULT NULL,
-  `age_months` int(11) DEFAULT NULL,
+  `age_months` int DEFAULT NULL,
   `age_group` varchar(255) DEFAULT NULL,
   `patient_ward` varchar(100) DEFAULT NULL,
   `patient_county` varchar(255) DEFAULT NULL,
@@ -105,12 +194,12 @@ CREATE TABLE `aefis` (
   `reporter_email` varchar(100) DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
-  `device` tinyint(2) DEFAULT '0',
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `device` tinyint DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
@@ -118,90 +207,77 @@ CREATE TABLE `aefis` (
   `modified` datetime DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
-  `assigned_date` datetime DEFAULT NULL
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
+  `assigned_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `aefi_descriptions`
+-- Dumping data for table `aefis`
 --
 
-CREATE TABLE `aefi_descriptions` (
-  `id` int(11) NOT NULL,
-  `aefi_id` int(11) DEFAULT NULL,
-  `description` text,
+LOCK TABLES `aefis` WRITE;
+/*!40000 ALTER TABLE `aefis` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aefis` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `aggregate_list_of_signals`
+--
+
+DROP TABLE IF EXISTS `aggregate_list_of_signals`;
+
+CREATE TABLE `aggregate_list_of_signals` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `aggregate_id` int DEFAULT NULL,
+  `aggregate_followup_id` int DEFAULT NULL,
+  `signal_term` mediumtext,
+  `source_trigger` mediumtext,
+  `status` mediumtext,
+  `outcome` mediumtext,
+  `date_detected` date DEFAULT NULL,
+  `date_closed` date DEFAULT NULL,
+  `reason_summary` mediumtext,
+  `evaluation_method` mediumtext,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `aefi_list_of_vaccines`
---
-
-CREATE TABLE `aefi_list_of_vaccines` (
-  `id` int(11) NOT NULL,
-  `aefi_id` int(11) DEFAULT NULL,
-  `saefi_id` int(11) DEFAULT NULL,
-  `vaccine_id` int(11) DEFAULT NULL,
-  `vaccine_name` varchar(200) DEFAULT NULL,
-  `vaccination_date` datetime DEFAULT NULL,
-  `vaccination_time` varchar(10) DEFAULT NULL,
-  `vaccine_manufacturer` varchar(255) DEFAULT NULL,
-  `vaccination_route` varchar(255) DEFAULT NULL,
-  `vaccination_site` varchar(55) DEFAULT NULL,
-  `dosage` varchar(255) DEFAULT NULL,
-  `icsr_code` varchar(255) DEFAULT NULL,
-  `batch_number` varchar(255) DEFAULT NULL,
-  `expiry_date` date DEFAULT NULL,
-  `diluent_batch_number` varchar(55) DEFAULT NULL,
-  `diluent_manufacturer` varchar(255) DEFAULT NULL,
-  `diluent_expiry_date` date DEFAULT NULL,
-  `suspected_drug` tinyint(1) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
 
 --
--- Table structure for table `aefi_reactions`
+-- Dumping data for table `aggregate_list_of_signals`
 --
 
-CREATE TABLE `aefi_reactions` (
-  `id` int(11) NOT NULL,
-  `aefi_id` int(11) DEFAULT NULL,
-  `reaction_name` varchar(255) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
+LOCK TABLES `aggregate_list_of_signals` WRITE;
+/*!40000 ALTER TABLE `aggregate_list_of_signals` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aggregate_list_of_signals` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `aggregates`
 --
 
+DROP TABLE IF EXISTS `aggregates`;
+
 CREATE TABLE `aggregates` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `aggregate_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `aggregate_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
   `summary_available` varchar(11) DEFAULT 'No',
-  `sub_county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `reference_no` varchar(55) DEFAULT NULL,
   `messageid` varchar(255) DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `company_code` varchar(255) DEFAULT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `comment` mediumtext,
@@ -214,23 +290,23 @@ CREATE TABLE `aggregates` (
   `type` varchar(255) DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `signature` tinyint(1) DEFAULT NULL,
-  `submitted` int(2) DEFAULT '0',
+  `submitted` int DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
   `reporter_name` varchar(255) DEFAULT NULL,
-  `reporter_designation` int(11) DEFAULT NULL,
+  `reporter_designation` int DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(50) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
   `resubmit` varchar(15) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'Submitted',
-  `active` tinyint(2) DEFAULT '1',
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `active` tinyint DEFAULT '1',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -244,7 +320,7 @@ CREATE TABLE `aggregates` (
   `therapeutic_group` varchar(255) DEFAULT NULL,
   `authorised_indications` varchar(255) DEFAULT NULL,
   `form_strength` varchar(255) DEFAULT NULL,
-  `interval_code` int(11) DEFAULT NULL,
+  `interval_code` int DEFAULT NULL,
   `submission_frequency` varchar(255) DEFAULT NULL,
   `reminder_date` datetime DEFAULT NULL,
   `introduction` longtext,
@@ -264,74 +340,86 @@ CREATE TABLE `aggregates` (
   `conclusion` longtext,
   `report_type` varchar(255) DEFAULT NULL,
   `manager_initiated` tinyint(1) DEFAULT '0',
-  `manager_submitted` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+  `manager_submitted` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `aggregate_list_of_signals`
+-- Dumping data for table `aggregates`
 --
 
-CREATE TABLE `aggregate_list_of_signals` (
-  `id` int(11) NOT NULL,
-  `aggregate_id` int(11) DEFAULT NULL,
-  `aggregate_followup_id` int(11) DEFAULT NULL,
-  `signal_term` mediumtext,
-  `source_trigger` mediumtext,
-  `status` mediumtext,
-  `outcome` mediumtext,
-  `date_detected` date DEFAULT NULL,
-  `date_closed` date DEFAULT NULL,
-  `reason_summary` mediumtext,
-  `evaluation_method` mediumtext,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
-
--- --------------------------------------------------------
+LOCK TABLES `aggregates` WRITE;
+/*!40000 ALTER TABLE `aggregates` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aggregates` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `aros`
 --
 
-CREATE TABLE `aros` (
-  `id` int(10) NOT NULL,
-  `parent_id` int(10) DEFAULT NULL,
-  `model` varchar(255) DEFAULT NULL,
-  `foreign_key` int(10) DEFAULT NULL,
-  `alias` varchar(255) DEFAULT NULL,
-  `lft` int(10) DEFAULT NULL,
-  `rght` int(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `aros`;
 
--- --------------------------------------------------------
+CREATE TABLE `aros` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `parent_id` int DEFAULT NULL,
+  `model` varchar(255) DEFAULT NULL,
+  `foreign_key` int DEFAULT NULL,
+  `alias` varchar(255) DEFAULT NULL,
+  `lft` int DEFAULT NULL,
+  `rght` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+--
+-- Dumping data for table `aros`
+--
+
+LOCK TABLES `aros` WRITE;
+/*!40000 ALTER TABLE `aros` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aros` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `aros_acos`
 --
 
+DROP TABLE IF EXISTS `aros_acos`;
+
 CREATE TABLE `aros_acos` (
-  `id` int(10) NOT NULL,
-  `aro_id` int(10) NOT NULL,
-  `aco_id` int(10) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `aro_id` int NOT NULL,
+  `aco_id` int NOT NULL,
   `_create` varchar(2) NOT NULL DEFAULT '0',
   `_read` varchar(2) NOT NULL DEFAULT '0',
   `_update` varchar(2) NOT NULL DEFAULT '0',
-  `_delete` varchar(2) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `_delete` varchar(2) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ARO_ACO_KEY` (`aro_id`,`aco_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `aros_acos`
+--
+
+LOCK TABLES `aros_acos` WRITE;
+/*!40000 ALTER TABLE `aros_acos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `aros_acos` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `attachments`
 --
 
+DROP TABLE IF EXISTS `attachments`;
+
 CREATE TABLE `attachments` (
-  `id` int(10) UNSIGNED NOT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
   `model` varchar(255) DEFAULT NULL,
   `file` varchar(255) DEFAULT NULL,
-  `foreign_key` int(10) NOT NULL,
+  `foreign_key` int NOT NULL,
   `dirname` varchar(255) DEFAULT NULL,
   `basename` varchar(255) NOT NULL,
   `checksum` varchar(255) NOT NULL,
@@ -343,66 +431,99 @@ CREATE TABLE `attachments` (
   `pocket_name` varchar(255) DEFAULT NULL,
   `version_no` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `attachments`
+--
+
+LOCK TABLES `attachments` WRITE;
+/*!40000 ALTER TABLE `attachments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `attachments` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `attachments_old`
 --
 
+DROP TABLE IF EXISTS `attachments_old`;
+
 CREATE TABLE `attachments_old` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `sadr_followup_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
-  `aefi_id` int(11) DEFAULT NULL,
-  `device_id` int(11) DEFAULT NULL,
-  `transfusion_id` int(11) DEFAULT NULL,
-  `medication_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `sadr_followup_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
+  `aefi_id` int DEFAULT NULL,
+  `device_id` int DEFAULT NULL,
+  `transfusion_id` int DEFAULT NULL,
+  `medication_id` int DEFAULT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `description` text,
   `mimetype` varchar(255) DEFAULT NULL,
-  `filesize` int(11) UNSIGNED DEFAULT NULL,
+  `filesize` int unsigned DEFAULT NULL,
   `dir` varchar(255) DEFAULT NULL,
   `file` varchar(255) DEFAULT NULL,
   `basename` varchar(255) DEFAULT NULL,
   `dirname` varchar(255) DEFAULT NULL,
   `checksum` varchar(255) DEFAULT NULL,
   `model` varchar(100) DEFAULT NULL,
-  `foreign_key` int(10) DEFAULT NULL,
+  `foreign_key` int DEFAULT NULL,
   `alternative` varchar(50) DEFAULT NULL,
   `group` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `attachments_old`
+--
+
+LOCK TABLES `attachments_old` WRITE;
+/*!40000 ALTER TABLE `attachments_old` DISABLE KEYS */;
+/*!40000 ALTER TABLE `attachments_old` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `authorities`
 --
 
+DROP TABLE IF EXISTS `authorities`;
+
 CREATE TABLE `authorities` (
-  `id` int(5) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `mah_name` varchar(137) DEFAULT NULL,
   `mah_company_name` varchar(153) DEFAULT NULL,
   `mah_company_address` varchar(261) DEFAULT NULL,
   `mah_company_telephone` varchar(168) DEFAULT NULL,
   `mah_company_email` varchar(109) DEFAULT NULL,
-  `product` int(5) DEFAULT NULL,
-  `master_mah` varchar(4) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `product` int DEFAULT NULL,
+  `master_mah` varchar(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `authorities`
+--
+
+LOCK TABLES `authorities` WRITE;
+/*!40000 ALTER TABLE `authorities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `authorities` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `auto_drugs`
 --
 
+DROP TABLE IF EXISTS `auto_drugs`;
+
 CREATE TABLE `auto_drugs` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `drugName` varchar(255) NOT NULL,
   `drugCode` varchar(255) NOT NULL,
   `isGeneric` tinyint(1) DEFAULT '1',
@@ -411,29 +532,175 @@ CREATE TABLE `auto_drugs` (
   `activeIngredients` longtext,
   `atcs` longtext,
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified` datetime DEFAULT CURRENT_TIMESTAMP
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `auto_drugs`
+--
+
+LOCK TABLES `auto_drugs` WRITE;
+/*!40000 ALTER TABLE `auto_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auto_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `captcha_phinxlog`
+--
+
+DROP TABLE IF EXISTS `captcha_phinxlog`;
+
+CREATE TABLE `captcha_phinxlog` (
+  `version` bigint NOT NULL,
+  `migration_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `breakpoint` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
+-- Dumping data for table `captcha_phinxlog`
+--
+
+LOCK TABLES `captcha_phinxlog` WRITE;
+/*!40000 ALTER TABLE `captcha_phinxlog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `captcha_phinxlog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `captchas`
+--
+
+DROP TABLE IF EXISTS `captchas`;
+
+CREATE TABLE `captchas` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `session_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image` blob,
+  `result` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `used` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
+-- Dumping data for table `captchas`
+--
+
+LOCK TABLES `captchas` WRITE;
+/*!40000 ALTER TABLE `captchas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `captchas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ce2b_list_of_drugs`
+--
+
+DROP TABLE IF EXISTS `ce2b_list_of_drugs`;
+
+CREATE TABLE `ce2b_list_of_drugs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ce2b_id` int DEFAULT NULL,
+  `ce2b_followup_id` int DEFAULT NULL,
+  `dose_id` int DEFAULT NULL,
+  `route_id` int DEFAULT NULL,
+  `frequency_id` int DEFAULT NULL,
+  `frequency_id_other` varchar(255) DEFAULT NULL,
+  `drug_name` varchar(255) DEFAULT NULL,
+  `brand_name` varchar(255) DEFAULT NULL,
+  `batch_no` varchar(255) DEFAULT NULL,
+  `manufacturer` varchar(255) DEFAULT NULL,
+  `dose` varchar(100) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `stop_date` date DEFAULT NULL,
+  `indication` varchar(100) DEFAULT NULL,
+  `suspected_drug` varchar(100) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `route` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+
+--
+-- Dumping data for table `ce2b_list_of_drugs`
+--
+
+LOCK TABLES `ce2b_list_of_drugs` WRITE;
+/*!40000 ALTER TABLE `ce2b_list_of_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ce2b_list_of_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ce2b_reaction`
+--
+
+DROP TABLE IF EXISTS `ce2b_reaction`;
+
+CREATE TABLE `ce2b_reaction` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `ce2b_id` int DEFAULT NULL,
+  `reaction_name` text,
+  `meddra_code` text,
+  `start_date` text,
+  `source_country` text,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  `criteria_death_null` varchar(255) DEFAULT NULL,
+  `criteria_death_value` varchar(255) DEFAULT NULL,
+  `life_hreatening_null` varchar(255) DEFAULT NULL,
+  `life_hreatening_value` varchar(255) DEFAULT NULL,
+  `prolonged_hospitalisation_null` varchar(255) DEFAULT NULL,
+  `prolonged_hospitalisation_value` varchar(255) DEFAULT NULL,
+  `incapacitating_null` varchar(255) DEFAULT NULL,
+  `incapacitating_value` varchar(255) DEFAULT NULL,
+  `birth_defect_null` varchar(255) DEFAULT NULL,
+  `birth_defect_value` varchar(255) DEFAULT NULL,
+  `other_medical_null` varchar(255) DEFAULT NULL,
+  `other_medical_value` varchar(255) DEFAULT NULL,
+  `reaction_outcome_null` varchar(255) DEFAULT NULL,
+  `reaction_outcome_value` varchar(255) DEFAULT NULL,
+  `medical_confirmation_null` varchar(255) DEFAULT NULL,
+  `medical_confirmation_value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `ce2b_reaction`
+--
+
+LOCK TABLES `ce2b_reaction` WRITE;
+/*!40000 ALTER TABLE `ce2b_reaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ce2b_reaction` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ce2bs`
 --
 
+DROP TABLE IF EXISTS `ce2bs`;
+
 CREATE TABLE `ce2bs` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `ce2b_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `ce2b_id` int DEFAULT NULL,
   `vigiflow_message` varchar(255) DEFAULT NULL,
   `vigiflow_date` varchar(255) DEFAULT NULL,
   `report_type` varchar(255) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sub_county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `reference_no` varchar(55) DEFAULT NULL,
   `messageid` varchar(255) DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `company_code` varchar(255) DEFAULT NULL,
   `company_name` varchar(255) DEFAULT NULL,
   `comment` mediumtext,
@@ -446,23 +713,23 @@ CREATE TABLE `ce2bs` (
   `type` varchar(255) DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `signature` tinyint(1) DEFAULT NULL,
-  `submitted` int(2) DEFAULT '0',
+  `submitted` int DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
   `reporter_name` varchar(255) DEFAULT NULL,
-  `reporter_designation` int(11) DEFAULT NULL,
+  `reporter_designation` int DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(50) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
   `resubmit` varchar(15) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'Submitted',
-  `active` tinyint(2) DEFAULT '1',
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `active` tinyint DEFAULT '1',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -493,81 +760,31 @@ CREATE TABLE `ce2bs` (
   `results_in_detah` tinyint(1) DEFAULT '0',
   `life_threatening` tinyint(1) DEFAULT '0',
   `prolonged_hospitalization` tinyint(1) DEFAULT '0',
-  `incapacitating` tinyint(1) DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+  `incapacitating` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
-
---
--- Table structure for table `ce2b_list_of_drugs`
---
-
-CREATE TABLE `ce2b_list_of_drugs` (
-  `id` int(11) NOT NULL,
-  `ce2b_id` int(11) DEFAULT NULL,
-  `ce2b_followup_id` int(11) DEFAULT NULL,
-  `dose_id` int(11) DEFAULT NULL,
-  `route_id` int(11) DEFAULT NULL,
-  `frequency_id` int(11) DEFAULT NULL,
-  `frequency_id_other` varchar(255) DEFAULT NULL,
-  `drug_name` varchar(255) DEFAULT NULL,
-  `brand_name` varchar(255) DEFAULT NULL,
-  `batch_no` varchar(255) DEFAULT NULL,
-  `manufacturer` varchar(255) DEFAULT NULL,
-  `dose` varchar(100) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `stop_date` date DEFAULT NULL,
-  `indication` varchar(100) DEFAULT NULL,
-  `suspected_drug` varchar(100) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `route` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
-
--- --------------------------------------------------------
 
 --
--- Table structure for table `ce2b_reaction`
+-- Dumping data for table `ce2bs`
 --
 
-CREATE TABLE `ce2b_reaction` (
-  `id` int(11) NOT NULL,
-  `ce2b_id` int(11) DEFAULT NULL,
-  `reaction_name` text,
-  `meddra_code` text,
-  `start_date` text,
-  `source_country` text,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
-  `criteria_death_null` varchar(255) DEFAULT NULL,
-  `criteria_death_value` varchar(255) DEFAULT NULL,
-  `life_hreatening_null` varchar(255) DEFAULT NULL,
-  `life_hreatening_value` varchar(255) DEFAULT NULL,
-  `prolonged_hospitalisation_null` varchar(255) DEFAULT NULL,
-  `prolonged_hospitalisation_value` varchar(255) DEFAULT NULL,
-  `incapacitating_null` varchar(255) DEFAULT NULL,
-  `incapacitating_value` varchar(255) DEFAULT NULL,
-  `birth_defect_null` varchar(255) DEFAULT NULL,
-  `birth_defect_value` varchar(255) DEFAULT NULL,
-  `other_medical_null` varchar(255) DEFAULT NULL,
-  `other_medical_value` varchar(255) DEFAULT NULL,
-  `reaction_outcome_null` varchar(255) DEFAULT NULL,
-  `reaction_outcome_value` varchar(255) DEFAULT NULL,
-  `medical_confirmation_null` varchar(255) DEFAULT NULL,
-  `medical_confirmation_value` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `ce2bs` WRITE;
+/*!40000 ALTER TABLE `ce2bs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ce2bs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `comments`
 --
 
+DROP TABLE IF EXISTS `comments`;
+
 CREATE TABLE `comments` (
-  `id` int(11) NOT NULL,
-  `foreign_key` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `model_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `foreign_key` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `model_id` int DEFAULT NULL,
   `model` varchar(255) DEFAULT NULL,
   `category` varchar(255) DEFAULT NULL,
   `sender` varchar(255) DEFAULT NULL,
@@ -576,21 +793,32 @@ CREATE TABLE `comments` (
   `review` text,
   `deleted` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `comments`
+--
+
+LOCK TABLES `comments` WRITE;
+/*!40000 ALTER TABLE `comments` DISABLE KEYS */;
+/*!40000 ALTER TABLE `comments` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `concomittant_drugs`
 --
 
+DROP TABLE IF EXISTS `concomittant_drugs`;
+
 CREATE TABLE `concomittant_drugs` (
-  `id` int(11) NOT NULL,
-  `sae_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sae_id` int DEFAULT NULL,
   `generic_name` varchar(100) DEFAULT NULL,
   `dose` varchar(100) DEFAULT NULL,
-  `route_id` int(11) DEFAULT NULL,
+  `route_id` int DEFAULT NULL,
   `indication` varchar(255) DEFAULT NULL,
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
@@ -598,89 +826,144 @@ CREATE TABLE `concomittant_drugs` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `concomittant_drugs`
+--
+
+LOCK TABLES `concomittant_drugs` WRITE;
+/*!40000 ALTER TABLE `concomittant_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `concomittant_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `counties`
 --
 
+DROP TABLE IF EXISTS `counties`;
+
 CREATE TABLE `counties` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `county_name` varchar(50) DEFAULT NULL,
   `org_unit` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `counties`
+--
+
+LOCK TABLES `counties` WRITE;
+/*!40000 ALTER TABLE `counties` DISABLE KEYS */;
+/*!40000 ALTER TABLE `counties` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `countries`
 --
 
-CREATE TABLE `countries` (
-  `id` int(11) NOT NULL,
-  `code` char(2) CHARACTER SET latin1 DEFAULT '',
-  `name` tinytext CHARACTER SET latin1,
-  `name_fr` tinytext CHARACTER SET latin1,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `countries`;
 
--- --------------------------------------------------------
+CREATE TABLE `countries` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `code` char(2) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT '',
+  `name` tinytext CHARACTER SET latin1 COLLATE latin1_swedish_ci,
+  `name_fr` tinytext CHARACTER SET latin1 COLLATE latin1_swedish_ci,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+--
+-- Dumping data for table `countries`
+--
+
+LOCK TABLES `countries` WRITE;
+/*!40000 ALTER TABLE `countries` DISABLE KEYS */;
+/*!40000 ALTER TABLE `countries` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `cron_tasks`
 --
 
+DROP TABLE IF EXISTS `cron_tasks`;
+
 CREATE TABLE `cron_tasks` (
-  `id` int(10) NOT NULL,
-  `jobtype` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
-  `title` varchar(40) COLLATE utf8_unicode_ci NOT NULL,
-  `data` text COLLATE utf8_unicode_ci,
-  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL COMMENT 'task / method',
+  `id` int NOT NULL AUTO_INCREMENT,
+  `jobtype` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `title` varchar(40) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `data` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL COMMENT 'task / method',
   `created` datetime NOT NULL,
   `notbefore` datetime DEFAULT NULL,
   `fetched` datetime DEFAULT NULL,
   `completed` datetime DEFAULT NULL,
-  `failed` int(3) NOT NULL DEFAULT '0',
-  `failure_message` text COLLATE utf8_unicode_ci,
-  `workerkey` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `interval` int(10) NOT NULL DEFAULT '0' COMMENT 'in minutes',
-  `status` int(2) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `failed` int NOT NULL DEFAULT '0',
+  `failure_message` text CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci,
+  `workerkey` varchar(45) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
+  `interval` int NOT NULL DEFAULT '0' COMMENT 'in minutes',
+  `status` int NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `cron_tasks`
+--
+
+LOCK TABLES `cron_tasks` WRITE;
+/*!40000 ALTER TABLE `cron_tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `cron_tasks` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `designations`
 --
 
+DROP TABLE IF EXISTS `designations`;
+
 CREATE TABLE `designations` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
-  `category` int(11) DEFAULT NULL,
+  `category` int DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `designations`
+--
+
+LOCK TABLES `designations` WRITE;
+/*!40000 ALTER TABLE `designations` DISABLE KEYS */;
+/*!40000 ALTER TABLE `designations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `devices`
 --
 
+DROP TABLE IF EXISTS `devices`;
+
 CREATE TABLE `devices` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
   `reference_no` varchar(255) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `device_id` int(11) DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
+  `device_id` int DEFAULT NULL,
   `report_type` varchar(20) DEFAULT NULL,
   `report_title` varchar(255) DEFAULT NULL,
   `name_of_institution` varchar(100) DEFAULT NULL,
@@ -714,20 +997,20 @@ CREATE TABLE `devices` (
   `operator_specify` varchar(255) DEFAULT NULL,
   `device_usage` varchar(100) DEFAULT NULL,
   `device_duration_type` varchar(255) DEFAULT NULL,
-  `device_duration` int(11) DEFAULT NULL,
+  `device_duration` int DEFAULT NULL,
   `device_availability` varchar(25) DEFAULT NULL,
   `device_unavailability` varchar(255) DEFAULT NULL,
   `implant_date` date DEFAULT NULL,
   `explant_date` date DEFAULT NULL,
   `implant_duration_type` varchar(255) DEFAULT NULL,
-  `implant_duration` int(11) DEFAULT NULL,
+  `implant_duration` int DEFAULT NULL,
   `specimen_type` varchar(25) DEFAULT NULL,
-  `patients_involved` int(11) DEFAULT NULL,
-  `tests_done` int(11) DEFAULT NULL,
-  `false_positives` int(11) DEFAULT NULL,
-  `false_negatives` int(11) DEFAULT NULL,
-  `true_positives` int(11) DEFAULT NULL,
-  `true_negatives` int(11) DEFAULT NULL,
+  `patients_involved` int DEFAULT NULL,
+  `tests_done` int DEFAULT NULL,
+  `false_positives` int DEFAULT NULL,
+  `false_negatives` int DEFAULT NULL,
+  `true_positives` int DEFAULT NULL,
+  `true_negatives` int DEFAULT NULL,
   `date_onset_incident` date DEFAULT NULL,
   `serious` varchar(10) DEFAULT NULL,
   `serious_yes` varchar(250) DEFAULT NULL,
@@ -741,83 +1024,96 @@ CREATE TABLE `devices` (
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
-  `deleted` tinyint(4) DEFAULT '0',
+  `deleted` tinyint DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `devices`
+--
+
+LOCK TABLES `devices` WRITE;
+/*!40000 ALTER TABLE `devices` DISABLE KEYS */;
+/*!40000 ALTER TABLE `devices` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `disproportionalities`
 --
 
+DROP TABLE IF EXISTS `disproportionalities`;
+
 CREATE TABLE `disproportionalities` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `drug_name` varchar(255) DEFAULT NULL,
   `reaction_name` varchar(255) DEFAULT NULL,
   `model` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `disproportionalities`
+--
+
+LOCK TABLES `disproportionalities` WRITE;
+/*!40000 ALTER TABLE `disproportionalities` DISABLE KEYS */;
+/*!40000 ALTER TABLE `disproportionalities` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `doses`
 --
 
+DROP TABLE IF EXISTS `doses`;
+
 CREATE TABLE `doses` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `value` varchar(100) DEFAULT NULL,
   `icsr_code` varchar(100) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `drugs`
+-- Dumping data for table `doses`
 --
 
-CREATE TABLE `drugs` (
-  `id` int(11) NOT NULL,
-  `brand_name` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `inn_name` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `manufacturer` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `local_trade_rep` varchar(255) DEFAULT NULL,
-  `batch_number` varchar(255) DEFAULT NULL,
-  `registration_status` varchar(255) DEFAULT NULL,
-  `retention_status` varchar(255) DEFAULT NULL,
-  `donation` varchar(255) DEFAULT NULL,
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified` datetime DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `doses` WRITE;
+/*!40000 ALTER TABLE `doses` DISABLE KEYS */;
+/*!40000 ALTER TABLE `doses` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `drug_dictionaries`
 --
 
+DROP TABLE IF EXISTS `drug_dictionaries`;
+
 CREATE TABLE `drug_dictionaries` (
-  `id` int(10) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `MedId` varchar(35) DEFAULT NULL,
   `drug_record_number` varchar(6) DEFAULT NULL,
   `sequence_no_1` varchar(2) DEFAULT NULL,
@@ -843,52 +1139,60 @@ CREATE TABLE `drug_dictionaries` (
   `create_date` varchar(8) DEFAULT NULL,
   `date_changed` varchar(8) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `drug_dictionaries_old`
+-- Dumping data for table `drug_dictionaries`
 --
 
-CREATE TABLE `drug_dictionaries_old` (
-  `id` mediumint(10) NOT NULL,
-  `MedId` varchar(35) CHARACTER SET latin1 DEFAULT NULL,
-  `drug_record_number` varchar(6) CHARACTER SET latin1 DEFAULT NULL,
-  `sequence_no_1` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
-  `sequence_no_2` varchar(3) CHARACTER SET latin1 DEFAULT NULL,
-  `sequence_no_3` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `sequence_no_4` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `generic` char(1) CHARACTER SET latin1 DEFAULT NULL,
-  `drug_name` varchar(455) DEFAULT NULL,
-  `health_program` varchar(255) DEFAULT NULL,
-  `name_specifier` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
-  `market_authorization_number` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
-  `market_authorization_date` varchar(8) CHARACTER SET latin1 DEFAULT NULL,
-  `market_authorization_withdrawal_date` varchar(8) CHARACTER SET latin1 DEFAULT NULL,
-  `country` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `company` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `marketing_authorization_holder` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `source_code` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `source_country` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `source_year` varchar(3) CHARACTER SET latin1 DEFAULT NULL,
-  `product_type` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `product_group` varchar(10) CHARACTER SET latin1 DEFAULT NULL,
-  `create_date` varchar(8) CHARACTER SET latin1 DEFAULT NULL,
-  `date_changed` varchar(8) CHARACTER SET latin1 DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf16;
+LOCK TABLES `drug_dictionaries` WRITE;
+/*!40000 ALTER TABLE `drug_dictionaries` DISABLE KEYS */;
+/*!40000 ALTER TABLE `drug_dictionaries` ENABLE KEYS */;
+UNLOCK TABLES;
+ 
 
--- --------------------------------------------------------
+--
+-- Table structure for table `drugs`
+--
+
+DROP TABLE IF EXISTS `drugs`;
+
+CREATE TABLE `drugs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `brand_name` varchar(255) CHARACTER SET utf8mb4  DEFAULT NULL,
+  `inn_name` varchar(255) CHARACTER SET utf8mb4  DEFAULT NULL,
+  `manufacturer` varchar(255) CHARACTER SET utf8mb4  DEFAULT NULL,
+  `local_trade_rep` varchar(255) DEFAULT NULL,
+  `batch_number` varchar(255) DEFAULT NULL,
+  `registration_status` varchar(255) DEFAULT NULL,
+  `retention_status` varchar(255) DEFAULT NULL,
+  `donation` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `drugs`
+--
+
+LOCK TABLES `drugs` WRITE;
+/*!40000 ALTER TABLE `drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `drugs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `facility_codes`
 --
 
+DROP TABLE IF EXISTS `facility_codes`;
+
 CREATE TABLE `facility_codes` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `facility_code` varchar(17) DEFAULT NULL,
   `facility_name` varchar(250) DEFAULT NULL,
   `province` varchar(50) DEFAULT NULL,
@@ -943,63 +1247,82 @@ CREATE TABLE `facility_codes` (
   `tb_treat` varchar(10) DEFAULT NULL,
   `Youth` varchar(10) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `facility_codes`
+--
+
+LOCK TABLES `facility_codes` WRITE;
+/*!40000 ALTER TABLE `facility_codes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `facility_codes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `feedbacks`
 --
 
+DROP TABLE IF EXISTS `feedbacks`;
+
 CREATE TABLE `feedbacks` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `email` char(50) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `foreign_key` int(11) DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `foreign_key` int DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
   `feedback` text,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `feedbacks`
+--
+
+LOCK TABLES `feedbacks` WRITE;
+/*!40000 ALTER TABLE `feedbacks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `feedbacks` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `frequencies`
 --
 
+DROP TABLE IF EXISTS `frequencies`;
+
 CREATE TABLE `frequencies` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `value` varchar(100) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `icsr_code` varchar(100) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `roles`
+-- Dumping data for table `frequencies`
 --
 
-CREATE TABLE `roles` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `frequencies` WRITE;
+/*!40000 ALTER TABLE `frequencies` DISABLE KEYS */;
+/*!40000 ALTER TABLE `frequencies` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `help_infos`
 --
 
+DROP TABLE IF EXISTS `help_infos`;
+
 CREATE TABLE `help_infos` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `field_name` varchar(25) DEFAULT NULL,
   `field_label` varchar(255) DEFAULT NULL,
   `place_holder` varchar(140) DEFAULT NULL,
@@ -1009,47 +1332,79 @@ CREATE TABLE `help_infos` (
   `help_text` varchar(100) DEFAULT NULL,
   `type` varchar(100) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `help_infos`
+--
+
+LOCK TABLES `help_infos` WRITE;
+/*!40000 ALTER TABLE `help_infos` DISABLE KEYS */;
+/*!40000 ALTER TABLE `help_infos` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `imports`
 --
 
+DROP TABLE IF EXISTS `imports`;
+
 CREATE TABLE `imports` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL,
   `filename` varchar(255) DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `imports`
+--
+
+LOCK TABLES `imports` WRITE;
+/*!40000 ALTER TABLE `imports` DISABLE KEYS */;
+/*!40000 ALTER TABLE `imports` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `khis`
 --
 
+DROP TABLE IF EXISTS `khis`;
+
 CREATE TABLE `khis` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `elementId` varchar(255) DEFAULT NULL,
   `elementName` varchar(255) DEFAULT NULL,
   `deleted` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `khis`
+--
+
+LOCK TABLES `khis` WRITE;
+/*!40000 ALTER TABLE `khis` DISABLE KEYS */;
+/*!40000 ALTER TABLE `khis` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `list_of_devices`
 --
 
+DROP TABLE IF EXISTS `list_of_devices`;
+
 CREATE TABLE `list_of_devices` (
-  `id` int(11) NOT NULL,
-  `device_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `device_id` int DEFAULT NULL,
   `brand_name` varchar(255) DEFAULT NULL,
   `serial_no` varchar(255) DEFAULT NULL,
   `common_name` varchar(255) DEFAULT NULL,
@@ -1057,19 +1412,30 @@ CREATE TABLE `list_of_devices` (
   `manufacture_date` varchar(255) DEFAULT NULL,
   `expiry_date` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `list_of_devices`
+--
+
+LOCK TABLES `list_of_devices` WRITE;
+/*!40000 ALTER TABLE `list_of_devices` DISABLE KEYS */;
+/*!40000 ALTER TABLE `list_of_devices` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `meddras`
 --
 
+DROP TABLE IF EXISTS `meddras`;
+
 CREATE TABLE `meddras` (
-  `id` int(8) DEFAULT NULL,
+  `id` int NOT NULL,
   `llt_name` varchar(100) DEFAULT NULL,
-  `pt_code` int(8) DEFAULT NULL,
+  `pt_code` int DEFAULT NULL,
   `llt_whoart_code` varchar(10) DEFAULT NULL,
   `llt_harts_code` varchar(10) DEFAULT NULL,
   `llt_costart_sym` varchar(10) DEFAULT NULL,
@@ -1078,24 +1444,74 @@ CREATE TABLE `meddras` (
   `llt_icd10_code` varchar(10) DEFAULT NULL,
   `llt_currency` varchar(1) DEFAULT NULL,
   `llt_jart_code` varchar(10) DEFAULT NULL,
-  `COL_12` varchar(10) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `COL_12` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `llt_name` (`llt_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `meddras`
+--
+
+LOCK TABLES `meddras` WRITE;
+/*!40000 ALTER TABLE `meddras` DISABLE KEYS */;
+/*!40000 ALTER TABLE `meddras` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `medication_products`
+--
+
+DROP TABLE IF EXISTS `medication_products`;
+
+CREATE TABLE `medication_products` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `medication_id` int DEFAULT NULL,
+  `generic_name_i` varchar(255) DEFAULT NULL,
+  `product_name_i` varchar(255) DEFAULT NULL,
+  `dosage_form_i` varchar(255) DEFAULT NULL,
+  `dosage_i` varchar(255) DEFAULT NULL,
+  `manufacturer_i` varchar(255) DEFAULT NULL,
+  `strength_i` varchar(255) DEFAULT NULL,
+  `container_i` varchar(255) DEFAULT NULL,
+  `generic_name_ii` varchar(255) DEFAULT NULL,
+  `product_name_ii` varchar(255) DEFAULT NULL,
+  `dosage_form_ii` varchar(255) DEFAULT NULL,
+  `dosage_ii` varchar(255) DEFAULT NULL,
+  `manufacturer_ii` varchar(255) DEFAULT NULL,
+  `strength_ii` varchar(255) DEFAULT NULL,
+  `container_ii` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modifed` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `medication_products`
+--
+
+LOCK TABLES `medication_products` WRITE;
+/*!40000 ALTER TABLE `medication_products` DISABLE KEYS */;
+/*!40000 ALTER TABLE `medication_products` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `medications`
 --
 
+DROP TABLE IF EXISTS `medications`;
+
 CREATE TABLE `medications` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
-  `medication_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
+  `medication_id` int DEFAULT NULL,
   `reference_no` varchar(255) DEFAULT NULL,
   `adverse_reaction` varchar(255) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `date_of_event` date DEFAULT NULL,
   `time_of_event` varchar(10) DEFAULT NULL,
   `name_of_institution` varchar(100) DEFAULT NULL,
@@ -1143,65 +1559,49 @@ CREATE TABLE `medications` (
   `reporter_email` varchar(100) DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `report_type` varchar(25) DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
-  `deleted` tinyint(4) DEFAULT '0',
+  `deleted` tinyint DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `vigiflow_message` text,
-  `vigiflow_ref` varchar(255) DEFAULT NULL
+  `vigiflow_ref` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `medication_products`
+-- Dumping data for table `medications`
 --
 
-CREATE TABLE `medication_products` (
-  `id` int(11) NOT NULL,
-  `medication_id` int(11) DEFAULT NULL,
-  `generic_name_i` varchar(255) DEFAULT NULL,
-  `product_name_i` varchar(255) DEFAULT NULL,
-  `dosage_form_i` varchar(255) DEFAULT NULL,
-  `dosage_i` varchar(255) DEFAULT NULL,
-  `manufacturer_i` varchar(255) DEFAULT NULL,
-  `strength_i` varchar(255) DEFAULT NULL,
-  `container_i` varchar(255) DEFAULT NULL,
-  `generic_name_ii` varchar(255) DEFAULT NULL,
-  `product_name_ii` varchar(255) DEFAULT NULL,
-  `dosage_form_ii` varchar(255) DEFAULT NULL,
-  `dosage_ii` varchar(255) DEFAULT NULL,
-  `manufacturer_ii` varchar(255) DEFAULT NULL,
-  `strength_ii` varchar(255) DEFAULT NULL,
-  `container_ii` varchar(255) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modifed` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `medications` WRITE;
+/*!40000 ALTER TABLE `medications` DISABLE KEYS */;
+/*!40000 ALTER TABLE `medications` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `messages`
 --
 
+DROP TABLE IF EXISTS `messages`;
+
 CREATE TABLE `messages` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` char(50) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
   `content` text,
@@ -1210,17 +1610,28 @@ CREATE TABLE `messages` (
   `style` varchar(250) DEFAULT NULL,
   `description` text,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `messages`
+--
+
+LOCK TABLES `messages` WRITE;
+/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `messages_delete`
 --
 
+DROP TABLE IF EXISTS `messages_delete`;
+
 CREATE TABLE `messages_delete` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` char(50) DEFAULT NULL,
   `subject` varchar(255) DEFAULT NULL,
   `content` text,
@@ -1228,21 +1639,32 @@ CREATE TABLE `messages_delete` (
   `style` varchar(250) DEFAULT NULL,
   `description` text,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `messages_delete`
+--
+
+LOCK TABLES `messages_delete` WRITE;
+/*!40000 ALTER TABLE `messages_delete` DISABLE KEYS */;
+/*!40000 ALTER TABLE `messages_delete` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `notifications`
 --
 
+DROP TABLE IF EXISTS `notifications`;
+
 CREATE TABLE `notifications` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
   `type` char(70) DEFAULT NULL,
   `model` varchar(255) DEFAULT NULL,
-  `foreign_key` int(10) DEFAULT NULL,
+  `foreign_key` int DEFAULT NULL,
   `title` varchar(255) DEFAULT NULL,
   `url` varchar(255) DEFAULT NULL,
   `system_message` text,
@@ -1250,22 +1672,63 @@ CREATE TABLE `notifications` (
   `deleted` tinyint(1) DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `notifications`
+--
+
+LOCK TABLES `notifications` WRITE;
+/*!40000 ALTER TABLE `notifications` DISABLE KEYS */;
+/*!40000 ALTER TABLE `notifications` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `padr_list_of_medicines`
+--
+
+DROP TABLE IF EXISTS `padr_list_of_medicines`;
+
+CREATE TABLE `padr_list_of_medicines` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `padr_id` int DEFAULT NULL,
+  `product_name` varchar(255) DEFAULT NULL,
+  `medicine_source` varchar(255) DEFAULT NULL,
+  `manufacturer` varchar(255) DEFAULT NULL,
+  `expiry_date` varchar(255) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `end_date` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modifed` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `padr_list_of_medicines`
+--
+
+LOCK TABLES `padr_list_of_medicines` WRITE;
+/*!40000 ALTER TABLE `padr_list_of_medicines` DISABLE KEYS */;
+/*!40000 ALTER TABLE `padr_list_of_medicines` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `padrs`
 --
 
+DROP TABLE IF EXISTS `padrs`;
+
 CREATE TABLE `padrs` (
-  `id` int(11) NOT NULL,
-  `padr_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sub_county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `padr_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `reference_no` varchar(55) DEFAULT NULL,
   `token` varchar(200) DEFAULT NULL,
   `relation` varchar(55) DEFAULT NULL,
@@ -1317,101 +1780,115 @@ CREATE TABLE `padrs` (
   `reporter_name` varchar(100) DEFAULT NULL,
   `reporter_email` varchar(100) DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
-  `emails` tinyint(2) DEFAULT '0',
+  `emails` tinyint DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
-  `device` tinyint(2) DEFAULT '0',
+  `device` tinyint DEFAULT '0',
   `deleted` tinyint(1) DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
-  `notified` tinyint(2) DEFAULT '0',
+  `notified` tinyint DEFAULT '0',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `reaction_on` varchar(25) DEFAULT NULL,
   `consent` varchar(255) DEFAULT NULL,
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
-  `archived_date` datetime DEFAULT NULL
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
+  `archived_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `padr_list_of_medicines`
+-- Dumping data for table `padrs`
 --
 
-CREATE TABLE `padr_list_of_medicines` (
-  `id` int(11) NOT NULL,
-  `padr_id` int(11) DEFAULT NULL,
-  `product_name` varchar(255) DEFAULT NULL,
-  `medicine_source` varchar(255) DEFAULT NULL,
-  `manufacturer` varchar(255) DEFAULT NULL,
-  `expiry_date` varchar(255) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `end_date` varchar(255) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modifed` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `padrs` WRITE;
+/*!40000 ALTER TABLE `padrs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `padrs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pints`
 --
 
+DROP TABLE IF EXISTS `pints`;
+
 CREATE TABLE `pints` (
-  `id` int(11) NOT NULL,
-  `transfusion_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `transfusion_id` int DEFAULT NULL,
   `component_type` varchar(255) DEFAULT NULL,
   `pint_no` varchar(55) DEFAULT NULL,
   `expiry_date` date DEFAULT NULL,
   `volume_transfused` varchar(55) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `pints`
+--
+
+LOCK TABLES `pints` WRITE;
+/*!40000 ALTER TABLE `pints` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pints` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pockets`
 --
 
+DROP TABLE IF EXISTS `pockets`;
+
 CREATE TABLE `pockets` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `content` mediumtext NOT NULL,
   `required` tinyint(1) DEFAULT '0',
-  `item_number` int(5) DEFAULT NULL,
+  `item_number` int DEFAULT NULL,
   `type` char(10) DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime NOT NULL,
-  `modified` datetime NOT NULL
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `pockets`
+--
+
+LOCK TABLES `pockets` WRITE;
+/*!40000 ALTER TABLE `pockets` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pockets` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pqmps`
 --
 
+DROP TABLE IF EXISTS `pqmps`;
+
 CREATE TABLE `pqmps` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sub_county_id` int(11) DEFAULT NULL,
-  `country_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
+  `country_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `reference_no` varchar(55) DEFAULT NULL,
   `facility_name` varchar(100) DEFAULT NULL,
   `facility_code` varchar(100) DEFAULT NULL,
@@ -1455,16 +1932,16 @@ CREATE TABLE `pqmps` (
   `adverse_reaction` varchar(255) DEFAULT NULL,
   `reaction_comments` text,
   `medication_error` varchar(255) DEFAULT NULL,
-  `emails` tinyint(2) DEFAULT '0',
-  `submitted` tinyint(2) DEFAULT '0',
+  `emails` tinyint DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
-  `device` tinyint(2) DEFAULT '0',
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `device` tinyint DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
-  `notified` tinyint(2) DEFAULT '0',
-  `deleted` tinyint(4) DEFAULT '0',
+  `notified` tinyint DEFAULT '0',
+  `deleted` tinyint DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
@@ -1491,108 +1968,407 @@ CREATE TABLE `pqmps` (
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
-  `assigned_date` datetime DEFAULT NULL
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
+  `assigned_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `queued_tasks`
+-- Dumping data for table `pqmps`
 --
 
-CREATE TABLE `queued_tasks` (
-  `id` int(10) NOT NULL,
-  `jobtype` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
-  `data` text COLLATE utf8_unicode_ci,
-  `group` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `reference` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+LOCK TABLES `pqmps` WRITE;
+/*!40000 ALTER TABLE `pqmps` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pqmps` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_phinxlog`
+--
+
+DROP TABLE IF EXISTS `queue_phinxlog`;
+
+CREATE TABLE `queue_phinxlog` (
+  `version` bigint NOT NULL,
+  `migration_name` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `breakpoint` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`version`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
+-- Dumping data for table `queue_phinxlog`
+--
+
+LOCK TABLES `queue_phinxlog` WRITE;
+/*!40000 ALTER TABLE `queue_phinxlog` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_phinxlog` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queue_processes`
+--
+
+DROP TABLE IF EXISTS `queue_processes`;
+
+CREATE TABLE `queue_processes` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pid` varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  `terminate` tinyint(1) NOT NULL DEFAULT '0',
+  `server` varchar(90) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `workerkey` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `workerkey` (`workerkey`),
+  UNIQUE KEY `pid` (`pid`,`server`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--
+-- Dumping data for table `queue_processes`
+--
+
+LOCK TABLES `queue_processes` WRITE;
+/*!40000 ALTER TABLE `queue_processes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queue_processes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `queued_jobs`
+--
+
+DROP TABLE IF EXISTS `queued_jobs`;
+
+CREATE TABLE `queued_jobs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `job_task` varchar(90) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `data` text COLLATE utf8mb4_unicode_ci,
+  `job_group` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `reference` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created` datetime NOT NULL,
   `notbefore` datetime DEFAULT NULL,
   `fetched` datetime DEFAULT NULL,
-  `progress` float(3,2) DEFAULT NULL,
   `completed` datetime DEFAULT NULL,
-  `failed` int(3) NOT NULL DEFAULT '0',
-  `failure_message` text COLLATE utf8_unicode_ci,
-  `workerkey` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `priority` int(4) NOT NULL DEFAULT '5'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `progress` float DEFAULT NULL,
+  `failed` int NOT NULL DEFAULT '0',
+  `failure_message` text COLLATE utf8mb4_unicode_ci,
+  `workerkey` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `priority` int NOT NULL DEFAULT '5',
+  PRIMARY KEY (`id`),
+  KEY `completed` (`completed`),
+  KEY `job_task` (`job_task`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `queued_jobs`
+--
+
+LOCK TABLES `queued_jobs` WRITE;
+/*!40000 ALTER TABLE `queued_jobs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `queued_jobs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `reminders`
 --
 
+DROP TABLE IF EXISTS `reminders`;
+
 CREATE TABLE `reminders` (
-  `id` int(11) NOT NULL,
-  `foreign_key` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `foreign_key` int DEFAULT NULL,
   `model` varchar(255) DEFAULT NULL,
-  `user_id` int(11) NOT NULL,
+  `user_id` int NOT NULL,
   `reminder_type` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `reminders`
+--
+
+LOCK TABLES `reminders` WRITE;
+/*!40000 ALTER TABLE `reminders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reminders` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `reviews`
 --
 
+DROP TABLE IF EXISTS `reviews`;
+
 CREATE TABLE `reviews` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `saefi_id` int(11) DEFAULT NULL,
-  `approved_by` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `saefi_id` int DEFAULT NULL,
+  `approved_by` int DEFAULT NULL,
   `comment` text,
   `created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `reviews`
+--
+
+LOCK TABLES `reviews` WRITE;
+/*!40000 ALTER TABLE `reviews` DISABLE KEYS */;
+/*!40000 ALTER TABLE `reviews` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+
+CREATE TABLE `roles` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `description` text,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `routes`
 --
 
+DROP TABLE IF EXISTS `routes`;
+
 CREATE TABLE `routes` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `value` varchar(100) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `icsr_code` varchar(100) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `routes`
+--
+
+LOCK TABLES `routes` WRITE;
+/*!40000 ALTER TABLE `routes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `routes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sadr_descriptions`
+--
+
+DROP TABLE IF EXISTS `sadr_descriptions`;
+
+CREATE TABLE `sadr_descriptions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `description` text,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `sadr_descriptions`
+--
+
+LOCK TABLES `sadr_descriptions` WRITE;
+/*!40000 ALTER TABLE `sadr_descriptions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadr_descriptions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sadr_followups`
+--
+
+DROP TABLE IF EXISTS `sadr_followups`;
+
+CREATE TABLE `sadr_followups` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sadr_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
+  `description_of_reaction` text,
+  `outcome` varchar(100) DEFAULT NULL,
+  `reporter_email` varchar(100) DEFAULT NULL,
+  `reporter_phone` varchar(100) DEFAULT NULL,
+  `submitted` tinyint DEFAULT '0',
+  `emails` tinyint DEFAULT '0',
+  `active` tinyint(1) DEFAULT '1',
+  `device` tinyint DEFAULT '0',
+  `notified` tinyint DEFAULT '0',
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=COMPACT;
+
+
+--
+-- Dumping data for table `sadr_followups`
+--
+
+LOCK TABLES `sadr_followups` WRITE;
+/*!40000 ALTER TABLE `sadr_followups` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadr_followups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sadr_list_of_drugs`
+--
+
+DROP TABLE IF EXISTS `sadr_list_of_drugs`;
+
+CREATE TABLE `sadr_list_of_drugs` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `sadr_followup_id` int DEFAULT NULL,
+  `dose_id` int DEFAULT NULL,
+  `route_id` int DEFAULT NULL,
+  `frequency_id` int DEFAULT NULL,
+  `frequency_id_other` varchar(255) DEFAULT NULL,
+  `drug_name` varchar(255) DEFAULT NULL,
+  `brand_name` varchar(255) DEFAULT NULL,
+  `batch_no` varchar(255) DEFAULT NULL,
+  `manufacturer` varchar(255) DEFAULT NULL,
+  `dose` varchar(100) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `stop_date` date DEFAULT NULL,
+  `indication` varchar(100) DEFAULT NULL,
+  `suspected_drug` varchar(100) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+
+--
+-- Dumping data for table `sadr_list_of_drugs`
+--
+
+LOCK TABLES `sadr_list_of_drugs` WRITE;
+/*!40000 ALTER TABLE `sadr_list_of_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadr_list_of_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sadr_list_of_medicines`
+--
+
+DROP TABLE IF EXISTS `sadr_list_of_medicines`;
+
+CREATE TABLE `sadr_list_of_medicines` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `sadr_followup_id` int DEFAULT NULL,
+  `dose_id` int DEFAULT NULL,
+  `route_id` int DEFAULT NULL,
+  `frequency_id` int DEFAULT NULL,
+  `frequency_other` varchar(255) DEFAULT NULL,
+  `drug_name` varchar(100) DEFAULT NULL,
+  `brand_name` varchar(100) DEFAULT NULL,
+  `batch_no` varchar(255) DEFAULT NULL,
+  `manufacturer` varchar(255) DEFAULT NULL,
+  `dose` varchar(100) DEFAULT NULL,
+  `start_date` date DEFAULT NULL,
+  `stop_date` date DEFAULT NULL,
+  `indication` varchar(100) DEFAULT NULL,
+  `suspected_drug` varchar(100) DEFAULT NULL,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+
+--
+-- Dumping data for table `sadr_list_of_medicines`
+--
+
+LOCK TABLES `sadr_list_of_medicines` WRITE;
+/*!40000 ALTER TABLE `sadr_list_of_medicines` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadr_list_of_medicines` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `sadr_reaction`
+--
+
+DROP TABLE IF EXISTS `sadr_reaction`;
+
+CREATE TABLE `sadr_reaction` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `reaction` text,
+  `created` datetime DEFAULT NULL,
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+
+--
+-- Dumping data for table `sadr_reaction`
+--
+
+LOCK TABLES `sadr_reaction` WRITE;
+/*!40000 ALTER TABLE `sadr_reaction` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadr_reaction` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sadrs`
 --
 
+DROP TABLE IF EXISTS `sadrs`;
+
 CREATE TABLE `sadrs` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
-  `medication_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sub_county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sadr_id` int DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
+  `medication_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `sub_county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `reference_no` varchar(55) DEFAULT NULL,
   `vigiflow_id` varchar(50) DEFAULT NULL,
   `report_title` varchar(100) DEFAULT NULL,
   `report_type` varchar(20) DEFAULT NULL,
   `report_sadr` tinyint(1) DEFAULT NULL,
   `report_therapeutic` tinyint(1) DEFAULT NULL,
-  `report_misuse` tinyint(4) DEFAULT NULL,
-  `report_off_label` tinyint(4) DEFAULT NULL,
+  `report_misuse` tinyint DEFAULT NULL,
+  `report_off_label` tinyint DEFAULT NULL,
   `product_category` varchar(255) DEFAULT NULL,
   `medicinal_product` tinyint(1) DEFAULT NULL,
   `blood_products` tinyint(1) DEFAULT NULL,
@@ -1635,26 +2411,26 @@ CREATE TABLE `sadrs` (
   `reporter_name` varchar(100) DEFAULT NULL,
   `reporter_email` varchar(100) DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
-  `emails` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
+  `emails` tinyint DEFAULT '0',
   `active` tinyint(1) DEFAULT '1',
-  `device` tinyint(2) DEFAULT '0',
+  `device` tinyint DEFAULT '0',
   `deleted` tinyint(1) DEFAULT '0',
   `archived` tinyint(1) DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `deleted_date` datetime DEFAULT NULL,
-  `notified` tinyint(2) DEFAULT '0',
+  `notified` tinyint DEFAULT '0',
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `vigiflow_message` text,
   `vigiflow_ref` varchar(255) DEFAULT NULL,
@@ -1663,139 +2439,43 @@ CREATE TABLE `sadrs` (
   `webradr_date` datetime DEFAULT NULL,
   `submitted_date` datetime DEFAULT NULL,
   `webradr_message` varchar(255) DEFAULT NULL,
-  `copied` tinyint(2) DEFAULT '0'
+  `copied` tinyint DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
 
 --
--- Table structure for table `sadr_descriptions`
+-- Dumping data for table `sadrs`
 --
 
-CREATE TABLE `sadr_descriptions` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `description` text,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sadr_followups`
---
-
-CREATE TABLE `sadr_followups` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `description_of_reaction` text,
-  `outcome` varchar(100) DEFAULT NULL,
-  `reporter_email` varchar(100) DEFAULT NULL,
-  `reporter_phone` varchar(100) DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
-  `emails` tinyint(2) DEFAULT '0',
-  `active` tinyint(1) DEFAULT '1',
-  `device` tinyint(2) DEFAULT '0',
-  `notified` tinyint(2) DEFAULT '0',
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=COMPACT;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sadr_list_of_drugs`
---
-
-CREATE TABLE `sadr_list_of_drugs` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `sadr_followup_id` int(11) DEFAULT NULL,
-  `dose_id` int(11) DEFAULT NULL,
-  `route_id` int(11) DEFAULT NULL,
-  `frequency_id` int(11) DEFAULT NULL,
-  `frequency_id_other` varchar(255) DEFAULT NULL,
-  `drug_name` varchar(255) DEFAULT NULL,
-  `brand_name` varchar(255) DEFAULT NULL,
-  `batch_no` varchar(255) DEFAULT NULL,
-  `manufacturer` varchar(255) DEFAULT NULL,
-  `dose` varchar(100) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `stop_date` date DEFAULT NULL,
-  `indication` varchar(100) DEFAULT NULL,
-  `suspected_drug` varchar(100) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sadr_list_of_medicines`
---
-
-CREATE TABLE `sadr_list_of_medicines` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `sadr_followup_id` int(11) DEFAULT NULL,
-  `dose_id` int(11) DEFAULT NULL,
-  `route_id` int(11) DEFAULT NULL,
-  `frequency_id` int(11) DEFAULT NULL,
-  `frequency_other` varchar(255) DEFAULT NULL,
-  `drug_name` varchar(100) DEFAULT NULL,
-  `brand_name` varchar(100) DEFAULT NULL,
-  `batch_no` varchar(255) DEFAULT NULL,
-  `manufacturer` varchar(255) DEFAULT NULL,
-  `dose` varchar(100) DEFAULT NULL,
-  `start_date` date DEFAULT NULL,
-  `stop_date` date DEFAULT NULL,
-  `indication` varchar(100) DEFAULT NULL,
-  `suspected_drug` varchar(100) DEFAULT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sadr_reaction`
---
-
-CREATE TABLE `sadr_reaction` (
-  `id` int(11) NOT NULL,
-  `sadr_id` int(11) DEFAULT NULL,
-  `reaction` text,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
+LOCK TABLES `sadrs` WRITE;
+/*!40000 ALTER TABLE `sadrs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sadrs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `saefis`
 --
 
+DROP TABLE IF EXISTS `saefis`;
+
 CREATE TABLE `saefis` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `saefi_id` int(11) DEFAULT NULL,
-  `initial_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `saefi_id` int DEFAULT NULL,
+  `initial_id` int DEFAULT NULL,
   `messageid` varchar(55) DEFAULT NULL,
   `vigiflow_ref` varchar(255) DEFAULT NULL,
   `vigiflow_date` varchar(255) DEFAULT NULL,
   `webradr_ref` varchar(255) DEFAULT NULL,
   `webradr_date` varchar(255) DEFAULT NULL,
-  `province_id` int(11) DEFAULT NULL,
+  `province_id` int DEFAULT NULL,
   `district` varchar(255) DEFAULT NULL,
   `aefi_report_ref` varchar(255) DEFAULT NULL,
   `name_of_vaccination_site` varchar(255) DEFAULT NULL,
   `reference_no` varchar(50) DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `place_vaccination` varchar(101) DEFAULT NULL,
   `place_vaccination_other` varchar(250) DEFAULT NULL,
@@ -1807,7 +2487,7 @@ CREATE TABLE `saefis` (
   `report_date` date DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `complete_date` date DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `telephone` varchar(40) DEFAULT NULL,
   `mobile` varchar(40) DEFAULT NULL,
   `reporter_email` varchar(100) DEFAULT NULL,
@@ -1815,9 +2495,9 @@ CREATE TABLE `saefis` (
   `gender` varchar(20) DEFAULT NULL,
   `patient_address` varchar(255) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
-  `age_at_onset_years` int(11) DEFAULT NULL,
-  `age_at_onset_months` int(11) DEFAULT NULL,
-  `age_at_onset_days` int(11) DEFAULT NULL,
+  `age_at_onset_years` int DEFAULT NULL,
+  `age_at_onset_months` int DEFAULT NULL,
+  `age_at_onset_days` int DEFAULT NULL,
   `age_group` varchar(255) DEFAULT NULL,
   `symptom_date` datetime DEFAULT NULL,
   `hospitalization_date` date DEFAULT NULL,
@@ -1851,7 +2531,7 @@ CREATE TABLE `saefis` (
   `pregnant_weeks` varchar(50) DEFAULT NULL,
   `breastfeeding` varchar(100) DEFAULT NULL,
   `infant` varchar(100) DEFAULT NULL,
-  `birth_weight` int(10) DEFAULT NULL,
+  `birth_weight` int DEFAULT NULL,
   `delivery_procedure` varchar(205) DEFAULT NULL,
   `delivery_procedure_specify` text,
   `source_examination` tinyint(1) DEFAULT NULL,
@@ -1884,14 +2564,14 @@ CREATE TABLE `saefis` (
   `vaccine_handling_specify` text,
   `vaccine_administered` varchar(255) DEFAULT NULL,
   `vaccine_administered_specify` text,
-  `vaccinated_vial` int(11) DEFAULT NULL,
-  `vaccinated_session` int(11) DEFAULT NULL,
-  `vaccinated_locations` int(11) DEFAULT NULL,
+  `vaccinated_vial` int DEFAULT NULL,
+  `vaccinated_session` int DEFAULT NULL,
+  `vaccinated_locations` int DEFAULT NULL,
   `vaccinated_locations_specify` text,
   `vaccinated_cluster` varchar(255) DEFAULT NULL,
-  `vaccinated_cluster_number` int(11) DEFAULT NULL,
+  `vaccinated_cluster_number` int DEFAULT NULL,
   `vaccinated_cluster_vial` varchar(255) DEFAULT NULL,
-  `vaccinated_cluster_vial_number` int(11) DEFAULT NULL,
+  `vaccinated_cluster_vial_number` int DEFAULT NULL,
   `syringes_used` varchar(255) DEFAULT NULL,
   `syringes_used_specify` varchar(255) DEFAULT NULL,
   `syringes_used_other` varchar(255) DEFAULT NULL,
@@ -1925,26 +2605,26 @@ CREATE TABLE `saefis` (
   `transport_findings` text,
   `similar_events` varchar(55) DEFAULT NULL,
   `similar_events_describe` text,
-  `similar_events_episodes` int(11) DEFAULT NULL,
-  `affected_vaccinated` int(11) DEFAULT NULL,
-  `affected_not_vaccinated` int(11) DEFAULT NULL,
+  `similar_events_episodes` int DEFAULT NULL,
+  `affected_vaccinated` int DEFAULT NULL,
+  `affected_not_vaccinated` int DEFAULT NULL,
   `affected_unknown` varchar(255) DEFAULT NULL,
   `community_comments` text,
   `relevant_findings` text,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `action_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `submitted` int(2) NOT NULL DEFAULT '0',
+  `submitted` int NOT NULL DEFAULT '0',
   `resubmit` varchar(15) DEFAULT NULL,
   `submitted_date` date DEFAULT NULL,
   `report_type` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT 'UnSubmitted',
-  `active` tinyint(2) DEFAULT '1',
-  `emails` tinyint(2) DEFAULT '0',
+  `active` tinyint DEFAULT '1',
+  `emails` tinyint DEFAULT '0',
   `signature` tinyint(1) DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT '0',
-  `copied` tinyint(4) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `deleted` tinyint DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `reporter_date` date DEFAULT NULL,
@@ -1966,28 +2646,39 @@ CREATE TABLE `saefis` (
   `time_of_first_symptom` varchar(255) DEFAULT NULL,
   `vaccine_name` varchar(255) DEFAULT NULL,
   `date_first_reported` varchar(255) DEFAULT NULL,
-  `date_form_filled` varchar(255) DEFAULT NULL
+  `date_form_filled` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `saefis`
+--
+
+LOCK TABLES `saefis` WRITE;
+/*!40000 ALTER TABLE `saefis` DISABLE KEYS */;
+/*!40000 ALTER TABLE `saefis` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `saes`
 --
 
+DROP TABLE IF EXISTS `saes`;
+
 CREATE TABLE `saes` (
-  `id` int(11) NOT NULL,
-  `application_id` int(11) DEFAULT NULL,
-  `sae_id` int(11) DEFAULT NULL,
-  `reference_no` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `form_type` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `patient_initials` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `country_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `application_id` int DEFAULT NULL,
+  `sae_id` int DEFAULT NULL,
+  `reference_no` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `form_type` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `user_id` int DEFAULT NULL,
+  `patient_initials` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `country_id` int DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
-  `age_years` int(11) DEFAULT NULL,
-  `gender` varchar(25) CHARACTER SET latin1 DEFAULT NULL,
-  `causality` varchar(250) CHARACTER SET latin1 DEFAULT NULL,
+  `age_years` int DEFAULT NULL,
+  `gender` varchar(25) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `causality` varchar(250) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
   `enrollment_date` date DEFAULT NULL,
   `administration_date` date DEFAULT NULL,
   `latest_date` date DEFAULT NULL,
@@ -2008,45 +2699,67 @@ CREATE TABLE `saes` (
   `source_health_professional` tinyint(1) DEFAULT '0',
   `report_date` date DEFAULT NULL,
   `submitted_date` datetime DEFAULT NULL,
-  `report_type` varchar(30) CHARACTER SET latin1 DEFAULT 'Initial',
-  `approved` tinyint(2) DEFAULT '0',
-  `approved_by` int(11) DEFAULT NULL,
-  `email_address` varchar(255) CHARACTER SET latin1 NOT NULL,
-  `reporter_name` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `reporter_phone` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `reporter_email` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `report_type` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT 'Initial',
+  `approved` tinyint DEFAULT '0',
+  `approved_by` int DEFAULT NULL,
+  `email_address` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `reporter_name` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `reporter_phone` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `reporter_email` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `saes`
+--
+
+LOCK TABLES `saes` WRITE;
+/*!40000 ALTER TABLE `saes` DISABLE KEYS */;
+/*!40000 ALTER TABLE `saes` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sites`
 --
 
+DROP TABLE IF EXISTS `sites`;
+
 CREATE TABLE `sites` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `description` varchar(255) DEFAULT NULL,
   `content` longtext,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `sites`
+--
+
+LOCK TABLES `sites` WRITE;
+/*!40000 ALTER TABLE `sites` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sites` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sub_counties`
 --
 
+DROP TABLE IF EXISTS `sub_counties`;
+
 CREATE TABLE `sub_counties` (
-  `id` int(11) NOT NULL,
-  `county_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `county_id` int DEFAULT NULL,
   `sub_county_name` varchar(50) DEFAULT NULL,
   `county_name` varchar(50) DEFAULT NULL,
   `Province` varchar(50) DEFAULT NULL,
@@ -2056,21 +2769,32 @@ CREATE TABLE `sub_counties` (
   `CAWards` varchar(50) DEFAULT NULL,
   `MainEthnicGroup` varchar(50) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `sub_counties`
+--
+
+LOCK TABLES `sub_counties` WRITE;
+/*!40000 ALTER TABLE `sub_counties` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sub_counties` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `suspected_drugs`
 --
 
+DROP TABLE IF EXISTS `suspected_drugs`;
+
 CREATE TABLE `suspected_drugs` (
-  `id` int(11) NOT NULL,
-  `sae_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `sae_id` int DEFAULT NULL,
   `generic_name` varchar(100) DEFAULT NULL,
   `dose` varchar(100) DEFAULT NULL,
-  `route_id` int(11) DEFAULT NULL,
+  `route_id` int DEFAULT NULL,
   `indication` varchar(255) DEFAULT NULL,
   `date_from` date DEFAULT NULL,
   `date_to` date DEFAULT NULL,
@@ -2080,39 +2804,60 @@ CREATE TABLE `suspected_drugs` (
   `deleted` tinyint(1) NOT NULL DEFAULT '0',
   `deleted_date` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `suspected_drugs`
+--
+
+LOCK TABLES `suspected_drugs` WRITE;
+/*!40000 ALTER TABLE `suspected_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `suspected_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `tmp_drugs`
 --
 
+DROP TABLE IF EXISTS `tmp_drugs`;
+
 CREATE TABLE `tmp_drugs` (
-  `ectd_product_id` int(5) DEFAULT NULL,
+  `ectd_product_id` int DEFAULT NULL,
   `product_trade_name` varchar(132) DEFAULT NULL,
   `product_registration_no` varchar(49) DEFAULT NULL,
   `local_foreign` varchar(7) DEFAULT NULL,
   `inn_of_api` varchar(286) DEFAULT NULL,
   `api_strength_per_dosage` varchar(271) DEFAULT NULL,
-  `AL` int(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `AL` int DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `tmp_drugs`
+--
+
+LOCK TABLES `tmp_drugs` WRITE;
+/*!40000 ALTER TABLE `tmp_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tmp_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `transfusions`
 --
 
+DROP TABLE IF EXISTS `transfusions`;
+
 CREATE TABLE `transfusions` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `pqmp_id` int(11) DEFAULT NULL,
-  `transfusion_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int DEFAULT NULL,
+  `pqmp_id` int DEFAULT NULL,
+  `transfusion_id` int DEFAULT NULL,
   `reference_no` varchar(255) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
-  `designation_id` int(11) DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
+  `designation_id` int DEFAULT NULL,
   `form_type` varchar(25) DEFAULT NULL,
   `patient_name` varchar(100) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
@@ -2192,10 +2937,10 @@ CREATE TABLE `transfusions` (
   `reporter_email` varchar(100) DEFAULT NULL,
   `reporter_phone` varchar(100) DEFAULT NULL,
   `report_type` varchar(55) DEFAULT NULL,
-  `submitted` tinyint(2) DEFAULT '0',
+  `submitted` tinyint DEFAULT '0',
   `submitted_date` datetime DEFAULT NULL,
-  `copied` tinyint(2) DEFAULT '0',
-  `archived` tinyint(4) DEFAULT '0',
+  `copied` tinyint DEFAULT '0',
+  `archived` tinyint DEFAULT '0',
   `archived_date` datetime DEFAULT NULL,
   `active` tinyint(1) DEFAULT '1',
   `created` datetime DEFAULT NULL,
@@ -2203,19 +2948,19 @@ CREATE TABLE `transfusions` (
   `reporter_date` date DEFAULT NULL,
   `person_submitting` varchar(55) DEFAULT NULL,
   `reporter_name_diff` varchar(255) DEFAULT NULL,
-  `reporter_designation_diff` int(11) DEFAULT NULL,
+  `reporter_designation_diff` int DEFAULT NULL,
   `reporter_email_diff` varchar(255) DEFAULT NULL,
   `reporter_phone_diff` varchar(255) DEFAULT NULL,
   `reporter_date_diff` date DEFAULT NULL,
-  `assigned_to` int(11) DEFAULT NULL,
-  `assigned_by` int(11) DEFAULT NULL,
+  `assigned_to` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
   `assigned_date` datetime DEFAULT NULL,
   `clinic_venue` varchar(155) DEFAULT NULL,
-  `specimens_post_transfusion` tinyint(4) DEFAULT NULL,
-  `specimens_edta_blood` tinyint(4) DEFAULT NULL,
-  `specimens_void_urine` tinyint(4) DEFAULT NULL,
-  `specimens_blood_reacted` tinyint(4) DEFAULT NULL,
-  `specimens_blood_bags` tinyint(4) DEFAULT NULL,
+  `specimens_post_transfusion` tinyint DEFAULT NULL,
+  `specimens_edta_blood` tinyint DEFAULT NULL,
+  `specimens_void_urine` tinyint DEFAULT NULL,
+  `specimens_blood_reacted` tinyint DEFAULT NULL,
+  `specimens_blood_bags` tinyint DEFAULT NULL,
   `clinic_code` varchar(55) DEFAULT NULL,
   `donor_number` varchar(55) DEFAULT NULL,
   `national_number` varchar(55) DEFAULT NULL,
@@ -2228,26 +2973,37 @@ CREATE TABLE `transfusions` (
   `venepuncture` varchar(85) DEFAULT NULL,
   `hematoma` varchar(85) DEFAULT NULL,
   `faint` varchar(55) DEFAULT NULL,
-  `deleted` tinyint(4) DEFAULT '0',
-  `deleted_date` datetime DEFAULT NULL
+  `deleted` tinyint DEFAULT '0',
+  `deleted_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `transfusions`
+--
+
+LOCK TABLES `transfusions` WRITE;
+/*!40000 ALTER TABLE `transfusions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transfusions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
+
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `designation_id` int(11) DEFAULT NULL,
-  `county_id` int(11) DEFAULT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `designation_id` int DEFAULT NULL,
+  `county_id` int DEFAULT NULL,
   `username` varchar(255) NOT NULL,
   `password` char(140) NOT NULL,
   `confirm_password` char(140) DEFAULT NULL,
   `name` varchar(100) DEFAULT NULL,
   `email` char(50) NOT NULL DEFAULT '',
-  `role_id` int(11) NOT NULL,
+  `role_id` int NOT NULL,
   `name_of_institution` varchar(100) DEFAULT NULL,
   `institution_address` varchar(100) DEFAULT NULL,
   `institution_code` varchar(100) DEFAULT NULL,
@@ -2255,8 +3011,8 @@ CREATE TABLE `users` (
   `institution_contact` varchar(100) DEFAULT NULL,
   `ward` varchar(100) DEFAULT NULL,
   `phone_no` varchar(100) DEFAULT NULL,
-  `forgot_password` tinyint(2) DEFAULT '0',
-  `initial_email` tinyint(2) DEFAULT '0',
+  `forgot_password` tinyint DEFAULT '0',
+  `initial_email` tinyint DEFAULT '0',
   `is_active` tinyint(1) DEFAULT '0',
   `is_admin` tinyint(1) DEFAULT '0',
   `deleted` tinyint(1) DEFAULT '0',
@@ -2266,34 +3022,57 @@ CREATE TABLE `users` (
   `user_type` varchar(55) DEFAULT NULL,
   `sponsor_email` varchar(55) DEFAULT NULL,
   `health_program` varchar(105) DEFAULT NULL,
-  `active_date` date DEFAULT NULL
+  `active_date` date DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `vaccines`
 --
 
+DROP TABLE IF EXISTS `vaccines`;
+
 CREATE TABLE `vaccines` (
-  `id` int(11) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `vaccine_name` varchar(55) DEFAULT NULL,
   `description` text,
   `health_program` varchar(255) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT '0',
-  `deleted_date` datetime DEFAULT NULL
+  `deleted_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- --------------------------------------------------------
+
+--
+-- Dumping data for table `vaccines`
+--
+
+LOCK TABLES `vaccines` WRITE;
+/*!40000 ALTER TABLE `vaccines` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vaccines` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `who_drugs`
 --
 
+DROP TABLE IF EXISTS `who_drugs`;
+
 CREATE TABLE `who_drugs` (
-  `id` int(10) NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
   `MedId` varchar(35) DEFAULT NULL,
   `drug_record_number` varchar(255) DEFAULT NULL,
   `sequence_no_1` varchar(2) DEFAULT NULL,
@@ -2317,795 +3096,27 @@ CREATE TABLE `who_drugs` (
   `create_date` varchar(8) DEFAULT NULL,
   `date_changed` varchar(8) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `acos`
---
-ALTER TABLE `acos`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aefis`
---
-ALTER TABLE `aefis`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aefi_descriptions`
---
-ALTER TABLE `aefi_descriptions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aefi_list_of_vaccines`
---
-ALTER TABLE `aefi_list_of_vaccines`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aefi_reactions`
---
-ALTER TABLE `aefi_reactions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aggregates`
---
-ALTER TABLE `aggregates`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aggregate_list_of_signals`
---
-ALTER TABLE `aggregate_list_of_signals`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aros`
---
-ALTER TABLE `aros`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `aros_acos`
---
-ALTER TABLE `aros_acos`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ARO_ACO_KEY` (`aro_id`,`aco_id`);
-
---
--- Indexes for table `attachments`
---
-ALTER TABLE `attachments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `attachments_old`
---
-ALTER TABLE `attachments_old`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `authorities`
---
-ALTER TABLE `authorities`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `auto_drugs`
---
-ALTER TABLE `auto_drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `ce2bs`
---
-ALTER TABLE `ce2bs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `ce2b_list_of_drugs`
---
-ALTER TABLE `ce2b_list_of_drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `ce2b_reaction`
---
-ALTER TABLE `ce2b_reaction`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `comments`
---
-ALTER TABLE `comments`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `concomittant_drugs`
---
-ALTER TABLE `concomittant_drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `counties`
---
-ALTER TABLE `counties`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `countries`
---
-ALTER TABLE `countries`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `cron_tasks`
---
-ALTER TABLE `cron_tasks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `designations`
---
-ALTER TABLE `designations`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `devices`
---
-ALTER TABLE `devices`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `disproportionalities`
---
-ALTER TABLE `disproportionalities`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `doses`
---
-ALTER TABLE `doses`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `drugs`
---
-ALTER TABLE `drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `drug_dictionaries`
---
-ALTER TABLE `drug_dictionaries`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `drug_dictionaries_old`
---
-ALTER TABLE `drug_dictionaries_old`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `facility_codes`
---
-ALTER TABLE `facility_codes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `feedbacks`
---
-ALTER TABLE `feedbacks`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `frequencies`
---
-ALTER TABLE `frequencies`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `roles`
---
-ALTER TABLE `roles`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `help_infos`
---
-ALTER TABLE `help_infos`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `khis`
---
-ALTER TABLE `khis`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `list_of_devices`
---
-ALTER TABLE `list_of_devices`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `meddras`
---
-ALTER TABLE `meddras`
-  ADD KEY `llt_name` (`llt_name`);
-
---
--- Indexes for table `medications`
---
-ALTER TABLE `medications`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `medication_products`
---
-ALTER TABLE `medication_products`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `messages`
---
-ALTER TABLE `messages`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `messages_delete`
---
-ALTER TABLE `messages_delete`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `notifications`
---
-ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `padrs`
---
-ALTER TABLE `padrs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `padr_list_of_medicines`
---
-ALTER TABLE `padr_list_of_medicines`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pints`
---
-ALTER TABLE `pints`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pockets`
---
-ALTER TABLE `pockets`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `pqmps`
---
-ALTER TABLE `pqmps`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `queued_tasks`
---
-ALTER TABLE `queued_tasks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `priority` (`priority`);
-
---
--- Indexes for table `reminders`
---
-ALTER TABLE `reminders`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `reviews`
---
-ALTER TABLE `reviews`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `routes`
---
-ALTER TABLE `routes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadrs`
---
-ALTER TABLE `sadrs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadr_descriptions`
---
-ALTER TABLE `sadr_descriptions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadr_followups`
---
-ALTER TABLE `sadr_followups`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadr_list_of_drugs`
---
-ALTER TABLE `sadr_list_of_drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadr_list_of_medicines`
---
-ALTER TABLE `sadr_list_of_medicines`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sadr_reaction`
---
-ALTER TABLE `sadr_reaction`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `saefis`
---
-ALTER TABLE `saefis`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `saes`
---
-ALTER TABLE `saes`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sites`
---
-ALTER TABLE `sites`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `sub_counties`
---
-ALTER TABLE `sub_counties`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `suspected_drugs`
---
-ALTER TABLE `suspected_drugs`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `transfusions`
---
-ALTER TABLE `transfusions`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
--- Indexes for table `vaccines`
---
-ALTER TABLE `vaccines`
-  ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `who_drugs`
+-- Dumping data for table `who_drugs`
 --
-ALTER TABLE `who_drugs`
-  ADD PRIMARY KEY (`id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `acos`
---
-ALTER TABLE `acos`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aefis`
---
-ALTER TABLE `aefis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aefi_descriptions`
---
-ALTER TABLE `aefi_descriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aefi_list_of_vaccines`
---
-ALTER TABLE `aefi_list_of_vaccines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aefi_reactions`
---
-ALTER TABLE `aefi_reactions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aggregates`
---
-ALTER TABLE `aggregates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aggregate_list_of_signals`
---
-ALTER TABLE `aggregate_list_of_signals`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aros`
---
-ALTER TABLE `aros`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `aros_acos`
---
-ALTER TABLE `aros_acos`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attachments`
---
-ALTER TABLE `attachments`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `attachments_old`
---
-ALTER TABLE `attachments_old`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `authorities`
---
-ALTER TABLE `authorities`
-  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `auto_drugs`
---
-ALTER TABLE `auto_drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ce2bs`
---
-ALTER TABLE `ce2bs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ce2b_list_of_drugs`
---
-ALTER TABLE `ce2b_list_of_drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `ce2b_reaction`
---
-ALTER TABLE `ce2b_reaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `comments`
---
-ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `concomittant_drugs`
---
-ALTER TABLE `concomittant_drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `counties`
---
-ALTER TABLE `counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `countries`
---
-ALTER TABLE `countries`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cron_tasks`
---
-ALTER TABLE `cron_tasks`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `designations`
---
-ALTER TABLE `designations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `devices`
---
-ALTER TABLE `devices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `disproportionalities`
---
-ALTER TABLE `disproportionalities`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `doses`
---
-ALTER TABLE `doses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `drugs`
---
-ALTER TABLE `drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `drug_dictionaries`
---
-ALTER TABLE `drug_dictionaries`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `drug_dictionaries_old`
---
-ALTER TABLE `drug_dictionaries_old`
-  MODIFY `id` mediumint(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `facility_codes`
---
-ALTER TABLE `facility_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `feedbacks`
---
-ALTER TABLE `feedbacks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `frequencies`
---
-ALTER TABLE `frequencies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `roles`
---
-ALTER TABLE `roles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `help_infos`
---
-ALTER TABLE `help_infos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `khis`
---
-ALTER TABLE `khis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `list_of_devices`
---
-ALTER TABLE `list_of_devices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `medications`
---
-ALTER TABLE `medications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `medication_products`
---
-ALTER TABLE `medication_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `messages`
---
-ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `messages_delete`
---
-ALTER TABLE `messages_delete`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `notifications`
---
-ALTER TABLE `notifications`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `padrs`
---
-ALTER TABLE `padrs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `padr_list_of_medicines`
---
-ALTER TABLE `padr_list_of_medicines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pints`
---
-ALTER TABLE `pints`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pockets`
---
-ALTER TABLE `pockets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pqmps`
---
-ALTER TABLE `pqmps`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `queued_tasks`
---
-ALTER TABLE `queued_tasks`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reminders`
---
-ALTER TABLE `reminders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `reviews`
---
-ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `routes`
---
-ALTER TABLE `routes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadrs`
---
-ALTER TABLE `sadrs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadr_descriptions`
---
-ALTER TABLE `sadr_descriptions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadr_followups`
---
-ALTER TABLE `sadr_followups`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadr_list_of_drugs`
---
-ALTER TABLE `sadr_list_of_drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadr_list_of_medicines`
---
-ALTER TABLE `sadr_list_of_medicines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sadr_reaction`
---
-ALTER TABLE `sadr_reaction`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `saefis`
---
-ALTER TABLE `saefis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `saes`
---
-ALTER TABLE `saes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sites`
---
-ALTER TABLE `sites`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `sub_counties`
---
-ALTER TABLE `sub_counties`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `suspected_drugs`
---
-ALTER TABLE `suspected_drugs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `transfusions`
---
-ALTER TABLE `transfusions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `vaccines`
---
-ALTER TABLE `vaccines`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `who_drugs`
---
-ALTER TABLE `who_drugs`
-  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
-COMMIT;
+LOCK TABLES `who_drugs` WRITE;
+/*!40000 ALTER TABLE `who_drugs` DISABLE KEYS */;
+/*!40000 ALTER TABLE `who_drugs` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-08-14 14:18:43

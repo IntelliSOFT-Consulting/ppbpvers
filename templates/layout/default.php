@@ -1,4 +1,6 @@
 <?php
+// In src/Template/Layout/default.php or similar
+echo $this->Html->meta('csrfToken', $this->request->getAttribute('csrfToken'), ['block' => true]);
 
 $cakeDescription = __d('cake_dev', 'PvERS: the Pharmacovigilance Electronic Reporting System');
 ?>
