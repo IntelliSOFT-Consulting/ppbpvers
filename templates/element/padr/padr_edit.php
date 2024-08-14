@@ -43,9 +43,9 @@ echo $this->Html->css('padr', array('inline' => false));
                     ));
 
                     echo $this->Form->control('county_id', array(
-                        'class' => 'set-control',
+                        'class' => 'set-control county',
                         'label' => array(
-                            'class' => 'control-label required',
+                            'class' => 'control-label required ',
                             'text' => 'County <span style="color:red;">*</span>',
                             'escape' => false,
 
@@ -67,9 +67,9 @@ echo $this->Html->css('padr', array('inline' => false));
                         'options' => array('Self' => 'Self', 'Parent' => 'Parent', 'Guardian' => 'Guardian', 'Other' => 'Other')
                     ));
                     echo $this->Form->control('sub_county_id', array(
-                        'class' => 'set-control',
+                        'class' => 'set-control sub_county',
                         'label' => array(
-                            'class' => 'control-label required',
+                            'class' => 'control-label required ',
                             'text' => 'Sub County <span style="color:red;">*</span>',
                             'escape' => false,
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -70,11 +71,20 @@ class PadrsTable extends Table
         ]);
         $this->hasMany('PadrListOfMedicines', [
             'foreignKey' => 'padr_id',
-            'cascadeCallbacks' => true, 
+            'cascadeCallbacks' => true,
         ]);
         $this->hasMany('Padrs', [
             'foreignKey' => 'padr_id',
-            'cascadeCallbacks' => true, 
+            'cascadeCallbacks' => true,
+        ]);
+        $this->hasMany('Attachments', [
+            'foreignKey' => 'foreign_key',
+            'dependent' => true,
+            'cascadeCallbacks' => true,
+            'conditions' => [
+                'Attachments.model' => 'Padr',
+                //  'Attachments.group' => 'attachment'
+            ],
         ]);
     }
 
@@ -94,13 +104,19 @@ class PadrsTable extends Table
             ->integer('user_id')
             ->allowEmptyString('user_id');
 
+
+        $validator
+            ->scalar('reporter_name')
+            ->maxLength('reporter_name', 100)
+            ->notEmptyString('reporter_name', 'Please provide reporter name');
+
         $validator
             ->integer('county_id')
-            ->allowEmptyString('county_id');
+            ->notEmptyString('county_id', 'Please provide county');
 
         $validator
             ->integer('sub_county_id')
-            ->allowEmptyString('sub_county_id');
+            ->notEmptyString('sub_county_id', 'Please select a sub county');
 
         $validator
             ->integer('designation_id')
@@ -324,10 +340,6 @@ class PadrsTable extends Table
             ->scalar('any_other_comment')
             ->allowEmptyString('any_other_comment');
 
-        $validator
-            ->scalar('reporter_name')
-            ->maxLength('reporter_name', 100)
-            ->allowEmptyString('reporter_name');
 
         $validator
             ->scalar('reporter_email')
@@ -338,9 +350,17 @@ class PadrsTable extends Table
             ->scalar('reporter_phone')
             ->maxLength('reporter_phone', 100)
             ->allowEmptyString('reporter_phone');
+        // Custom validation rule to check that at least one field is filled
+        $validator->add('reporter_email', 'custom', [
+            'rule' => [$this, 'validateReporterContact'],
+            'message' => 'Please provide either an email or a phone number.'
+        ]);
 
-        $validator
-            ->allowEmptyString('submitted');
+        $validator->add('reporter_phone', 'custom', [
+            'rule' => [$this, 'validateReporterContact'],
+            'message' => 'Please provide either an email or a phone number.'
+        ]);
+
 
         $validator
             ->dateTime('submitted_date')
@@ -429,6 +449,16 @@ class PadrsTable extends Table
         return $validator;
     }
 
+
+    // Custom validation function
+    public function validateReporterContact($value, $context)
+    {
+        $reporterEmail = $context['data']['reporter_email'] ?? null;
+        $reporterPhone = $context['data']['reporter_phone'] ?? null;
+
+        // Validation passes if either reporter_email or reporter_phone is provided
+        return !empty($reporterEmail) || !empty($reporterPhone);
+    }
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.

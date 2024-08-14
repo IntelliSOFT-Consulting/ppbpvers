@@ -105,9 +105,15 @@ $(document).ready(function () {
             $(".diff:input").prop("disabled", true);
         }
     });
-    if ($("#SadrPersonSubmittingNo").is(":checked")) {
+    if ($("#PersonSubmittingNo").is(":checked")) {
         $(".diff:input").prop("disabled", true);
     }
+
+    $('.date-pick-field').datepicker({
+        dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
+        changeMonth: true,
+        changeYear: true,
+    });
 
     //If Male disable
 

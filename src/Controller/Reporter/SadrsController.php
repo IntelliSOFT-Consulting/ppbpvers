@@ -92,7 +92,7 @@ class SadrsController extends AppController
     public function edit($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => [],
+            'contain' => ['Attachments'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
@@ -101,11 +101,15 @@ class SadrsController extends AppController
                 $validate = 'first';
                 debug("submitting....");
             }
-            // debug($this->request->getData());
-            // exit; 
+           
             $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData(), [
-                'associated' => ['Attachment']
+                'associated' => [
+                    // 'Attachments' => ['validate' => ($this->request->getData('submitted') == 2)]
+                ]
             ]);
+            debug($this->request->getData());
+            debug($sadr);
+            exit; 
             if ($this->Sadrs->save($sadr, array('validate' => $validate, 'deep' => true))) {
                 if (!empty($this->request->getData('submitReport'))) {
                     $this->Sadrs->saveField('submitted', 2);
@@ -200,6 +204,9 @@ class SadrsController extends AppController
                 $this->Flash->success(__('The SADR has been saved'));
                 $this->redirect($this->referer());
             } else {
+                 $errors = $sadr->getErrors(); 
+            debug($errors);
+            exit;
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
             }
 

@@ -13,23 +13,23 @@ $(function() {
             alert("Sorry, cant save more than Four Attachments at a time!");
         }
     });
-    function constructATr(intId) {
+    function constructATr(intId) { 
         var intId2 = intId + 1;
         var trWrapper = '\
         <tr class="fieldwrapper" id="field{i}">\
         <td>{i2}</td>\
         <td><div class="control-group">\
-            <input type="hidden" id="Attachment{i}Model" name="data[Attachment][{i}][model]" value="'+$('#buildattachmentsform').attr("data-model")+'">\
-            <input type="hidden" id="Attachment{i}Group" name="data[Attachment][{i}][group]" value="'+$('#buildattachmentsform').attr("data-group")+'">\
-            <input type="hidden" id="Attachment{i}Dirname" name="data[Attachment][{i}][dirname]">\
-            <input type="hidden" id="Attachment{i}Basename" name="data[Attachment][{i}][basename]">\
-            <input type="hidden" id="Attachment{i}Checksum" name="data[Attachment][{i}][checksum]">\
-            <input type="hidden" id="Attachment{i}Id" class="" \
-                name="data[Attachment][{i}][id]"><input type="file" id="Attachment{i}File" class="span12 input-file" \
-                name="data[Attachment][{i}][file]"  data-items="4"  autocomplete="off" >\
+            <input type="hidden" id="attachments{i}Model" name="attachments[{i}][model]" value="'+$('#buildattachmentsform').attr("data-model")+'">\
+           <input type="hidden" id="attachments{i}Dirname" name="attachments[{i}][dirname]">\
+             <input type="hidden" id="attachments{i}Foreign_Key" name="attachments[{i}][foreign_key]" value="0">\
+            <input type="hidden" id="attachments{i}Basename" name="attachments[{i}][basename]">\
+            <input type="hidden" id="attachments{i}Checksum" name="attachments[{i}][checksum]">\
+            <input type="hidden" id="attachments{i}Id" class="" \
+                name="attachments[{i}][id]"><input type="file" id="attachments{i}File" class="span12 input-file" \
+                name="attachments[{i}][file]"  data-items="4"  autocomplete="off" >\
         </div></td>\
-        <td><div class="control-group"><textarea id="Attachment{i}Description"  rows="1" \
-               name="data[Attachment][{i}][description]" class="span11"></textarea></div></td>\
+        <td><div class="control-group"><textarea id="attachments{i}Description"  rows="1" \
+               name="attachments[{i}][description]" class="span11"></textarea></div></td>\
         <td><button  type="button" class="btn btn-mini remove-row tiptip" data-original-title="Remove file">\
                       &nbsp;<i class="icon-minus"></i>&nbsp;</button></td></tr>';
 

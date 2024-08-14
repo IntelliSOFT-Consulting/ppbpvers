@@ -27,7 +27,8 @@ class PadrsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow([
-            'add','view'
+            'add',
+            'view'
         ]);
     }
     /**
@@ -54,10 +55,11 @@ class PadrsController extends AppController
      */
     public function view($id = null)
     {
-        $padr = $this->Padrs->get($id, [
+        $padr = $this->Padrs->find('all', [
             'contain' => ['Users', 'Counties', 'SubCounties', 'Designations', 'Padrs', 'PadrListOfMedicines'],
-        ]);
-// 
+            'conditions' => ['Padrs.token' => $id] // Replace 'other_column' with the actual column name
+        ])->firstOrFail();
+        // 
         $this->set(compact('padr'));
     }
 
@@ -69,15 +71,18 @@ class PadrsController extends AppController
     public function add()
     {
         $padr = $this->Padrs->newEmptyEntity();
-        if ($this->request->is('post')) { 
-        //    debug($this->request->getData());
-        //    exit;
+        if ($this->request->is('post')) {
+           
+
             $padr = $this->Padrs->patchEntity($padr, $this->request->getData(), [
-                'associated' => ['PadrListOfMedicines']
+                'associated' => ['PadrListOfMedicines', 'Attachments']
             ]);
+             // debug($this->request->getData());
+            // debug($padr);
+            // exit;
             if ($this->Padrs->save($padr)) {
 
-                $token = Security::hash(strval($padr['id'])); 
+                $token = Security::hash(strval($padr['id']));
                 $dataTable = $this->getTableLocator()->get('padrs');
                 // Update the field using the query builder
                 $result = $dataTable->query()
@@ -85,10 +90,10 @@ class PadrsController extends AppController
                     ->set(['token' => $token])
                     ->where(['id' => $padr['id']])
                     ->execute();
-                 
+
                 $this->Flash->success(__('The padr has been saved.'));
 
-                return $this->redirect(['action' => 'view',$padr['id']]);
+                return $this->redirect(['action' => 'view', $token]);
             }
             // $errors = $padr->getErrors();
             // debug($this->request->getData());
@@ -97,10 +102,9 @@ class PadrsController extends AppController
             $this->Flash->error(__('The padr could not be saved. Please, try again.'));
         }
         $users = $this->Padrs->Users->find('list', ['limit' => 200])->all();
-        $counties = $this->Padrs->Counties->find('list', ['limit' => 200])->all();
-        $subCounties = $this->Padrs->SubCounties->find('list', ['limit' => 200])->all();
+        $counties = $this->Padrs->Counties->find('list', ['limit' => 200])->all(); 
         $designations = $this->Padrs->Designations->find('list', ['limit' => 200])->all();
-        $this->set(compact('padr', 'users', 'counties', 'subCounties', 'designations'));
+        $this->set(compact('padr', 'users', 'counties', 'designations'));
     }
 
     /**

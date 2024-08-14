@@ -4,30 +4,40 @@ $(function () {
 
     //Hapa Kazi tu
     reloadPublicmediCations();
-    function reloadPublicmediCations() {
-        var dates2 = $(".date-pick-from, .date-pick-to").datepicker({
-            minDate: "-100Y",
-            maxDate: "-0D",
-            dateFormat: "dd-mm-yy",
-            showButtonPanel: true,
+    function reloadPublicmediCations() { 
+
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
             changeMonth: true,
             changeYear: true,
-            showAnim: "show",
+            maxDate: new Date()
+        
         });
-
-        $(".date-pick-field").datepicker({
-            minDate: "-100Y",
-            dateFormat: "dd-mm-yy",
+        $('.datepicker-expiry').datepicker({
+            dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
+            changeMonth: true,
+            changeYear: true, 
+        
         });
     }
 
-    $(".datepicker").datepicker({
-        minDate: "-100Y",
-        dateFormat: "dd-mm-yy"
+    $('.datepicker').datepicker({
+        dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
+        changeMonth: true,
+        changeYear: true,
+        maxDate: new Date()
+    
+    });
+    $('.datepicker-expiry').datepicker({
+        dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
+        changeMonth: true,
+        changeYear: true, 
+    
     });
     
     // incremental development
     $("#addPadrListOfMedicine").click(function () {
+        
         
         if ($("#listOfPadrListOfMedicinesTable tbody td.sailor").length > 0) {
             var intId = parseInt(
@@ -68,14 +78,14 @@ $(function () {
                   <tr>\
                     <td>When did you start taking/using the medicine/vaccine/device?</td>\
                     <td>\
-                        <input name="padr_list_of_medicines[{i}][start_date]" class="span11 date-pick-from" type="text" id="padr_list_of_medicines{i}StartDate"> </td>\
+                        <input name="padr_list_of_medicines[{i}][start_date]" class="span11  datepicker" type="text" id="padr_list_of_medicines{i}StartDate"> </td>\
                     <td>When did you stop taking/using the medicine/vaccine/device?</td>\
                     <td>\
-                        <input name="padr_list_of_medicines[{i}][end_date]" class="span11 date-pick-to" type="text" id="padr_list_of_medicines{i}EndDate"> </td>\
+                        <input name="padr_list_of_medicines[{i}][end_date]" class="span11  datepicker" type="text" id="padr_list_of_medicines{i}EndDate"> </td>\
                   </tr>\
                   <tr>\
                     <td>Expiry date of the medicine/vaccine/device</td>\
-                    <td><input name="padr_list_of_medicines[{i}][expiry_date]" class="span11 date-pick-field" type="text" id="padr_list_of_medicines{i}ExpiryDate"> </td>\
+                    <td><input name="padr_list_of_medicines[{i}][expiry_date]" class="span11  datepicker-expiry" type="text" id="padr_list_of_medicines{i}ExpiryDate"> </td>\
                     <td>  </td>\
                     <td>  </td>\
                   </tr>\

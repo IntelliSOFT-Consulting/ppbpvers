@@ -37,20 +37,7 @@ class Attachment extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'model' => true,
-        'file' => true,
-        'foreign_key' => true,
-        'dirname' => true,
-        'basename' => true,
-        'checksum' => true,
-        'alternative' => true,
-        'group' => true,
-        'description' => true,
-        'year' => true,
-        'file_date' => true,
-        'pocket_name' => true,
-        'version_no' => true,
-        'created' => true,
-        'modified' => true,
+        '*' => true,
+        // 'id' => false, 
     ];
 }

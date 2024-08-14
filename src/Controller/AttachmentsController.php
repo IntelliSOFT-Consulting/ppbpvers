@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Event\EventInterface;
 
 /**
  * Attachments Controller
@@ -11,6 +14,21 @@ namespace App\Controller;
  */
 class AttachmentsController extends AppController
 {
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+        $this->Auth->allow('add');
+    }
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow([
+            'add',
+            'view'
+        ]);
+    }
     /**
      * Index method
      *
@@ -48,12 +66,18 @@ class AttachmentsController extends AppController
     {
         $attachment = $this->Attachments->newEmptyEntity();
         if ($this->request->is('post')) {
+            // debug($this->request->getData());
+            // exit;
             $attachment = $this->Attachments->patchEntity($attachment, $this->request->getData());
             if ($this->Attachments->save($attachment)) {
                 $this->Flash->success(__('The attachment has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }
+            // $errors = $attachment->getErrors();
+            // debug($this->request->getData());
+            // debug($errors);
+            // exit;
             $this->Flash->error(__('The attachment could not be saved. Please, try again.'));
         }
         $this->set(compact('attachment'));

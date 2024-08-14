@@ -1198,7 +1198,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                 <!--/row-->
                 <hr>
 
-                <?php //echo $this->element('multi/attachments', ['model' => 'Sadr', 'group' => 'attachment', 'examples' => '']); 
+                <?php 
+                echo $this->element('multi/attachments', ['model' => 'Sadr', 'group' => 'attachment', 'examples' => '']); 
                 ?>
                 <div class="row-fluid">
                     <div class="span6">
@@ -1207,7 +1208,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                             'reporter_name',
                             array(
                                 'div' => array('class' => 'control-group required'),
-                                'label' => array('class' => 'control-label required', 'text' => 'Name of Person Reporting <span style="color:red;">*</span>'),
+                                'label' => array('class' => 'control-label required', 
+                                'text' => 'Name of Person Reporting <span style="color:red;">*</span>','escape'=>false),
                             )
                         );
                         echo $this->Form->control(
@@ -1215,7 +1217,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             array(
                                 'type' => 'email',
                                 'div' => array('class' => 'control-group required'),
-                                'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS <span style="color:red;">*</span>')
+                                'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS <span style="color:red;">*</span>','escape'=>false)
                             )
                         );
 
@@ -1283,7 +1285,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                                         'legend' => false,
                                         'div' => false,
                                         'hiddenField' => false,
-                                        'class' => 'person-submit',
+                                        'id'=>'PersonSubmittingNo',
+                                        'class' => 'person-submit ',
                                         'format' => array('before', 'label', 'between', 'control', 'error', 'after'),
                                         'error' => array('attributes' => array('wrap' => 'p', 'class' => 'required error')),
                                         'before' => '<label class="radio">',
@@ -1328,7 +1331,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                                 'options' => $designations,
                                 'empty' => true,
                                 'class' => 'diff',
-                                'label' => array('class' => 'control-label required', 'text' => 'Designation' . ' <span style="color:red;">*</span>'),
+                                'label' => array('class' => 'control-label required', 'text' => 'Designation' . ' <span style="color:red;">*</span>','escape'=>false),
                                 'empty' => true
                             )
                         );
@@ -1354,7 +1357,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                 </div>
                 <!--/row-->
 
-                <?php //echo $this->element('help/explanatory'); 
+                <?php 
+                echo $this->element('help/explanatory'); 
                 ?>
             </div>
 

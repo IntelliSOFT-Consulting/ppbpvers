@@ -70,13 +70,11 @@ echo $this->Html->css('padr', array('inline' => false));
                         <td>
                             <?php
                             echo $this->Form->control('padr_list_of_medicines.' . $i . '.start_date', array(
-                                'type' => 'date',
+                                'type' => 'text',
                                 'label' => false,
                                 'between' => false,
-                                'div' => false,
-
-                                'dateFormat' => 'DMY',
-                                // 'class' => 'date-pick-from padr_control-item datepicker',
+                                'div' => false, 
+                                'class' => ' padr_control-item datepicker',
                                 'after' => false
                             ));
                             ?>
@@ -85,12 +83,11 @@ echo $this->Html->css('padr', array('inline' => false));
                         <td>
                             <?php
                             echo $this->Form->control('padr_list_of_medicines.' . $i . '.end_date', array(
-                                'type' => 'date',
+                                'type' => 'text',
                                 'label' => false,
-                                'between' => false,
-                                'dateFormat' => 'DMY',
+                                'between' => false, 
                                 'div' => false,
-                                // 'class' => 'date-pick-to padr_control-item datepicker',
+                                'class' => 'padr_control-item datepicker',
                                 'after' => false
                             ));
                             ?>
@@ -101,13 +98,11 @@ echo $this->Html->css('padr', array('inline' => false));
                         <td>
                             <?php
                             echo $this->Form->control('padr_list_of_medicines.' . $i . '.expiry_date', array(
-                                'type' => 'date',
+                                'type' => 'text',
                                 'label' => false,
                                 'between' => false,
-                                'div' => false,
-
-                                'dateFormat' => 'DMY',
-                                // 'class' => 'date-pick-field padr_control-item datepicker',
+                                'div' => false, 
+                                'class' => ' padr_control-item datepicker-expiry',
                                 'after' => false
                             ));
                             ?>
