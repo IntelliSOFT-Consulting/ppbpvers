@@ -13,6 +13,8 @@ use App\Controller\AppController;
  */
 class PadrsController extends AppController
 {
+
+    public $page_options = array('25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -20,12 +22,17 @@ class PadrsController extends AppController
      */
     public function index()
     {
+        $criteria = array();
+        $criteria['Padrs.deleted'] = 0;
+        $criteria['Padrs.archived'] = 0; 
+        $criteria['Padrs.copied !='] = '1';
         $this->paginate = [
             'contain' => ['Users', 'Counties', 'SubCounties', 'Designations'],
+            'conditions' => $criteria
         ];
         $padrs = $this->paginate($this->Padrs);
-
         $this->set(compact('padrs'));
+        $this->set('page_options', $this->page_options);
     }
 
     /**
@@ -37,10 +44,24 @@ class PadrsController extends AppController
      */
     public function view($id = null)
     {
-        $padr = $this->Padrs->get($id, [
+        $id = preg_replace('/\.pdf$/', '', $id);
+        $padr = $this->Padrs->find('all', [
             'contain' => ['Users', 'Counties', 'SubCounties', 'Designations', 'Padrs', 'PadrListOfMedicines'],
-        ]);
-
+            'conditions' => ['Padrs.token' => $id]  
+        ])->firstOrFail();
+        // debug($this->request->getParam('_ext'));
+        // exit;
+        if ($this->request->getParam('_ext') === 'pdf') {
+            $this->viewBuilder()->enableAutoLayout(false);
+            $this->viewBuilder()->setClassName('CakePdf.Pdf');
+            $this->viewBuilder()->setOptions([
+                'pdfConfig' => [
+                    'filename' => 'PADR_' . str_replace($padr['reference_no'], '/', '_') . '.pdf'
+                ]
+            ]);
+            // $this->pdfConfig = array('filename' => 'PADR_' . $id . '.pdf',  'orientation' => 'portrait');
+            // $this->response->download('PADR_' . str_replace($padr['reference_no'], '/', '_') . '.pdf');
+        }
         $this->set(compact('padr'));
     }
 

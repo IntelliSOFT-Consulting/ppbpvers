@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Security;
 
 /**
@@ -72,37 +73,51 @@ class PadrsController extends AppController
     {
         $padr = $this->Padrs->newEmptyEntity();
         if ($this->request->is('post')) {
-           
+
 
             $padr = $this->Padrs->patchEntity($padr, $this->request->getData(), [
                 'associated' => ['PadrListOfMedicines', 'Attachments']
             ]);
-             // debug($this->request->getData());
-            // debug($padr);
-            // exit;
             if ($this->Padrs->save($padr)) {
+
+
+                $startDate = new FrozenTime(date("Y-01-01 00:00:00"));
+                $endDate = new FrozenTime(date("Y-m-d H:i:s"));
+
+                $count = $this->Padrs->find()
+                    ->where([
+                        'Padrs.submitted_date BETWEEN :start AND :end'
+                    ])
+                    ->bind(':start', $startDate->format('Y-m-d H:i:s'), 'datetime')
+                    ->bind(':end', $endDate->format('Y-m-d H:i:s'), 'datetime')
+                    ->count();
+
+                $count++;
+                $count = ($count < 10) ? "0$count" : $count;
 
                 $token = Security::hash(strval($padr['id']));
                 $dataTable = $this->getTableLocator()->get('padrs');
                 // Update the field using the query builder
                 $result = $dataTable->query()
                     ->update()
-                    ->set(['token' => $token])
+                    ->set([
+                        'token' => $token,
+                        'submitted_date' => date("Y-m-d H:i:s"),
+                        'reference_no' => 'PADR/' . date('Y') . '/' . $count
+                    ])
                     ->where(['id' => $padr['id']])
                     ->execute();
+
+
 
                 $this->Flash->success(__('The padr has been saved.'));
 
                 return $this->redirect(['action' => 'view', $token]);
             }
-            // $errors = $padr->getErrors();
-            // debug($this->request->getData());
-            // debug($errors);
-            // exit;
             $this->Flash->error(__('The padr could not be saved. Please, try again.'));
         }
         $users = $this->Padrs->Users->find('list', ['limit' => 200])->all();
-        $counties = $this->Padrs->Counties->find('list', ['limit' => 200])->all(); 
+        $counties = $this->Padrs->Counties->find('list', ['limit' => 200])->all();
         $designations = $this->Padrs->Designations->find('list', ['limit' => 200])->all();
         $this->set(compact('padr', 'users', 'counties', 'designations'));
     }

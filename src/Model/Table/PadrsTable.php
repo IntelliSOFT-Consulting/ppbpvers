@@ -413,14 +413,7 @@ class PadrsTable extends Table
         $validator
             ->date('reporter_date_diff')
             ->allowEmptyDate('reporter_date_diff');
-
-        $validator
-            ->integer('assigned_to')
-            ->allowEmptyString('assigned_to');
-
-        $validator
-            ->integer('assigned_by')
-            ->allowEmptyString('assigned_by');
+ 
 
         $validator
             ->dateTime('assigned_date')
@@ -434,18 +427,7 @@ class PadrsTable extends Table
         $validator
             ->scalar('consent')
             ->maxLength('consent', 255)
-            ->allowEmptyString('consent');
-
-        $validator
-            ->allowEmptyString('copied');
-
-        $validator
-            ->allowEmptyString('archived');
-
-        $validator
-            ->dateTime('archived_date')
-            ->allowEmptyDateTime('archived_date');
-
+            ->allowEmptyString('consent'); 
         return $validator;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since     3.3.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App;
 
 use Cake\Core\Configure;
@@ -52,8 +54,8 @@ class Application extends BaseApplication
         $this->addPlugin('Queue', ['routes' => false]);
         $this->addPlugin('Migrations');
         $this->addPlugin('Acl');
- 
-        
+
+
         if (PHP_SAPI === 'cli') {
             $this->bootstrapCli();
         } else {
@@ -74,6 +76,7 @@ class Application extends BaseApplication
         // Load more plugins here
         $this->addPlugin('Captcha');
         $this->addPlugin('Josegonzalez/Upload');
+        $this->addPlugin('CakePdf');
     }
 
     /**
@@ -121,9 +124,7 @@ class Application extends BaseApplication
      * @return void
      * @link https://book.cakephp.org/4/en/development/dependency-injection.html#dependency-injection
      */
-    public function services(ContainerInterface $container): void
-    {
-    }
+    public function services(ContainerInterface $container): void {}
 
     /**
      * Bootstrapping for CLI application.
