@@ -69,13 +69,7 @@ $nchecked = "&#x2610;";
                     </tr>
                     <tr>
                         <td style="width: 25%;">Date of Birth:</td>
-                        <td><strong><?php
-                                    $dob = '';
-                                    $bod = $padr['date_of_birth'];
-                                    if (isset($bod['day'])) $dob .= $bod['day'] . '-';
-                                    if (isset($bod['month'])) $dob .= $bod['month'] . '-';
-                                    if (isset($bod['year'])) $dob .= $bod['year'];
-                                    echo $dob;
+                        <td><strong><?php echo $padr['date_of_birth']."<br>"; 
                                     echo $padr['age_group'];
                                     ?></strong>
                         </td>
@@ -116,26 +110,12 @@ $nchecked = "&#x2610;";
                             </p>
                         </td>
                         <td>
-                            When did the reaction start?
-                            <strong><?php
-                                    $rod = $padr['date_of_onset_of_reaction'];
-                                    $dor = '';
-                                    if (isset($rod['day'])) $dor .= $rod['day'] . '-';
-                                    if (isset($rod['month'])) $dor .= $rod['month'] . '-';
-                                    if (isset($rod['year'])) $dor .= $rod['year'];
-                                    echo $dor;
-                                    ?></strong>
-                            Is the reaction still on?
+                            <p> When did the reaction start?</p>
+                            <strong><?php echo $padr['date_of_onset_of_reaction']; ?></strong>
+                            <p> Is the reaction still on?</p>
                             <strong><?php echo $padr['reaction_on'] ?></strong>
-                            <br> When did the reaction stop?
-                            <strong><?php
-                                    $rod = $padr['date_of_end_of_reaction'];
-                                    $dor = '';
-                                    if (isset($rod['day'])) $dor .= $rod['day'] . '-';
-                                    if (isset($rod['month'])) $dor .= $rod['month'] . '-';
-                                    if (isset($rod['year'])) $dor .= $rod['year'];
-                                    echo $dor;
-                                    ?></strong>
+                            <p> When did the reaction stop?</p>
+                            <strong><?php echo $padr['date_of_end_of_reaction']; ?></strong>
                         </td>
                     </tr>
                 </table>
@@ -232,8 +212,8 @@ $nchecked = "&#x2610;";
                         <td style="width: 20%;"><strong>Consent Given:</strong></td>
                         <td style="width: 30%;">
                             <?php
-                           echo $outcome = $padr['consent'];
-                           ?> </td>
+                            echo $outcome = $padr['consent'];
+                            ?> </td>
                         <td style="width: 30%;"></td>
                         <td style="width: 25%;"></td>
                     </tr>

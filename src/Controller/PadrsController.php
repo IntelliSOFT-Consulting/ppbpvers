@@ -6,7 +6,10 @@ namespace App\Controller;
 
 use Cake\Event\EventInterface;
 use Cake\I18n\FrozenTime;
+use Cake\Routing\Router;
 use Cake\Utility\Security;
+use Cake\Utility\Text;
+use Cake\View\Helper\HtmlHelper;
 
 /**
  * Padrs Controller
@@ -61,6 +64,8 @@ class PadrsController extends AppController
             'conditions' => ['Padrs.token' => $id] // Replace 'other_column' with the actual column name
         ])->firstOrFail();
         // 
+        //  debug($padr);
+                // exit;
         $this->set(compact('padr'));
     }
 
@@ -108,6 +113,87 @@ class PadrsController extends AppController
                     ->where(['id' => $padr['id']])
                     ->execute();
 
+
+                //******************       Send Emails to Reporter and Managers          *****************************
+
+
+                $html = new HtmlHelper(new \Cake\View\View());
+
+                $message = $this->Messages->find()
+                    ->where(['name' => 'reporter_padr_submit'])
+                    ->first();
+                $padr = $this->Padrs->get($padr['id'], [
+                    'contain' => [],
+                ]);
+                // debug($padr);
+                // exit;
+                $referenceLink = Router::url([
+                    'controller' => 'padrs',
+                    'action' => 'view',
+                    $padr['token']
+                ], true);
+                $variables = array(
+                    'name' => $padr['reporter_name'],
+                    'reference_no' => $padr['reference_no'],
+                    'reference_link' => $html->link(
+                        $padr['reference_no'],
+                        $referenceLink,
+                        // array('controller' => 'padrs', 'action' => 'view', $padr['token'], 'full_base' => true),
+                        array('escape' => false)
+                    ),
+                    'modified' => $padr['modified']
+                );
+                $datum = array(
+                    'email' => $padr['reporter_email'],
+                    'id' => $padr->id,
+                    'type' => 'reporter_padr_submit',
+                    'model' => 'Padr',
+                    'subject' => Text::insert($message['subject'], $variables),
+                    'message' => Text::insert($message['content'], $variables)
+                );
+
+                $this->QueuedJobs->createJob('GenericEmail', $datum);
+                //Notify managers
+                $users = $this->Padrs->Users->find('all', [
+                    'contain' => [],
+                    'conditions' => [
+                        'Users.role_id' => 2,
+                        'Users.is_active' => '1'
+                    ]
+                ]);
+
+                $referenceLink = Router::url([
+                    'controller' => 'padrs',
+                    'action' => 'view',
+                    $padr['token'],
+                    // 'prefix' => 'manager'
+                ], true);
+                foreach ($users as $user) {
+
+                    $variables = array(
+                        'name' => $user['name'],
+                        'reference_no' => $padr['reference_no'],
+                        'reference_link' => $html->link(
+                            $padr['reference_no'],
+                            $referenceLink,
+                            array('escape' => false)
+                        ),
+                        'modified' => $padr['modified']
+                    );
+                    $datum = array(
+                        'email' => $user['email'],
+                        'id' => $padr->id,
+                        'user_id' => $user['id'],
+                        'type' => 'reporter_padr_submit',
+                        'model' => 'Padr',
+                        'subject' => Text::insert($message['subject'], $variables),
+                        'message' => Text::insert($message['content'], $variables)
+                    );
+
+                    $this->QueuedJobs->createJob('GenericEmail', $datum);
+                    $this->QueuedJobs->createJob('GenericNotification', $datum);
+                }
+                //**********************************    END   *********************************
 
 
                 $this->Flash->success(__('The padr has been saved.'));

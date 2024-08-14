@@ -307,8 +307,7 @@ class UsersController extends AppController
                     'subject' => $subject,
                     'message' => $message
                 );
-
-                $this->loadModel('Queue.QueuedJobs'); // Load the model correctly
+ 
                 $this->QueuedJobs->createJob('GenericNotification', $datum);
                 $this->QueuedJobs->createJob('GenericEmail', $datum);
                 // 

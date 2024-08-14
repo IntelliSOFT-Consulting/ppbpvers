@@ -45,6 +45,8 @@ class AppController extends Controller
      */
 
      public $Notifications;
+     public $Messages;
+     public $QueuedJobs;
 
     public function initialize(): void
     {
@@ -54,6 +56,8 @@ class AppController extends Controller
         // $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash'); 
         $this->Notifications = $this->loadModel('Notifications');
+        $this->Messages = $this->loadModel('Messages');
+        $this->QueuedJobs = $this->loadModel('Queue.QueuedJobs');
 
         // $this->loadHelper('Tools.Captcha', [
         //     'type' => 'active'

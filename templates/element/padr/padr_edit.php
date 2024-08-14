@@ -171,16 +171,14 @@ echo $this->Html->css('padr', array('inline' => false));
                     <?php
 
                     echo $this->Form->control('date_of_birth', array(
-                        'type' => 'date',
-                        'dateFormat' => 'DMY',
-                        'minYear' => date('Y') - 100,
-                        'maxYear' => date('Y'),
+                        'type' => 'text', 
+                    
                         'empty' => array('day' => '(day)', 'month' => '(month)', 'year' => '(year)'),
                         'label' => array('class' => 'control-label required', 'text' => 'Date of Birth'),
                         'title' => 'select beginning of the month if unsure',
                         'data-content' => 'If selected, year is mandatory.',
 
-                        'class' => 'tooltipper set-control',
+                        'class' => 'tooltipper set-control date-pick-from',
                     ));
 
                     ?>
@@ -375,20 +373,19 @@ echo $this->Html->css('padr', array('inline' => false));
                         <div class="span4">
                             <?php
                             echo $this->Form->control('date_of_onset_of_reaction', array(
-                                'type' => 'date',
+                                'type' => 'text',
                                 'between' => false,
                                 'div' => false,
                                 'after' => false,
-                                'dateFormat' => 'DMY',
-                                'minYear' => date('Y') - 100,
-                                'maxYear' => date('Y'),
                                 'empty' => array('day' => '(day)', 'month' => '(month)', 'year' => '(year)'),
                                 'label' => array('class' => 'required', 'text' => 'When did the reaction start? '),
-                                'class' => 'span4',
+                                'class' => 'span6 date-pick-from',
                             ));
+                          
+                            
                             echo $this->Form->control('reaction_on', array(
                                 'type' => 'radio',
-                                'label' => false,
+                                'label' => array('text' => 'Is the reaction still on?'),
                                 'legend' => false,
                                 'div' => false,
                                 'hiddenField' => false,
@@ -416,6 +413,17 @@ echo $this->Html->css('padr', array('inline' => false));
                                         </div> </div>',
                                 'options' => array('No' => 'No'),
                             ));
+
+
+                            echo $this->Form->control('date_of_end_of_reaction', array(
+                                'type' => 'text',
+                                'between' => false,
+                                'div' => false,
+                                'after' => false,
+                                'empty' => array('day' => '(day)', 'month' => '(month)', 'year' => '(year)'),
+                                'label' => array('class' => 'required end', 'text' => 'When did the reaction end? '),
+                                'class' => 'span6 date-pick-from end',
+                            ));
                             ?>
                         </div>
                     </div>
@@ -435,45 +443,45 @@ echo $this->Html->css('padr', array('inline' => false));
                         echo "<h6>Select all issues with the medicine/device</h6>";
                         echo $this->Form->control('pqmp_label', array(
                             'type' => 'checkbox',
-                            'label' => array('text'=>'The label looks wrong '),
+                            'label' => array('text' => 'The label looks wrong '),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));
                         echo $this->Form->control('pqmp_material', array(
                             'type' => 'checkbox',
                             'label' => array('text' => 'Has unusual material in it '),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));
                         echo $this->Form->control('pqmp_color', array(
                             'type' => 'checkbox',
-                            'label' => array('text'=>'The color is changing'),
+                            'label' => array('text' => 'The color is changing'),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));
                         echo $this->Form->control('pqmp_smell', array(
                             'type' => 'checkbox',
-                            'label' => array('text'=>'The smell is unusual'),
+                            'label' => array('text' => 'The smell is unusual'),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));
                         echo $this->Form->control('pqmp_working', array(
                             'type' => 'checkbox',
-                            'label' => array('text'=>'The medicine/device is not working'),
+                            'label' => array('text' => 'The medicine/device is not working'),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));
                         echo $this->Form->control('pqmp_bottle', array(
                             'type' => 'checkbox',
-                            'label' => array('text'=>'The packet or bottle does not seem to be usual or complete '),
+                            'label' => array('text' => 'The packet or bottle does not seem to be usual or complete '),
                             'div' => false,
                             'class' => false,
-                            'hiddenField' => false, 
+                            'hiddenField' => false,
                         ));  ?>
                     </div>
                     <!--/span-->
@@ -493,8 +501,8 @@ echo $this->Html->css('padr', array('inline' => false));
                 <!--/row-->
             </div>
 
-            <?php 
-            echo $this->element('multi/padr_list_of_medicines'); 
+            <?php
+            echo $this->element('multi/padr_list_of_medicines');
             ?>
 
             <!-- Section to show the outcome -->
@@ -589,8 +597,8 @@ echo $this->Html->css('padr', array('inline' => false));
                 ?>
             </div>
             <!-- End of outcome section -->
-            <?php 
-            echo $this->element('multi/attachments', ['model' => 'Padr', 'group' => 'attachment', 'examples' => '']); 
+            <?php
+            echo $this->element('multi/attachments', ['model' => 'Padr', 'group' => 'attachment', 'examples' => '']);
             ?>
             <div class="row-fluid report">
                 <?php

@@ -48,6 +48,15 @@ $(document).ready(function () {
   //If SADR disable Poor-Quality Health Products and Technologies and vice versa
   $('.pqmp').hide();
   $('.sadr').hide();
+  $('.end').hide();
+  $('input[name="reaction_on"]').click(function () {
+    if ($(this).val() == 'No') {
+     
+      $('.end').show("slow");
+    } else { 
+      $('.end').hide();
+    }
+  });
   $('input[name="report_sadr"]').click(function () {
     if ($(this).val() == 'Side Effects') {
       $('.pqmp').hide();
