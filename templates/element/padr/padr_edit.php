@@ -92,9 +92,9 @@ echo $this->Html->css('padr', array('inline' => false));
                         echo $this->Form->control('reporter_email', array(
                             'class' => 'set-control',
                             'type' => 'email',
-                            'div' => array('class' => 'control-group required'),
+                            'div' => array('class' => 'control-group'),
                             'required' => false,
-                            'label' => array('class' => 'control-label required', 'text' => 'Email Address')
+                            'label' => array('class' => 'control-label', 'text' => 'Email Address')
                         ));
 
                         ?>
@@ -103,7 +103,7 @@ echo $this->Html->css('padr', array('inline' => false));
                     <div class="span6">
                         <?php
                         echo $this->Form->control('reporter_phone', array(
-                            'label' => array('class' => 'control-label required', 'text' => 'Mobile No.<span style="color:red;">*</span>', 'escape' => false,),
+                            'label' => array('class' => 'control-label', 'text' => 'Mobile No.<span style="color:red;">*</span>', 'escape' => false,),
                             'placeholder' => '',
                             'title' => 'Mobile No.',
                             'data-content' => 'It is important for follow up by the Pharmacy and Poisons Board and to obtain additional information as well as providing you with the feedback',

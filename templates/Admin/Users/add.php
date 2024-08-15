@@ -17,8 +17,7 @@ echo $this->Html->css('user', array('inline' => false));
                     </div>
                 </div>
                 <?php
-
-                echo $this->Flash->render();
+ 
                 echo $this->Form->create();
                 ?>
                 <div class="row-fluid">

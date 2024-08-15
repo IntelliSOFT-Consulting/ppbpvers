@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\Log\Log;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -122,44 +123,13 @@ class PadrsTable extends Table
             ->integer('designation_id')
             ->allowEmptyString('designation_id');
 
-        $validator
-            ->scalar('reference_no')
-            ->maxLength('reference_no', 55)
-            ->allowEmptyString('reference_no');
-
-        $validator
-            ->scalar('token')
-            ->maxLength('token', 200)
-            ->allowEmptyString('token');
 
         $validator
             ->scalar('relation')
             ->maxLength('relation', 55)
             ->allowEmptyString('relation');
 
-        $validator
-            ->scalar('vigiflow_ref')
-            ->maxLength('vigiflow_ref', 255)
-            ->allowEmptyString('vigiflow_ref');
 
-        $validator
-            ->scalar('vigiflow_message')
-            ->allowEmptyString('vigiflow_message');
-
-        $validator
-            ->scalar('vigiflow_date')
-            ->maxLength('vigiflow_date', 255)
-            ->allowEmptyString('vigiflow_date');
-
-        $validator
-            ->scalar('report_title')
-            ->maxLength('report_title', 100)
-            ->allowEmptyString('report_title');
-
-        $validator
-            ->scalar('report_type')
-            ->maxLength('report_type', 20)
-            ->allowEmptyString('report_type');
 
         $validator
             ->scalar('report_sadr')
@@ -344,52 +314,19 @@ class PadrsTable extends Table
         $validator
             ->scalar('reporter_email')
             ->maxLength('reporter_email', 100)
-            ->allowEmptyString('reporter_email');
-
-        $validator
-            ->scalar('reporter_phone')
-            ->maxLength('reporter_phone', 100)
-            ->allowEmptyString('reporter_phone');
-        // Custom validation rule to check that at least one field is filled
-        $validator->add('reporter_email', 'custom', [
-            'rule' => [$this, 'validateReporterContact'],
-            'message' => 'Please provide either an email or a phone number.'
-        ]);
-
-        $validator->add('reporter_phone', 'custom', [
-            'rule' => [$this, 'validateReporterContact'],
-            'message' => 'Please provide either an email or a phone number.'
-        ]);
+            ->allowEmptyString('reporter_email', 'This field is required', function ($context) {
+                return !$context['data']['reporter_phone'];
+            });
 
 
-        $validator
-            ->dateTime('submitted_date')
-            ->allowEmptyDateTime('submitted_date');
+        // $validator
+        //     ->scalar('reporter_phone')
+        //     ->maxLength('reporter_phone', 100)
+        //     ->allowEmptyString('reporter_phone', 'This field is required', function ($context) {
+        //         return !$context['data']['reporter_email'];
+        //     });
 
-        $validator
-            ->allowEmptyString('emails');
 
-        $validator
-            ->boolean('active')
-            ->allowEmptyString('active');
-
-        $validator
-            ->allowEmptyString('device');
-
-        $validator
-            ->boolean('deleted')
-            ->allowEmptyString('deleted');
-
-        $validator
-            ->dateTime('deleted_date')
-            ->allowEmptyDateTime('deleted_date');
-
-        $validator
-            ->allowEmptyString('notified');
-
-        $validator
-            ->date('reporter_date')
-            ->allowEmptyDate('reporter_date');
 
         $validator
             ->scalar('reporter_name_diff')
@@ -413,7 +350,7 @@ class PadrsTable extends Table
         $validator
             ->date('reporter_date_diff')
             ->allowEmptyDate('reporter_date_diff');
- 
+
 
         $validator
             ->dateTime('assigned_date')
@@ -427,7 +364,7 @@ class PadrsTable extends Table
         $validator
             ->scalar('consent')
             ->maxLength('consent', 255)
-            ->allowEmptyString('consent'); 
+            ->allowEmptyString('consent');
         return $validator;
     }
 
