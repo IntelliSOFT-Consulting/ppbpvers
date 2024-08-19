@@ -12,7 +12,7 @@ echo $this->Html->css('padr', array('inline' => false));
     <?php
     echo $this->Form->create($padr, array(
         'type' => 'file',
-        'class' => 'form-vertical'
+        // 'class' => 'form-vertical'
     ));
     ?>
     <div class="row-fluid">
@@ -38,7 +38,7 @@ echo $this->Html->css('padr', array('inline' => false));
                     <?php
                     echo $this->Form->control('reporter_name', array(
                         'class' => 'set-control',
-                        'div' => array('class' => 'control-group required'),
+                        // 'div' => array('class' => 'control-group required'),
                         'label' => array('class' => 'control-label required', 'text' => 'Name of Person Reporting <span style="color:red;">*</span>', 'escape' => false,),
                     ));
 
@@ -62,7 +62,7 @@ echo $this->Html->css('padr', array('inline' => false));
                     echo $this->Form->control('relation', array(
                         'type' => 'select',
                         'empty' => true,
-                        'class' => 'set-control',
+                        // 'class' => 'set-control',
                         'label' => array('class' => 'control-label required', 'text' => 'Relation'),
                         'options' => array('Self' => 'Self', 'Parent' => 'Parent', 'Guardian' => 'Guardian', 'Other' => 'Other')
                     ));
@@ -75,7 +75,7 @@ echo $this->Html->css('padr', array('inline' => false));
 
                         ),
                         'empty' => true,
-                        'between' => '<div class="controls ui-widget set-control">',
+                        // 'between' => '<div class="controls ui-widget set-control">',
                     ));
 
 
@@ -92,7 +92,7 @@ echo $this->Html->css('padr', array('inline' => false));
                         echo $this->Form->control('reporter_email', array(
                             'class' => 'set-control',
                             'type' => 'email',
-                            'div' => array('class' => 'control-group'),
+                            // 'div' => array('class' => 'control-group'),
                             'required' => false,
                             'label' => array('class' => 'control-label', 'text' => 'Email Address')
                         ));
@@ -620,8 +620,10 @@ echo $this->Html->css('padr', array('inline' => false));
             <div class="row-fluid">
                 <div class="span4">
                     <label class="required pull-right" style="color: purple; padding-top: 4px;">Please solve the riddle <i class="fa fa-smile-o" aria-hidden="true"></i></label>
-                    <?php
-                    // echo $this->Captcha->control('Padr', array('label' => false, 'type' => 'number'));
+                    <?php 
+                    echo $this->Captcha->render([
+                        'placeholder' => __('Please solve the riddle'), 
+                    ]);
                     ?>
                 </div>
                 <div class="span8 pull-left">

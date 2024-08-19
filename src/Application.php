@@ -54,7 +54,7 @@ class Application extends BaseApplication
         $this->addPlugin('Queue', ['routes' => false]);
         $this->addPlugin('Migrations');
         $this->addPlugin('Acl');
-
+        $this->addPlugin('Captcha');
 
         if (PHP_SAPI === 'cli') {
             $this->bootstrapCli();
@@ -73,8 +73,7 @@ class Application extends BaseApplication
             $this->addPlugin('DebugKit');
         }
 
-        // Load more plugins here
-        $this->addPlugin('Captcha');
+        // Load more plugins here 
         $this->addPlugin('Josegonzalez/Upload');
         $this->addPlugin('CakePdf');
     }

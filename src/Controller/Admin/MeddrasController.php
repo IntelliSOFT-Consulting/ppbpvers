@@ -13,6 +13,12 @@ use App\Controller\AppController;
  */
 class MeddrasController extends AppController
 {
+
+
+    public function autosync()
+    {
+        return $this->redirect($this->referer());
+    }
     /**
      * Index method
      *

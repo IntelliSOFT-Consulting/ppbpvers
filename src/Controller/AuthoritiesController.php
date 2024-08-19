@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
+
 /**
  * Authorities Controller
  *
@@ -11,6 +13,37 @@ namespace App\Controller;
  */
 class AuthoritiesController extends AppController
 {
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow('autocomplete');
+    }
+
+
+    public function autocomplete($query = null) {
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        // $coders = $this->Authorities->finder($term, $type); // Assuming `finder` is a custom method
+
+        $coders = $this->Authorities->find('byTerm', ['term' => $term, 'type' => $type])->toArray();
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->mah_company_email,
+                'label' => $value->mah_name,
+                'code' => $value->master_mah, 
+                'addr' => $value->mah_company_address,
+                'phone' => $value->mah_company_telephone
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]); 
+	}
     /**
      * Index method
      *

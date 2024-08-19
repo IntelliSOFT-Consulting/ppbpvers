@@ -18,7 +18,7 @@ echo $this->Html->css('user', array('inline' => false));
                 </div>
                 <?php
  
-                echo $this->Form->create();
+                echo $this->Form->create($user);
                 ?>
                 <div class="row-fluid">
                     <div class="span4">
@@ -83,7 +83,7 @@ echo $this->Html->css('user', array('inline' => false));
                                 'text' => 'New Password' . ' <span style="color:red;">*</span>',
                                 'escape' => false
                             ),
-                            'error' => array('attributes' => array('class' => 'error-message'))
+                            // 'error' => array('attributes' => array('class' => 'error-message'))
                         ));
                         echo $this->Form->control('confirm_password', array(
                             'type' => 'password',
@@ -92,7 +92,7 @@ echo $this->Html->css('user', array('inline' => false));
                                 'text' => 'Confirm New Password' . ' <span style="color:red;">*</span>',
                                 'escape' => false
                             ),
-                            'error' => ['attributes' => ['class' => 'error-message']]
+                            // 'error' => ['attributes' => ['class' => 'error-message']]
                         ));
                         echo $this->Form->control('active_date', array(
                             'type' => 'text', 'class' => 'date-pick-field',

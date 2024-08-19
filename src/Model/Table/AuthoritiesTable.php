@@ -9,7 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Authorities Model
+ * Authorities Model 
  *
  * @method \App\Model\Entity\Authority newEmptyEntity()
  * @method \App\Model\Entity\Authority newEntity(array $data, array $options = [])
@@ -38,10 +38,22 @@ class AuthoritiesTable extends Table
         parent::initialize($config);
 
         $this->setTable('authorities');
-        $this->setDisplayField('id');
+        $this->setDisplayField('mah_name');
         $this->setPrimaryKey('id');
     }
+    public function findByTerm(Query $query, array $options): Query
+    {
+        $term = $options['term'] ?? '';
+        $type = $options['type'] ?? '';
 
+        if ($type === 'N') {
+            // Example: searching by numeric term
+            return $query->where(['mah_company_email LIKE' => "%$term%"]);
+        } else {
+            // Example: searching by alphanumeric term
+            return $query->where(['mah_company_email LIKE' => "%$term%"]);
+        }
+    }
     /**
      * Default validation rules.
      *

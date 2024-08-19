@@ -46,6 +46,9 @@ class UsersController extends AppController
         parent::initialize();
         $this->loadComponent('Paginator');
         $this->Auth->allow('logout', 'activate', 'admin');
+        $this->loadComponent('Captcha.Captcha', [
+            'captchaType' => 'math', // or 'image'
+        ]);
     }
     public function admin()
     {
@@ -98,9 +101,14 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow([
-            'register', 'login', 'logout', 'activate',
+            'register',
+            'login',
+            'logout',
+            'activateAccount',
             // 'admin',
-            'forgotPassword', 'resetPassword', 'view'
+            'forgotPassword',
+            'resetPassword',
+            'view'
         ]);
     }
 
@@ -122,9 +130,7 @@ class UsersController extends AppController
         }
     }
 
-    public function guest()
-    {
-    }
+    public function guest() {}
     public function login()
     {
         if ($this->request->is('post')) {
@@ -144,7 +150,7 @@ class UsersController extends AppController
             }
             // Attempt to identify the user
             $user = $this->Auth->identify();
-           
+
             if ($user) {
                 $this->Auth->setUser($user);
 
@@ -158,7 +164,7 @@ class UsersController extends AppController
                 }
 
                 // User is authenticated, handle redirect based on user group
-                
+
                 switch ($user['role_id']) {
                     case '1':
                         return $this->redirect(['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
@@ -202,7 +208,8 @@ class UsersController extends AppController
         $user = $this->Auth->User();
         $user = $this->Users->find('all', array(
             'contain' => array(
-                'Designations', 'Counties'
+                'Designations',
+                'Counties'
             ),
             'conditions' => array(
                 'Users.id' => $this->Auth->user('id')
@@ -231,13 +238,16 @@ class UsersController extends AppController
 
     public function register()
     {
-        // $this->Users->addBehavior('Captcha.Captcha');
+
+        $this->Users->addBehavior('Captcha.Captcha');
+        
         if ($this->Auth->user()) {
             return $this->redirect($this->Auth->redirectUrl());
         }
 
         $user = $this->Users->newEmptyEntity();
         if ($this->request->is('post')) {
+
 
             // dd($this->request->getData());
             $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -281,17 +291,18 @@ class UsersController extends AppController
 
                 $html = new HtmlHelper(new \Cake\View\View());
 
-
+                $referenceLink = Router::url([
+                    'controller' => 'users',
+                    'action' => 'activate_account',
+                    $user->id
+                ], true);
                 $variables = array(
                     'name' => $user['name'],
                     'username' => $user['username'],
                     'email' => $user['email'],
                     'reference_link' => $html->link(
                         'Activate',
-                        array(
-                            'controller' => 'users',
-                            'action' => 'activate_account', $user->id, $user->id, 'full_base' => true
-                        ),
+                        $referenceLink,
                         array('escape' => false)
                     ),
                 );
@@ -307,7 +318,7 @@ class UsersController extends AppController
                     'subject' => $subject,
                     'message' => $message
                 );
- 
+
                 $this->QueuedJobs->createJob('GenericNotification', $datum);
                 $this->QueuedJobs->createJob('GenericEmail', $datum);
                 // 
@@ -325,7 +336,10 @@ class UsersController extends AppController
                         'reference_link' => $html->link(
                             'Activate',
                             array(
-                                'controller' => 'users', 'action' => 'activate_account', $user->id, $user->id,
+                                'controller' => 'users',
+                                'action' => 'activate_account',
+                                $user->id,
+                                $user->id,
                                 'full_base' => true
                             ),
                             array('escape' => false)
@@ -343,7 +357,7 @@ class UsersController extends AppController
 
                     $this->QueuedJobs->createJob('GenericNotification', $datum);
                     $this->QueuedJobs->createJob('GenericEmail', $datum);
-                } 
+                }
                 return $this->redirect(['controller' => 'Pages', 'action' => 'home']);
             } else {
                 $errorMessages = [];
@@ -365,21 +379,20 @@ class UsersController extends AppController
 
     //TODO: Add forgot password functionality
 
-    public function activate($id = null)
+    public function activateAccount($id = null)
     {
         if ($id) {
-            $user = $this->Users->findByActivationKey($id)->first();
+            $user = $this->Users->get($id);
 
             if ($user) {
                 $query = $this->Users->query();
                 $query->update()
                     ->set(['is_active' => 1])
-                    ->where(['id' => $user->id])
+                    ->where(['id' => $id])
                     ->execute();
 
-                $this->Flash->success(__('You have successfully activated your account.'));
-                $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
+                $this->Flash->success(__('You have successfully activated your account. Please login to proceed'));
+                return $this->redirect('/');
             } else {
                 $this->Flash->error(__('Invalid activation token.'));
                 $this->redirect('/');
@@ -401,7 +414,7 @@ class UsersController extends AppController
             $user = $this->Users->findByEmail($this->request->getData('email'))->first();
             if ($user) {
 
-                $new_pass = date('sYmdHi', strtotime(Time::now()));
+                $new_pass = date('sYmdHi');
                 $hasher = new DefaultPasswordHasher();
                 $password = $hasher->hash($new_pass);
                 $query = $this->Users->query();
@@ -413,8 +426,12 @@ class UsersController extends AppController
                 //Send registration confirm email
                 $this->loadModel('Queue.QueuedJobs');
                 $data = [
-                    'email_address' => $user->email, 'user_id' => $user->id, 'type' => 'forgot_password_email', 'model' => 'Users',
-                    'foreign_key' => $user->id, 'vars' =>  $user->toArray()
+                    'email_address' => $user->email,
+                    'user_id' => $user->id,
+                    'type' => 'forgot_password_email',
+                    'model' => 'Users',
+                    'foreign_key' => $user->id,
+                    'vars' =>  $user->toArray()
                 ];
                 $pass = $this->Util->generateXOR($user->id);
                 $html = new HtmlHelper(new \Cake\View\View());
@@ -422,7 +439,9 @@ class UsersController extends AppController
                 $data['vars']['new_password'] = $new_pass;
                 $data['vars']['pv_site'] = $html->link('MCAZ PV website', ['controller' => 'Pages', 'action' => 'home', '_full' => true]);
                 $data['vars']['reset_password_link'] = $html->link('Reset Password', [
-                    'controller' => 'Users', 'action' => 'resetPassword', $pass,
+                    'controller' => 'Users',
+                    'action' => 'resetPassword',
+                    $pass,
                     '_full' => true
                 ]);
                 $this->QueuedJobs->createJob('GenericEmail', $data);

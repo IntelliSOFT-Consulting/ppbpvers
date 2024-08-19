@@ -18,7 +18,7 @@ return [
     'formGroup' => '<div class="form-group"> {{label}}{{input}} </div>',
     'label' => '<div class="col-sm-4 control-label"><label {{attrs}}>{{text}}</label></div>',
     // Generic input element.
-    'input' => '<div class="col-sm-6"><input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/></div>',
+    'input' => '<div class="col-sm-10"><input class="form-control" type="{{type}}" name="{{name}}"{{attrs}}/></div>',
     // Container element used by control() when a field has an error.
     'inputContainerError' => '<div class="input {{type}}{{required}} has-error">{{content}}{{error}}</div>',
     // Error message wrapper elements.

@@ -37,8 +37,87 @@ class ValidationErrorsHelper extends Helper
         }
         return $result;
     }
-
     public function displayErrors($entity)
+    {
+        $errors = $entity->getErrors(); // Initialize the $errors variable
+
+        if (empty($errors)) {
+            return ''; // Return an empty string if there are no errors
+        }
+
+        $myarr = $this->flatten($errors); // Flatten the errors array
+        $output = '<div class="alert alert-danger alert-dismissible fade in" role="alert"> 
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>';
+
+        $i = 0;
+        foreach ($myarr as $value) {
+            $i++;
+            if ($i <= 3) {
+                $output .= '<i class="fa fa-exclamation-triangle"></i> ' . h($value) . '<br/>';
+            }
+        }
+
+        if (count($myarr) > 3) {
+            $output .= '<small class="accordion-toggle" data-toggle="collapse" data-target="#demo">
+                            more...
+                        </small>
+                        <div id="demo" class="collapse">';
+            $i = 0;
+            foreach ($myarr as $value) {
+                $i++;
+                if ($i > 3) {
+                    $output .= '<i class="fa fa-exclamation-triangle"></i> ' . h($value) . '<br/>';
+                }
+            }
+            $output .= '</div>';
+        }
+
+        $output .= '</div>';
+
+        return $output;
+    }
+    public function displayErrorsalt($entity)
+    {
+        $errors = $entity->getErrors(); // Assuming the entity has a getErrors() method to fetch validation errors
+
+        if (empty($errors)) {
+            return '';
+        }
+
+        $myarr = $this->flatten($errors);
+        $output = '<div class="alert alert-danger alert-dismissible fade in" role="alert"> 
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>';
+
+        $i = 0;
+        foreach ($myarr as $value) {
+            $i++;
+            if ($i <= 3) {
+                $output .= '<i class="fa fa-exclamation-triangle"></i> ' . h($value) . '<br/>';
+            }
+        }
+
+        if (count($myarr) > 3) {
+            $output .= '<small class="accordion-toggle" data-toggle="collapse" data-target="#demo">
+                            more...
+                        </small>
+                        <div id="demo" class="collapse">';
+            $i = 0;
+            foreach ($myarr as $value) {
+                $i++;
+                if ($i > 3) {
+                    $output .= '<i class="fa fa-exclamation-triangle"></i> ' . h($value) . '<br/>';
+                }
+            }
+            $output .= '</div>';
+        }
+
+        $output .= '</div>';
+
+        return $output;
+    }
+    public function displayErrorsOld($entity)
     {
         if (empty($errors)) {
             return '';

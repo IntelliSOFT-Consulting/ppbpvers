@@ -43,18 +43,12 @@ class AppView extends View
             $this->loadHelper('Form', ['templates' => 'view_form',]);
         } else {
             // $this->loadHelper('Form', ['templates' => 'app_form',]); 
-            // $this->loadHelper('Form', [
-            //     'templates' => [
-            //         'checkboxWrapper' => '<div class="checkbox {{attrs.class}}">{{input}}{{label}}</div>',
-            //         'checkboxContainer' => '{{label}}<div class="checkbox">{{input}}{{between}}{{after}}</div>'
-            //     ]
-            // ]);
-        }
-        // $this->loadHelper('Util');
+            // $this->loadHelper('EdForm', ['templates' => 'app_form',]);  
+        } 
 
         $this->loadHelper('Text');
         $this->loadHelper('Paginator', ['templates' => 'paginator-templates']);
-        
+        $this->loadHelper('Captcha.Captcha');
         $this->loadHelper('ValidationErrors');
     }
 }

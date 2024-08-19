@@ -1,48 +1,47 @@
 $(function () {
     //If not serious disable criteria
-    
-    
-    $(".user_user_type").click(function () {
+
+
+    $("#user-type").click(function () {
         $(".ribidi").toggle();
     });
-    if (!$(".user_user_type").is(":checked")) {
+    if (!$("#user-type").is(":checked")) {
         $(".ribidi").hide();
     }
+ 
 
-    var cache2 = {},
-        lastXhr;
-    $(".user_institution_code").autocomplete({
+    $('#institution-code').autocomplete({
         source: function (request, response) {
-            var term = request.term;
-            if (term in cache2) {
-                response(cache2[term]);
-                return;
-            }
+            $.ajax({
+                url: '/api/facilityCodes/autocomplete.json', // Replace with your API endpoint
+                data: {
+                    term: request.term // Pass the input value to the API
+                },
+                success: function (data) {
+                    response($.map(data.codes, function (item) {
 
-            lastXhr = $.getJSON(
-                "/api/facilityCodes/autocomplete.json",
-                request,
-                function (data, status, xhr) {
-                    cache2[term] = data;
-                    if (xhr === lastXhr) {
-                        response(data);
-                    }
+                        return {
+                            label: item.label, // Display name in the dropdown
+                            value: item.value, // Use code as the input value
+                            addr: item.addr,
+                            phone: item.phone
+                        };
+                    }));
                 }
-            );
+            });
         },
+        minLength: 2, // Start searching after 2 characters
         select: function (event, ui) {
-            $(".user_name_of_institution").val(ui.item.label);
-            $(".user_institution_code").val(ui.item.value);
-            $(".user_institution_address").val(ui.item.addr);
-            $(".user_institution_contact").val(ui.item.phone);
-            return false;
-        },
-        minLength: 2  
+            console.log(ui.item);
+            $("#name-of-institution").val(ui.item.label);
+            $("#institution-code").val(ui.item.value);
+            $("#institution-address").val(ui.item.addr);
+            $("#institution-contact").val(ui.item.phone);
+        }
     });
-
     var cache3 = {},
         lastXhr;
-    $(".user_name_of_institution").autocomplete({
+    $("#name-of-institution").autocomplete({
         source: function (request, response) {
             var term = request.term;
             if (term in cache3) {
@@ -56,24 +55,24 @@ $(function () {
                 function (data, status, xhr) {
                     cache3[term] = data;
                     if (xhr === lastXhr) {
-                        response(data);
+                        response(data.codes);
                     }
                 }
             );
         },
         select: function (event, ui) {
-            $(".user_name_of_institution").val(ui.item.label);
-            $(".user_institution_code").val(ui.item.value);
-            $(".user_institution_address").val(ui.item.addr);
-            $(".user_institution_contact").val(ui.item.phone);
+            $("#name-of-institution").val(ui.item.label);
+            $("#institution-code").val(ui.item.value);
+            $("#institution-address").val(ui.item.addr);
+            $("#institution-contact").val(ui.item.phone);
             return false;
         },
-        minLength: 2  
+        minLength: 2
     });
 
     var cache4 = {},
         lastXhr;
-    $("#UserSponsorEmail").autocomplete({
+    $("#sponsor-email").autocomplete({
         source: function (request, response) {
             var term = request.term;
             if (term in cache4) {
@@ -85,19 +84,19 @@ $(function () {
                 "/authorities/autocomplete.json",
                 request,
                 function (data, status, xhr) {
-                    cache4[term] = data;
+                    cache4[term] = data.codes;
                     if (xhr === lastXhr) {
-                        response(data);
+                        response(data.codes);
                     }
                 }
             );
         },
         select: function (event, ui) {
-            $("#UserSponsorEmail").val(ui.item.value);
-            $("#UserNameOfInstitution").val(ui.item.label);
-            $("#UserInstitutionAddress").val(ui.item.addr);
-            $("#UserInstitutionCode").val(ui.item.code);
-            $("#UserInstitutionContact").val(ui.item.phone);
+            $("#sponsor-email").val(ui.item.value);
+            $("#name-of-institution").val(ui.item.label);
+            $("#institution-address").val(ui.item.addr);
+            $("#institution-code").val(ui.item.code);
+            $("#institution-contact").val(ui.item.phone);
             return false;
         },
     });
