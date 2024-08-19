@@ -11,7 +11,9 @@ echo $this->Html->css('sadr', array('inline' => false));
 <section id="sadrsadd">
 
     <?php
-    echo $this->Form->create($sadr);
+    echo $this->Form->create($sadr, [
+        'type' => 'file',
+    ]);
     ?>
     <div class="row-fluid">
         <div class="span10 formback" style="padding: 10px;">
@@ -49,14 +51,14 @@ echo $this->Html->css('sadr', array('inline' => false));
                         <?php
                         echo $this->Form->control(
                             'report_title',
-                            array(
-                                'label' => array('class' => 'control-label required', 'text' => 'REPORT TITLE<span style="color:red;">*</span>', 'escape' => false),
-                                'placeholder' => 'this content title..',
-                                'title' => 'Report Title',
-                                'data-content' => 'Appropriate title for the report e.g Nevirapine related Rash',
-                                'after' => '<p class="help-block"> e.g Nevirapine related rash </p></div>',
-                                'class' => 'span9',
-                            )
+                            // array(
+                            //     'label' => array('class' => 'control-label required', 'text' => 'REPORT TITLE<span style="color:red;">*</span>', 'escape' => false),
+                            //     'placeholder' => 'this content title..',
+                            //     'title' => 'Report Title',
+                            //     'data-content' => 'Appropriate title for the report e.g Nevirapine related Rash',
+                            //     'after' => '<p class="help-block"> e.g Nevirapine related rash </p></div>',
+                            //     'class' => 'span9',
+                            // )
                         );
                         ?>
                     </div>
@@ -244,6 +246,9 @@ echo $this->Html->css('sadr', array('inline' => false));
                             )
                         );
                         echo $this->Form->control('contact', array('label' => array('class' => 'control-label', 'text' => 'INSTITUTION CONTACT'),));
+                        $defaultSubCountyId = $sadr['sub_county_id'];
+
+                        echo '<p id="defaultSubCountyId" style="display:none">' . h($defaultSubCountyId) . '</p>';
                         ?>
                     </div>
                     <!--/span-->
@@ -266,15 +271,11 @@ echo $this->Html->css('sadr', array('inline' => false));
                         ?>
                         <div class="well-mine">
                             <?php
-
+ 
                             echo $this->Form->control(
                                 'date_of_birth',
                                 array(
-                                    'type' => 'date',
-                                    // 'dateFormat' => 'DMY',   'minYear' => date('Y') - 100, 'maxYear' => date('Y'), 'empty' => true,
-                                    'dateFormat' => 'DMY',
-                                    'minYear' => date('Y') - 100,
-                                    'maxYear' => date('Y'),
+                                    'type' => 'text', 
                                     'empty' => array('day' => '(choose day)', 'month' => '(choose month)', 'year' => '(choose year)'),
                                     'label' => array('class' => 'control-label required', 'text' => 'DATE OF BIRTH <span style="color:red;">*</span>', 'escape' => false),
                                     'title' => 'select beginning of the month if unsure',
@@ -323,7 +324,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             'known_allergy',
                             array(
                                 'type' => 'radio',
-                                'label' => false,
+                                'label' => array('class' => 'control-label required','text'=>'ANY KNOWN ALLERGY'),
                                 'legend' => false,
                                 'div' => false,
                                 'hiddenField' => false,
@@ -539,15 +540,12 @@ echo $this->Html->css('sadr', array('inline' => false));
                             )
                         );
 
-                        // echo $this->element('multi/sadr_reactions');
+                        echo $this->element('multi/sadr_reactions');
 
                         echo $this->Form->control(
                             'date_of_onset_of_reaction',
                             array(
-                                'type' => 'date',
-                                'dateFormat' => 'DMY',
-                                'minYear' => date('Y') - 100,
-                                'maxYear' => date('Y'),
+                                'type' => 'text', 
                                 'empty' => true,
                                 'label' => array('class' => 'control-label required', 'text' => 'DATE OF ONSET OF REACTION <span style="color:red;">*</span>', 'escape' => false),
                                 'after' => '<p class="help-block"> When did the reaction start </p></div>',
@@ -1174,7 +1172,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                     </div>
                 </div>
 
-                <?php //echo $this->element('help/assessment'); 
+                <?php 
+                echo $this->element('help/assessment'); 
                 ?>
 
                 <div class="row-fluid">
@@ -1198,8 +1197,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                 <!--/row-->
                 <hr>
 
-                <?php 
-                echo $this->element('multi/attachments', ['model' => 'Sadr', 'group' => 'attachment', 'examples' => '']); 
+                <?php
+                echo $this->element('multi/attachments', ['model' => 'Sadr', 'group' => 'attachment', 'examples' => '']);
                 ?>
                 <div class="row-fluid">
                     <div class="span6">
@@ -1208,8 +1207,11 @@ echo $this->Html->css('sadr', array('inline' => false));
                             'reporter_name',
                             array(
                                 'div' => array('class' => 'control-group required'),
-                                'label' => array('class' => 'control-label required', 
-                                'text' => 'Name of Person Reporting <span style="color:red;">*</span>','escape'=>false),
+                                'label' => array(
+                                    'class' => 'control-label required',
+                                    'text' => 'Name of Person Reporting <span style="color:red;">*</span>',
+                                    'escape' => false
+                                ),
                             )
                         );
                         echo $this->Form->control(
@@ -1217,7 +1219,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             array(
                                 'type' => 'email',
                                 'div' => array('class' => 'control-group required'),
-                                'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS <span style="color:red;">*</span>','escape'=>false)
+                                'label' => array('class' => 'control-label required', 'text' => 'E-MAIL ADDRESS <span style="color:red;">*</span>', 'escape' => false)
                             )
                         );
 
@@ -1285,7 +1287,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                                         'legend' => false,
                                         'div' => false,
                                         'hiddenField' => false,
-                                        'id'=>'PersonSubmittingNo',
+                                        'id' => 'PersonSubmittingNo',
                                         'class' => 'person-submit ',
                                         'format' => array('before', 'label', 'between', 'control', 'error', 'after'),
                                         'error' => array('attributes' => array('wrap' => 'p', 'class' => 'required error')),
@@ -1331,7 +1333,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                                 'options' => $designations,
                                 'empty' => true,
                                 'class' => 'diff',
-                                'label' => array('class' => 'control-label required', 'text' => 'Designation' . ' <span style="color:red;">*</span>','escape'=>false),
+                                'label' => array('class' => 'control-label required', 'text' => 'Designation' . ' <span style="color:red;">*</span>', 'escape' => false),
                                 'empty' => true
                             )
                         );
@@ -1357,8 +1359,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                 </div>
                 <!--/row-->
 
-                <?php 
-                echo $this->element('help/explanatory'); 
+                <?php
+                echo $this->element('help/explanatory');
                 ?>
             </div>
 

@@ -20,9 +20,34 @@ class SubCountiesController extends AppController
     public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
-        $this->Auth->allow('autocomplete');
+        $this->Auth->allow(['single','autocomplete']);
     }
+    public function single()
+    {
 
+        $term = $this->request->getQuery('county');
+        $subCounties = $this->SubCounties->find()
+            ->where(['SubCounties.id' => $term])
+            ->all();
+
+        if ($subCounties->isEmpty()) {
+            throw new NotFoundException(__('No sub-counties found for the selected county.'));
+        }
+
+        // Prepare data for JSON response
+        $subCountiesList = [];
+        foreach ($subCounties as $subCounty) {
+            $subCountiesList[] = [
+                'id' => $subCounty->id,
+                'name' => $subCounty->sub_county_name
+            ];
+        }
+
+        $this->set([
+            'codes' => $subCountiesList,
+            '_serialize' => ['codes']
+        ]);
+    }
     public function autocomplete()
     {
 

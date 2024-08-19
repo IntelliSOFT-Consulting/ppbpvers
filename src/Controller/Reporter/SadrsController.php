@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Reporter;
 
 use App\Controller\AppController;
+use Cake\I18n\FrozenTime;
 
 /**
  * Sadrs Controller
@@ -44,9 +45,11 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations', 'Sadrs', 'AttachmentsOld', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'Sadrs', 'AttachmentsOld', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
 
+        // debug($sadr);
+        // exit;
         $this->set(compact('sadr'));
     }
 
@@ -92,41 +95,68 @@ class SadrsController extends AppController
     public function edit($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Attachments'],
+            'contain' => ['Attachments', 'SadrReaction'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $validate = false;
             if (!empty($this->request->getData('submitReport'))) {
                 $validate = 'first';
-                debug("submitting....");
+                // debug("submitting....");
             }
-           
+
             $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData(), [
                 'associated' => [
-                    // 'Attachments' => ['validate' => ($this->request->getData('submitted') == 2)]
+                    'Attachments',
+                    'SadrReaction'
                 ]
             ]);
-            debug($this->request->getData());
-            debug($sadr);
-            exit; 
+            // debug($this->request->getData());
+            // debug($sadr);
+            // exit; 
             if ($this->Sadrs->save($sadr, array('validate' => $validate, 'deep' => true))) {
+                $sadr = $this->Sadrs->get($id, [
+                    'contain' => ['Attachments', 'SadrReaction'],
+                ]);
+                //      debug($sadr);
+                // exit; 
                 if (!empty($this->request->getData('submitReport'))) {
-                    $this->Sadrs->saveField('submitted', 2);
-                    $this->Sadrs->saveField('submitted_date', date("Y-m-d H:i:s"));
-                    //lucian
-                    // if(empty($sadr->reference_no)) {
+
+                    $dataTable = $this->getTableLocator()->get('sadrs');
+                    // Update the field using the query builder
+                    $result = $dataTable->query()
+                        ->update()
+                        ->set([
+                            'submitted' => 2,
+                            'submitted_date' => date("Y-m-d H:i:s"),
+                        ])
+                        ->where(['id' => $id])
+                        ->execute();
+
                     if (!empty($sadr['reference_no']) && $sadr['reference_no'] == 'new') {
-                        $count = $this->Sadrs->find('count',  array(
-                            'fields' => 'Sadrs.reference_no',
-                            'conditions' => array(
-                                'Sadrs.submitted_date BETWEEN ? and ?' => array(date("Y-01-01 00:00:00"), date("Y-m-d H:i:s")), 'Sadrs.reference_no !=' => 'new'
-                            )
-                        ));
+
+
+                        $startDate = new FrozenTime(date("Y-01-01 00:00:00"));
+                        $endDate = new FrozenTime(date("Y-m-d H:i:s"));
+
+                        $count = $this->Sadrs->find()
+                            ->where([
+                                'Sadrs.submitted_date BETWEEN :start AND :end',
+                                'Sadrs.reference_no !=' => 'new'
+                            ])
+                            ->bind(':start', $startDate->format('Y-m-d H:i:s'), 'datetime')
+                            ->bind(':end', $endDate->format('Y-m-d H:i:s'), 'datetime')
+                            ->count();
                         $count++;
                         $count = ($count < 10) ? "0$count" : $count;
                         $reference = 'SADR/' . date('Y') . '/' . $count;
-                        $this->Sadrs->saveField('reference_no', $reference);
+                        $result = $dataTable->query()
+                            ->update()
+                            ->set([
+                                'reference_no' => $reference
+                            ])
+                            ->where(['id' => $id])
+                            ->execute();
                     }
                     //bokelo
                     // $sadr = $this->Sadr->read(null, $id);
@@ -198,15 +228,15 @@ class SadrsController extends AppController
                     // }
 
                     $this->Flash->success(__('The SADR has been submitted to PPB'));
-                    $this->redirect(array('action' => 'view', $sadr->id));
+                   return $this->redirect(array('action' => 'view', $sadr->id));
                 }
                 // debug($this->request->data);
                 $this->Flash->success(__('The SADR has been saved'));
                 $this->redirect($this->referer());
             } else {
-                 $errors = $sadr->getErrors(); 
-            debug($errors);
-            exit;
+                // $errors = $sadr->getErrors();
+                // debug($errors);
+                // exit;
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
             }
 
@@ -225,6 +255,8 @@ class SadrsController extends AppController
         $counties = $this->Sadrs->Counties->find('list', ['limit' => 200])->all();
         $sub_counties = $this->Sadrs->SubCounties->find('list', ['limit' => 200])->all();
         $designations = $this->Sadrs->Designations->find('list', ['limit' => 200])->all();
+        // debug($sadr);
+        // exit;
         $this->set(compact('sadr', 'users', 'pqmps', 'medications', 'counties', 'sub_counties', 'designations'));
     }
 

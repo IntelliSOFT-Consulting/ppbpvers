@@ -42,7 +42,19 @@ class MeddrasTable extends Table
 
         $this->addBehavior('Timestamp');
     }
+    public function findByTerm(Query $query, array $options): Query
+    {
+        $term = $options['term'] ?? '';
+        $type = $options['type'] ?? '';
 
+        if ($type === 'N') {
+            // Example: searching by numeric term
+            return $query->where(['pt_code LIKE' => "%$term%"]);
+        } else {
+            // Example: searching by alphanumeric term
+            return $query->where(['llt_name LIKE' => "%$term%"]);
+        }
+    }
     /**
      * Default validation rules.
      *

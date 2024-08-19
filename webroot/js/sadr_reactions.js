@@ -17,9 +17,9 @@ $(function() {
             var new_SadrReaction = $('<div class="sadr-reaction-group">\
                 <div class="row-fluid">\
                     <div class="span8">\
-                      <input type="hidden" name="data[SadrReaction][{i}][id]" class="" id="SadrReaction{i}Id">\
+                      <input type="hidden" name="sadr_reaction[{i}][id]" class="" id="sadr_reaction{i}Id">\
                       <div class="control-group">\
-                        <div class="controls"><input type="text" name="data[SadrReaction][{i}][reaction]" class="span8 reaction" id="SadrReaction{i}Reaction"></div>\
+                        <div class="controls"><input type="text" name="sadr_reaction[{i}][reaction]" class="span8 reaction" id="sadr_reaction{i}Reaction"></div>\
                       </div>\
                     </div>\
                     <div class="row-fluid">\
@@ -31,8 +31,27 @@ $(function() {
               </div>\
             </div>'.replace(/{i}/g, intId)); 
             $("#sadr-reactions").append(new_SadrReaction);
-            $('.reaction').autocomplete({
-                source: "/meddras/autocomplete.json"
+            $('.reaction').autocomplete({             
+              source: function (request, response) { 
+                    $.ajax({
+                        url: '/Meddras/autocomplete.json', // Replace with your API endpoint
+                        data: {
+                            term: request.term // Pass the input value to the API
+                        },
+                        success: function (data) {
+                            response($.map(data.codes, function (item) { 
+                                return {
+                                    label: item.label, // Display name in the dropdown
+                                    value: item.value,
+                                };
+                            }));
+                        }
+                    });
+                },
+                minLength: 2, // Start searching after 2 characters
+                select: function (event, ui) {
+                    console.log(ui.item); 
+                }
             });
         } else {
             alert("Sorry, cant add more than "+$("#sadr-reactions .sadr-reaction-group").length+" descriptions!");
@@ -43,7 +62,7 @@ $(function() {
     function removeSadrReaction() {
         intId = parseFloat($(this).attr('id').replace('sadr_reactionsButton', ''));
         
-        var inputVal = $('#SadrReaction'+ intId +'Id').val();
+        var inputVal = $('#sadr_reactions'+ intId +'Id').val();
         if (inputVal) {
           
             $.ajax({

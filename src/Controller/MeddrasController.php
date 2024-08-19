@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Event\EventInterface;
 
 /**
  * Meddras Controller
@@ -11,6 +14,33 @@ namespace App\Controller;
  */
 class MeddrasController extends AppController
 {
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow('autocomplete');
+    }
+
+    public function autocomplete()
+    {
+
+        $term = $this->request->getQuery('term');
+        $type = is_numeric($term) ? 'N' : 'A';
+
+        $coders = $this->Meddras->find('byTerm', ['term' => $term, 'type' => $type])->toArray();
+
+        $codes = [];
+        foreach ($coders as $value) {
+            $codes[] = [
+                'value' => $value->llt_name,
+                'label' => $value->llt_name, 
+            ];
+        }
+
+        $this->set([
+            'codes' => $codes,
+            '_serialize' => ['codes']
+        ]);
+    }
     /**
      * Index method
      *

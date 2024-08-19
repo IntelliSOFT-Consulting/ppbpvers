@@ -1,4 +1,119 @@
 $(document).ready(function () {
+    $('#report-title').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Meddras/autocomplete.json', // Replace with your API endpoint
+                data: {
+                    term: request.term // Pass the input value to the API
+                },
+                success: function (data) {
+                    response($.map(data.codes, function (item) {
+                        return {
+                            label: item.label, // Display name in the dropdown
+                            value: item.value,
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2, // Start searching after 2 characters
+        select: function (event, ui) {
+            console.log(ui.item);
+            // $("#report-title").val(ui.item.label); 
+        }
+    });
+
+    $('#reaction').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/Meddras/autocomplete.json', // Replace with your API endpoint
+                data: {
+                    term: request.term // Pass the input value to the API
+                },
+                success: function (data) {
+                    response($.map(data.codes, function (item) {
+                        return {
+                            label: item.label, // Display name in the dropdown
+                            value: item.value,
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2, // Start searching after 2 characters
+        select: function (event, ui) {
+            console.log(ui.item);
+            // $("#report-title").val(ui.item.label); 
+        }
+    });
+    $('#institution-code').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/api/facilityCodes/autocomplete.json', // Replace with your API endpoint
+                data: {
+                    term: request.term // Pass the input value to the API
+                },
+                success: function (data) {
+                    response($.map(data.codes, function (item) {
+
+                        return {
+                            label: item.label, // Display name in the dropdown
+                            value: item.value, // Use code as the input value
+                            addr: item.addr,
+                            phone: item.phone
+                        };
+                    }));
+                }
+            });
+        },
+        minLength: 2, // Start searching after 2 characters
+        select: function (event, ui) {
+            console.log(ui.item);
+            $("#name-of-institution").val(ui.item.label);
+            $("#institution-code").val(ui.item.value);
+            $("#address").val(ui.item.addr);
+            $("#institution-contact").val(ui.item.phone);
+        }
+    });
+    var defaultSubCountyId = $('#defaultSubCountyId').text().trim(); // Get default ID from <p> tag
+    if (defaultSubCountyId != "") {
+        console.log('selected sub county ');
+        console.log(defaultSubCountyId);
+        var subCountySelect = $('.sub_county');
+        subCountySelect.empty();
+        $.ajax({
+            url: '/api/subCounties/single.json', // Replace with your API endpoint
+            type: 'GET',
+            data: { county: defaultSubCountyId },
+            success: function (response) {
+                console.log(response);
+                // Assuming the response is an array of sub-counties 
+                if (Array.isArray(response.codes)) {
+                    $.each(response.codes, function (index, subCounty) {
+                        console.log(subCounty);
+                        subCountySelect.append(
+                            $('<option></option>').val(subCounty.id).text(subCounty.name)
+                        );
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error fetching sub-counties:', error);
+                subCountySelect.append('<option value="">Error loading sub-counties</option>');
+            }
+        });
+    }
+
+    $('#date-of-birth,#date-of-onset-of-reaction').datepicker({
+        minDate: "-100Y", maxDate: "-0D",
+        dateFormat: 'dd-mm-yy',
+        showButtonPanel: true,
+        changeMonth: true,
+        changeYear: true,
+        showAnim: 'show'
+    });
+
+
     if ($('input[name="gender"]:checked').val() === "Male") {
         $(".pregnancy_status").attr("disabled", "disabled");
         $(".pregnancy_status").prop("checked", false);
@@ -16,20 +131,20 @@ $(document).ready(function () {
         }
     });
 
-    $('.county').on('change', function() {
+    $('.county').on('change', function () {
         var selectedCounty = $(this).val();
-        console.log('selected county **** '+selectedCounty);
+        console.log('selected county **** ' + selectedCounty);
         var subCountySelect = $('.sub_county');
-                
+        subCountySelect.empty();
         $.ajax({
             url: '/api/subCounties/autocomplete.json', // Replace with your API endpoint
             type: 'GET',
             data: { county: selectedCounty },
-            success: function(response) {
+            success: function (response) {
                 console.log(response);
                 // Assuming the response is an array of sub-counties 
                 if (Array.isArray(response.codes)) {
-                    $.each(response.codes, function(index, subCounty) {
+                    $.each(response.codes, function (index, subCounty) {
                         console.log(subCounty);
                         subCountySelect.append(
                             $('<option></option>').val(subCounty.id).text(subCounty.name)
@@ -37,14 +152,14 @@ $(document).ready(function () {
                     });
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.error('Error fetching sub-counties:', error);
                 subCountySelect.append('<option value="">Error loading sub-counties</option>');
             }
         });
 
     });
- 
+
 
     $("#SadrCountyId").combobox();
 
@@ -105,7 +220,7 @@ $(document).ready(function () {
             $(".diff:input").prop("disabled", true);
         }
     });
-    if ($("#PersonSubmittingNo").is(":checked")) {
+    if ($("#person-submitting-no").is(":checked")) {
         $(".diff:input").prop("disabled", true);
     }
 
@@ -113,96 +228,14 @@ $(document).ready(function () {
         dateFormat: 'yy-mm-dd', // Adjust the format as per your requirement
         changeMonth: true,
         changeYear: true,
+        minDate: "-100Y",
+        maxDate: "-0D",
     });
-
-    //If Male disable
-
-    // $('input[name="data[Sadr][gender]"]').click(function () {
-    //     if ($(this).val() == 'Male') {
-    //         $('input[name="data[Sadr][pregnancy_status]"]').attr('disabled', this.checked).attr('checked', !this.checked);
-    //     } else {
-    //         $('input[name="data[Sadr][pregnancy_status]"]').attr('disabled', false);
-    //     }
-    // });
-    // if ($('input[name="data[Sadr][gender]"][value="Male"]').is(':checked')) { $('input[name="data[Sadr][pregnancy_status]"]').attr('disabled', true).attr('checked', false); }
-
-    //If not serious disable criteria
-    // $('input[name="data[Sadr][serious]"]').click(function () {
-    //     if ($(this).val() == 'No') {
-    //         $('input[name="data[Sadr][serious_reason]"]').attr('disabled', this.checked).attr('checked', !this.checked);
-    //         $('#serious_reason_clear').hide();
-    //     } else {
-    //         $('input[name="data[Sadr][serious_reason]"]').attr('disabled', false);
-    //         $('#serious_reason_clear').show();
-    //     }
-    // });
-    // if ($('input[name="data[Sadr][serious]"][value="No"]').is(':checked')) { $('input[name="data[Sadr][serious_reason]"]').attr('disabled', true).attr('checked', false); }
-
+ 
     $("#SadrReaction").autocomplete({
         source: "/meddras/autocomplete.json",
     });
-    $("#SadrReportTitle").autocomplete({
-        source: "/meddras/autocomplete.json",
-    });
-    var cache2 = {},
-        lastXhr;
-    $("#SadrInstitutionCode").autocomplete({
-        source: function (request, response) {
-            var term = request.term;
-            if (term in cache2) {
-                response(cache2[term]);
-                return;
-            }
 
-            lastXhr = $.getJSON(
-                "/facility_codes/autocomplete.json",
-                request,
-                function (data, status, xhr) {
-                    cache2[term] = data;
-                    if (xhr === lastXhr) {
-                        response(data);
-                    }
-                }
-            );
-        },
-        select: function (event, ui) {
-            $("#SadrNameOfInstitution").val(ui.item.label);
-            $("#SadrInstitutionCode").val(ui.item.value);
-            $("#SadrAddress").val(ui.item.addr);
-            $("#SadrInstitutionContact").val(ui.item.phone);
-            return false;
-        },
-    });
-
-    var cache3 = {},
-        lastXhr;
-    $("#SadrNameOfInstitution").autocomplete({
-        source: function (request, response) {
-            var term = request.term;
-            if (term in cache3) {
-                response(cache3[term]);
-                return;
-            }
-
-            lastXhr = $.getJSON(
-                "/facility_codes/autocomplete.json",
-                request,
-                function (data, status, xhr) {
-                    cache3[term] = data;
-                    if (xhr === lastXhr) {
-                        response(data);
-                    }
-                }
-            );
-        },
-        select: function (event, ui) {
-            $("#SadrNameOfInstitution").val(ui.item.label);
-            $("#SadrInstitutionCode").val(ui.item.value);
-            $("#SadrAddress").val(ui.item.addr);
-            $("#SadrInstitutionContact").val(ui.item.phone);
-            return false;
-        },
-    });
     // get the id of Sadr_medicinal_product_
     $("#SadrMedicinalProduct").change(function () {
         $("#SadrHerbalProduct").attr("checked", false);
