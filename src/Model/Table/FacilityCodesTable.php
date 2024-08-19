@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -47,20 +48,20 @@ class FacilityCodesTable extends Table
     }
 
 
-       // Custom finder method
-       public function findByTerm(Query $query, array $options): Query
-       {
-           $term = $options['term'] ?? '';
-           $type = $options['type'] ?? '';
-   
-           if ($type === 'N') {
-               // Example: searching by numeric term
-               return $query->where(['facility_code LIKE' => "%$term%"]);
-           } else {
-               // Example: searching by alphanumeric term
-               return $query->where(['facility_name LIKE' => "%$term%"]);
-           }
-       }
+    // Custom finder method
+    public function findByTerm(Query $query, array $options): Query
+    {
+        $term = $options['term'] ?? '';
+        $type = $options['type'] ?? '';
+
+        if ($type === 'N') {
+            // Example: searching by numeric term
+            return $query->where(['facility_code LIKE' => "%$term%"])->limit(100);
+        } else {
+            // Example: searching by alphanumeric term
+            return $query->where(['facility_name LIKE' => "%$term%"])->limit(100);
+        }
+    }
     /**
      * Default validation rules.
      *

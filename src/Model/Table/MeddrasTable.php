@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -36,7 +37,7 @@ class MeddrasTable extends Table
     public function initialize(array $config): void
     {
         parent::initialize($config);
-                $this->setTable('meddras');
+        $this->setTable('meddras');
         $this->setDisplayField('llt_name');
         $this->setPrimaryKey('id');
 
@@ -49,10 +50,10 @@ class MeddrasTable extends Table
 
         if ($type === 'N') {
             // Example: searching by numeric term
-            return $query->where(['pt_code LIKE' => "%$term%"]);
+            return $query->where(['pt_code LIKE' => "%$term%"])->limit(100);
         } else {
             // Example: searching by alphanumeric term
-            return $query->where(['llt_name LIKE' => "%$term%"]);
+            return $query->where(['llt_name LIKE' => "%$term%"])->limit(100);
         }
     }
     /**

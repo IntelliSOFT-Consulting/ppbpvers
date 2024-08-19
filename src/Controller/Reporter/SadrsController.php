@@ -6,6 +6,9 @@ namespace App\Controller\Reporter;
 
 use App\Controller\AppController;
 use Cake\I18n\FrozenTime;
+use Cake\Routing\Router;
+use Cake\Utility\Text;
+use Cake\View\Helper\HtmlHelper;
 
 /**
  * Sadrs Controller
@@ -115,13 +118,13 @@ class SadrsController extends AppController
             // debug($sadr);
             // exit; 
             if ($this->Sadrs->save($sadr, array('validate' => $validate, 'deep' => true))) {
-                $sadr = $this->Sadrs->get($id, [
-                    'contain' => ['Attachments', 'SadrReaction'],
-                ]);
+
                 //      debug($sadr);
                 // exit; 
                 if (!empty($this->request->getData('submitReport'))) {
-
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction'],
+                    ]);
                     $dataTable = $this->getTableLocator()->get('sadrs');
                     // Update the field using the query builder
                     $result = $dataTable->query()
@@ -158,77 +161,101 @@ class SadrsController extends AppController
                             ->where(['id' => $id])
                             ->execute();
                     }
-                    //bokelo
-                    // $sadr = $this->Sadr->read(null, $id);
+                    //bokelo 
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction'],
+                    ]);
+                    //******************       Send Email and Notifications to Reporter and Managers          *****************************
 
-                    // //******************       Send Email and Notifications to Reporter and Managers          *****************************
-                    // $this->loadModel('Message');
-                    // $html = new HtmlHelper(new ThemeView());
-                    // $message = $this->Message->find('first', array('conditions' => array('name' => 'reporter_sadr_submit')));
-                    // $variables = array(
-                    //     'name' => $this->Auth->User('name'), 'reference_no' => $sadr['Sadr']['reference_no'],
-                    //     'reference_link' => $html->link(
-                    //         $sadr['Sadr']['reference_no'],
-                    //         array('controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id'], 'reporter' => true, 'full_base' => true),
-                    //         array('escape' => false)
-                    //     ),
-                    //     'modified' => $sadr['Sadr']['modified']
-                    // );
-                    // $datum = array(
-                    //     'email' => $sadr['Sadr']['reporter_email'],
-                    //     'id' => $id, 'user_id' => $this->Auth->User('id'), 'type' => 'reporter_sadr_submit', 'model' => 'Sadr',
-                    //     'subject' => CakeText::insert($message['Message']['subject'], $variables),
-                    //     'message' => CakeText::insert($message['Message']['content'], $variables)
-                    // );
+                    $html = new HtmlHelper(new \Cake\View\View());
 
-                    // $this->loadModel('Queue.QueuedTask');
-                    // $this->QueuedTask->createJob('GenericEmail', $datum);
-                    // $this->QueuedTask->createJob('GenericNotification', $datum);
+                    $message = $this->Messages->find()
+                        ->where(['name' => 'reporter_sadr_submit'])
+                        ->first();
+                    $referenceLink = Router::url([
+                        'controller' => 'sadrs',
+                        'action' => 'view',
+                        $sadr['id'],
+                        'reporter' => true
+                    ], true);
+                    $variables = array(
+                        'name' => $this->Auth->User('name'),
+                        'reference_no' => $sadr['reference_no'],
+                        'reference_link' => $html->link(
+                            $sadr['reference_no'],
+                            $reference,
+                            array('escape' => false)
+                        ),
+                        'modified' => $sadr['modified']
+                    );
+                    $datum = array(
+                        'email' => $sadr['reporter_email'],
+                        'id' => $id,
+                        'user_id' => $this->Auth->User('id'),
+                        'type' => 'reporter_sadr_submit',
+                        'model' => 'Sadr',
+                        'subject' => Text::insert($message['subject'], $variables),
+                        'message' => Text::insert($message['content'], $variables)
+                    );
+
+                    $this->QueuedJobs->createJob('GenericEmail', $datum);
+                    $this->QueuedJobs->createJob('GenericNotification', $datum);
 
 
-                    // //Send SMS
-                    // if (!empty($sadr['Sadr']['reporter_phone']) && strlen(substr($sadr['Sadr']['reporter_phone'], -9)) == 9 && is_numeric(substr($sadr['Sadr']['reporter_phone'], -9))) {
-                    //     $datum['phone'] = '254' . substr($sadr['Sadr']['reporter_phone'], -9);
-                    //     $variables['reference_url'] = Router::url(['controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id'], 'reporter' => true, 'full_base' => true]);
-                    //     $datum['sms'] = CakeText::insert($message['Message']['sms'], $variables);
-                    //     $this->QueuedTask->createJob('GenericSms', $datum);
+                    //Send SMS
+                    // if (!empty($sadr['reporter_phone']) && strlen(substr($sadr['reporter_phone'], -9)) == 9 && is_numeric(substr($sadr['reporter_phone'], -9))) {
+                    //     $datum['phone'] = '254' . substr($sadr['reporter_phone'], -9);
+                    //     $variables['reference_url'] = Router::url(['controller' => 'sadrs', 'action' => 'view', $sadr['id'], 'reporter' => true, 'full_base' => true]);
+                    //     $datum['sms'] = Text::insert($message['sms'], $variables);
+                    //     $this->QueuedJobs->createJob('GenericSms', $datum);
                     // }
 
-                    // //Notify managers
-                    // $users = $this->Sadr->User->find('all', array(
-                    //     'contain' => array(),
-                    //     'conditions' => array('User.group_id' => 2, 'User.is_active' => '1')
-                    // ));
-                    // foreach ($users as $user) {
-                    //     $variables = array(
-                    //         'name' => $user['User']['name'], 'reference_no' => $sadr['Sadr']['reference_no'],
-                    //         'reference_link' => $html->link(
-                    //             $sadr['Sadr']['reference_no'],
-                    //             array('controller' => 'sadrs', 'action' => 'view', $sadr['Sadr']['id'], 'manager' => true, 'full_base' => true),
-                    //             array('escape' => false)
-                    //         ),
-                    //         'modified' => $sadr['Sadr']['modified']
-                    //     );
-                    //     $datum = array(
-                    //         'email' => $user['User']['email'],
-                    //         'id' => $id, 'user_id' => $user['User']['id'], 'type' => 'reporter_sadr_submit', 'model' => 'Sadr',
-                    //         'subject' => CakeText::insert($message['Message']['subject'], $variables),
-                    //         'message' => CakeText::insert($message['Message']['content'], $variables)
-                    //     );
+                    //Notify managers
+                    $users = $this->Sadrs->Users->find('all', array(
+                        'contain' => array(),
+                        'conditions' => array('Users.role_id' => 2, 'Users.is_active' => '1')
+                    ));
+                    foreach ($users as $user) {
 
-                    //     $this->QueuedTask->createJob('GenericEmail', $datum);
-                    //     $this->QueuedTask->createJob('GenericNotification', $datum);
-                    // }
-                    //**********************************    END   *********************************
+                        $referenceLink = Router::url([
+                            'controller' => 'sadrs',
+                            'action' => 'view',
+                            $sadr['id'],
+                            'manager' => true
+                        ], true);
+                        $variables = array(
+                            'name' => $user['name'],
+                            'reference_no' => $sadr['reference_no'],
+                            'reference_link' => $html->link(
+                                $sadr['reference_no'],
+                                $referenceLink,
+                                array('escape' => false)
+                            ),
+                            'modified' => $sadr['modified']
+                        );
+                        $datum = array(
+                            'email' => $user['email'],
+                            'id' => $id,
+                            'user_id' => $user['id'],
+                            'type' => 'reporter_sadr_submit',
+                            'model' => 'Sadr',
+                            'subject' => Text::insert($message['subject'], $variables),
+                            'message' => Text::insert($message['content'], $variables)
+                        );
+
+                        $this->QueuedTask->createJob('GenericEmail', $datum);
+                        $this->QueuedTask->createJob('GenericNotification', $datum);
+                    }
+                    // **********************************    END   *********************************
 
                     // If the report is serious sent an alert:
-                    // $serious = $sadr['Sadr']['serious'];
-                    // if ($serious == "Yes") {
-                    //     $this->notifyCountyPharmacist($sadr);
-                    // }
+                    $serious = $sadr['serious'];
+                    if ($serious == "Yes") {
+                        // $this->notifyCountyPharmacist($sadr);
+                    }
 
                     $this->Flash->success(__('The SADR has been submitted to PPB'));
-                   return $this->redirect(array('action' => 'view', $sadr->id));
+                    return $this->redirect(array('action' => 'view', $sadr->id));
                 }
                 // debug($this->request->data);
                 $this->Flash->success(__('The SADR has been saved'));

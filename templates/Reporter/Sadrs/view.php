@@ -69,15 +69,17 @@ $this->assign('SADR', 'active');
         <div class="row-fluid">
           <div class="span8">
             <?php
-            echo $this->element('comments/list', ['comments' => $sadr['ExternalComment']]);
+            echo $this->element('comments/list', ['comments' => $sadr['external_comment']]);
             ?>
           </div>
           <div class="span4 lefty">
             <?php
             echo $this->element('comments/add', [
               'model' => [
-                'model_id' => $sadr['id'], 'foreign_key' => $sadr['id'],
-                'model' => 'Sadr', 'category' => 'external', 'url' => 'report_feedback',
+                'model_id' => $sadr['id'], 
+                'foreign_key' => $sadr['id'],
+                'model' => 'Sadr',
+                 'category' => 'external', 'url' => 'report_feedback',
                 'review' => false
               ]
             ])
