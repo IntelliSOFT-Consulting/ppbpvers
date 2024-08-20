@@ -13,6 +13,7 @@ bake_all_default_values.sh
 /tmp/*
 /vendor/*
 supervisord.log
+/webroot/files
 
 # OS generated files #
 ######################
