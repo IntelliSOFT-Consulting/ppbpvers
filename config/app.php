@@ -16,8 +16,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN),
-'debug' => true,
+    'debug' => filter_var(env('DEBUG', true), FILTER_VALIDATE_BOOLEAN), 
 
     /*
      * Configure basic information about the application.
@@ -131,6 +130,14 @@ return [
             'serialize' => true,
             'duration' => '+1 years',
             'url' => env('CACHE_CAKEMODEL_URL', null),
+        ],
+        '_cake_routes_' => [
+            'className' => 'File',
+            'prefix' => 'myapp_cake_routes_',
+            'path' => CACHE . 'persistent/',
+            'serialize' => true,
+            'duration' => '+1 years',
+            'url' => env('CACHE_CAKE_ROUTES_URL', null),
         ],
     ],
 

@@ -11,8 +11,7 @@ LABEL imeja.image.authors="kiprotich.japheth19@gmail.com" \
 RUN a2enmod rewrite; \
     a2enmod headers; \
     a2enmod ssl
-
-# Install some extra stuff
+ 
 RUN set -ex; \
     apt-get update; \
     apt-get install -y \ 
@@ -24,12 +23,15 @@ RUN set -ex; \
     git \
     nodejs  \
     default-mysql-client \ 
-    vim; \
+    vim \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev; \
     apt-get clean
- 
 
 # Install some php extensions from the docker built source.
-RUN docker-php-ext-install gettext mysqli pdo_mysql zip 
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg; \
+    docker-php-ext-install gettext mysqli pdo_mysql zip gd
 
 
 # Install the intl extension
@@ -61,16 +63,18 @@ RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Install wkhtmltopdf
-RUN apt-get install -y \
-    wkhtmltopdf
-# Copy the migration script
+# RUN apt-get install -y \
+#     wkhtmltopdf
+# # Copy the migration script
 COPY run_migrations.sh /usr/local/bin/run_migrations.sh
 
 # Ensure the script is executable
 RUN chmod +x /usr/local/bin/run_migrations.sh
+RUN chmod +x .
 # Start Supervisor and Apache
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
-
+# Run the script after the container starts
+# CMD ["/bin/bash", "/usr/local/bin/init_db.sh"]
 # Run the migration script as the container's entrypoint
 # ENTRYPOINT ["/usr/local/bin/run_migrations.sh"]

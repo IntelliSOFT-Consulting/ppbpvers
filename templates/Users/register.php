@@ -88,6 +88,7 @@ echo $this->Html->script('registration', array('inline' => false));
 							]
 						]);
 						echo $this->Form->control('county_id', ['empty' => true]); 
+						// debug($this->Captcha->render());
 						echo $this->Captcha->render([
 							'placeholder' => __('Please solve the riddle'), 
 						]);

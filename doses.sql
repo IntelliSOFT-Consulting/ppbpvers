@@ -417,7 +417,7 @@ INSERT INTO `countries` (`id`, `code`, `name`, `name_fr`, `created`, `modified`)
 
 UPDATE countries SET created = CURRENT_TIMESTAMP,modified=CURRENT_TIMESTAMP;
  
-
+-- Dose Information Here
 
 TRUNCATE TABLE authorities;
 INSERT INTO `authorities` (`id`, `mah_name`, `mah_company_name`, `mah_company_address`, `mah_company_telephone`, `mah_company_email`, `product`, `master_mah`) VALUES
