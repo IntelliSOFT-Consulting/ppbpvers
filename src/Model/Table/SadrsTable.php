@@ -106,7 +106,7 @@ class SadrsTable extends Table
         $this->hasMany('Attachments', [
             'foreignKey' => 'foreign_key',
             'conditions' => [
-                'Attachments.model' => 'Sadr', 'Attachments.group' => 'attachment',
+                'Attachments.model' => 'Sadr',
             ]
         ]);
 

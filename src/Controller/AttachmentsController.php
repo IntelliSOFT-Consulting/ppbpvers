@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Event\EventInterface;
+use Cake\Filesystem\File;
+use Cake\Http\Client\Response;
+use Cake\Http\Exception\NotFoundException;
 
 /**
  * Attachments Controller
@@ -24,10 +27,39 @@ class AttachmentsController extends AppController
     public function beforeFilter(EventInterface $event): void
     {
         parent::beforeFilter($event);
-        $this->Auth->allow([
-            'add',
-            'view'
-        ]);
+        $this->Auth->allow(['add', 'view', 'download']);
+    }
+
+
+    public function download($id = null)
+    {
+        $attachment = $this->Attachments->get($id);
+
+        if (!$attachment) {
+            $this->Flash->error(__('The requested file does not exist!'));
+            return $this->redirect($this->referer());
+        }
+
+        // Get the directory name and file name from the attachment entity
+        $directory = $attachment->dirname;
+        $fileName = $attachment->basename;
+
+        // Construct the full file path
+        $filePath = ROOT . DS . $directory  . $fileName;
+
+        // Create a File object for the file
+        $file = new File($filePath);
+        if (!$file->exists()) {
+            $this->Flash->error(__('The requested file does not exist!'));
+            return $this->redirect($this->referer());
+        }
+
+        $response = $this->response->withFile(
+            $file->path,
+            ['download' => true, 'name' => $attachment->basename]
+        );
+
+        return $response;
     }
     /**
      * Index method

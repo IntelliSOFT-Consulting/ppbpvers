@@ -47,6 +47,9 @@ RUN docker-php-ext-enable intl
 COPY . /var/www/html/
 WORKDIR /var/www/html
 
+# COPY . /var/www/html/web/cake/pharmacovigilance-revamped/
+# WORKDIR /var/www/html/web/cake/pharmacovigilance-revamped
+
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

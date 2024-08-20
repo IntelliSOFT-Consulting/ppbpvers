@@ -48,7 +48,7 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'Sadrs', 'AttachmentsOld', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'Sadrs', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
 
         // debug($sadr);
