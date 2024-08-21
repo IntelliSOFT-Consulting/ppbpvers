@@ -81,6 +81,9 @@ class SadrsController extends AppController
             'contain' => [],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $data= $this->request->getData();
+            debug($data);
+            exit;
             $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData());
             if ($this->Sadrs->save($sadr)) {
                 $this->Flash->success(__('The sadr has been saved.'));

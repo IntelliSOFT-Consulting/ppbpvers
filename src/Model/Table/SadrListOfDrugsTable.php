@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -46,7 +47,7 @@ class SadrListOfDrugsTable extends Table
         parent::initialize($config);
 
         $this->setTable('sadr_list_of_drugs');
-        $this->setDisplayField('id');
+        $this->setDisplayField('drug_name');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -59,7 +60,8 @@ class SadrListOfDrugsTable extends Table
         ]);
         $this->belongsTo('Doses', [
             'foreignKey' => 'dose_id',
-        ]);
+
+        ])->setProperty('doses_entity');
         $this->belongsTo('Routes', [
             'foreignKey' => 'route_id',
         ]);

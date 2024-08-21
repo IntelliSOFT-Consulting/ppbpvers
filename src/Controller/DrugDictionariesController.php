@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Event\EventInterface;
 
 /**
  * DrugDictionaries Controller
@@ -11,6 +14,36 @@ namespace App\Controller;
  */
 class DrugDictionariesController extends AppController
 {
+
+
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow(['autocomplete', 'autocomblete']);
+    }
+
+    public function autocomplete($query = null)
+    {
+        $term = $this->request->getQuery('term'); 
+        $groupers = $this->DrugDictionaries->find('byName', ['term' => $term, 'type' => 'Y'])->toArray();
+        $groups = array();
+        foreach ($groupers as $key => $value) {
+            $groups[] = $value['drug_name'];
+        }
+        $this->set('groups', array_values($groups));
+        $this->set('_serialize', 'groups');
+    }
+	public function autocomblete($query = null) {
+        $term = $this->request->getQuery('term'); 
+        
+        $groupers = $this->DrugDictionaries->find('byTrade', ['term' => $term, 'type' => 'N'])->toArray();			
+                $groups = array();
+		foreach ($groupers as $key => $value) {
+			$groups[] = $value['DrugDictionary']['trade_name'];
+		}
+		$this->set('groups', array_values($groups));
+        $this->set('_serialize', 'groups');
+	}
     /**
      * Index method
      *

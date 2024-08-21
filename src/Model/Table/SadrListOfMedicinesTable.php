@@ -59,7 +59,7 @@ class SadrListOfMedicinesTable extends Table
         ]);
         $this->belongsTo('Doses', [
             'foreignKey' => 'dose_id',
-        ]);
+        ])->setProperty('doses_entity');
         $this->belongsTo('Routes', [
             'foreignKey' => 'route_id',
         ]);

@@ -10,7 +10,7 @@ $(function() {
       //console.log('reload stuff called!!');
       var dates2 = $('.date-pick-from, .date-pick-to').datepicker({
         minDate:"-100Y", maxDate:"-0D", 
-        dateFormat:'dd-mm-yy', 
+        dateFormat:'yy-mm-dd', 
         showButtonPanel:true, 
         changeMonth:true, 
         changeYear:true, 
@@ -19,7 +19,7 @@ $(function() {
 
       $('.date-pick-field').datepicker({
           minDate:"-100Y", maxDate:"0", 
-          dateFormat:'dd-mm-yy'
+          dateFormat:'yy-mm-dd'
       });
 
     }
@@ -39,7 +39,7 @@ $(function() {
       if ($('#listOfMedicinesTable tbody tr').length < 10) {            
           trVar = $.parseHTML(constructLODTr(intId));
           // trVar = constructLODTr(intId);
-          // $(trVar).find('[name*="dose_id"]').append($("#SadrListOfDrug0DoseId > option").clone()).val('');
+          $(trVar).find('[name*="dose_id"]').append($("#SadrListOfDrug0DoseId > option").clone()).val('');
           $(trVar).find('[name*="route_id"]').append($("#SadrListOfDrug0RouteId > option").clone()).val('');
           $(trVar).find('[name*="frequency_id"]').append($("#SadrListOfDrug0FrequencyId > option").clone()).val('');
 
@@ -57,24 +57,26 @@ $(function() {
         var trWrapper = '\
           <tr>\
             <td>{i2}</td>\
-            <td><input class="span11" name="data[SadrListOfMedicine][{i}][id]" id="SadrListOfMedicine{i}-id" type="hidden"> \
-                <input class="span11" name="data[SadrListOfMedicine][{i}][drug_name]" id="SadrListOfMedicine{i}DrugName" type="text">  </td>\
+            <td><input class="span11" name="sadr_list_of_medicines[{i}][id]" id="sadr_list_of_medicines{i}-id" type="hidden"> \
+                <input class="span11" name="sadr_list_of_medicines[{i}][drug_name]" id="sadr_list_of_medicines{i}DrugName" type="text">  </td>\
             <td>\
-                <input class="span11" name="data[SadrListOfMedicine][{i}][brand_name]" id="SadrListOfMedicine{i}BrandName" type="text"> </td>\
+                <input class="span11" name="sadr_list_of_medicines[{i}][brand_name]" id="sadr_list_of_medicines{i}BrandName" type="text"> </td>\
             <td>\
-                <input class="span11" name="data[SadrListOfMedicine][{i}][batch_no]" maxlength="255" id="SadrListOfMedicine{i}BatchNo" type="text"> </td>\
+                <input class="span11" name="sadr_list_of_medicines[{i}][batch_no]" maxlength="255" id="sadr_list_of_medicines{i}BatchNo" type="text"> </td>\
             <td>\
-                <input class="span11" name="data[SadrListOfMedicine][{i}][manufacturer]" maxlength="255" id="SadrListOfMedicine{i}Manufacturer" type="text"> </td>\
-            <td><input class="span11" name="data[SadrListOfMedicine][{i}][dose]" id="SadrListOfMedicine{i}Dose" type="text"> </td>\
+                <input class="span11" name="sadr_list_of_medicines[{i}][manufacturer]" maxlength="255" id="sadr_list_of_medicines{i}Manufacturer" type="text"> </td>\
+            <td><input class="span11" name="sadr_list_of_medicines[{i}][dose]" id="sadr_list_of_medicines{i}Dose" type="text"> </td>\
             <td>\
-                 <select class="span11" name="data[SadrListOfMedicine][{i}][dose_id]" id="SadrListOfMedicine{i}DoseId"></select>    </td>\
-            <td> <select class="span11" name="data[SadrListOfMedicine][{i}][route_id]" id="SadrListOfMedicine{i}RouteId"></select>  </td>\
-            <td> <select class="span11" name="data[SadrListOfMedicine][{i}][frequency_id]" id="SadrListOfMedicine{i}FrequencyId"></select>     </td>\
+                 <select class="span11" name="sadr_list_of_medicines[{i}][dose_id]" id="sadr_list_of_medicines{i}DoseId"></select>    </td>\
+            <td> <select class="span11" name="sadr_list_of_medicines[{i}][route_id]" id="sadr_list_of_medicines{i}RouteId"></select>  </td>\
+            <td> <select class="span11" name="sadr_list_of_medicines[{i}][frequency_id]" id="sadr_list_of_medicines{i}FrequencyId"></select> \
+                <small class="help-block">If Other specify</small>\
+                <input class="span11" style="margin-top: 10px;" name="sadr_list_of_medicines[{i}][frequency_other]" id="sadr_list_of_medicines{i}FrequencyOther" type="text"></td>\
             <td>\
-              <input class="span11 date-pick-from" name="data[SadrListOfMedicine][{i}][start_date]" id="SadrListOfMedicine{i}StartDate" type="text">   </td>\
+              <input class="span11 date-pick-from" name="sadr_list_of_medicines[{i}][start_date]" id="sadr_list_of_medicines{i}StartDate" type="text">   </td>\
             <td>\
-              <input class="span11 date-pick-to" name="data[SadrListOfMedicine][{i}][stop_date]" id="SadrListOfMedicine{i}StopDate" type="text">  </td>\
-            <td> <input class="span11" name="data[SadrListOfMedicine][{i}][indication]" id="SadrListOfMedicine{i}Indication" type="text"> </td>\
+              <input class="span11 date-pick-to" name="sadr_list_of_medicines[{i}][stop_date]" id="sadr_list_of_medicines{i}StopDate" type="text">  </td>\
+            <td> <input class="span11" name="sadr_list_of_medicines[{i}][indication]" id="sadr_list_of_medicines{i}Indication" type="text"> </td>\
             <td>\
                 <button type="button" class="btn btn-danger btn-small remove-medicine" ><i class="fa fa-minus"></i> </button>\
             </td>\
@@ -89,7 +91,7 @@ $(function() {
         $.ajax({
           async:true, type:'POST', 
           url:'/sadr_list_of_medicines/delete/'+$(this).val()+'.json',
-          data:{'id': $(this).val(), '_id': $('input[name="data[Sadr][id]"]').val()}, //TODO:Use this to ensure the sadr belongs to the user
+          data:{'id': $(this).val(), '_id': $('input[name="Sadr][id]"]').val()}, //TODO:Use this to ensure the sadr belongs to the user
           success : function(data) {
              console.log(data);
           }

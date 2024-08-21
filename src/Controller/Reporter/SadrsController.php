@@ -32,7 +32,7 @@ class SadrsController extends AppController
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
             'conditions' => $criteria,
-            'order'=>['Sadrs.created'=>'DESC']
+            'order' => ['Sadrs.created' => 'DESC']
         ];
         $sadrs = $this->paginate($this->Sadrs);
         $this->set('page_options', $this->page_options);
@@ -58,14 +58,14 @@ class SadrsController extends AppController
             //         exit;
             $reference_no = $sadr['reference_no'];
             // debug($reference_no);
-            $reference_no = str_replace('/', '_',$reference_no);
+            $reference_no = str_replace('/', '_', $reference_no);
             // debug($reference_no);
             // exit;
             $this->viewBuilder()->enableAutoLayout(false);
             $this->viewBuilder()->setClassName('CakePdf.Pdf');
             $this->viewBuilder()->setOptions([
                 'pdfConfig' => [
-                    'filename' => $reference_no. '' . '.pdf'
+                    'filename' => $reference_no . '' . '.pdf'
                 ]
             ]);
         }
@@ -114,10 +114,15 @@ class SadrsController extends AppController
     public function edit($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Attachments', 'SadrReaction'],
+            'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
         ]);
+        // debug($sadr);
+        //     exit; 
         if ($this->request->is(['patch', 'post', 'put'])) {
-
+            $data = $this->request->getData();
+            // debug($sadr);
+            // debug($data);
+            // exit; 
             $validate = false;
             if (!empty($this->request->getData('submitReport'))) {
                 $validate = 'first';
@@ -127,16 +132,17 @@ class SadrsController extends AppController
             $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData(), [
                 'associated' => [
                     'Attachments',
-                    'SadrReaction'
+                    'SadrReaction',
+                    'SadrListOfDrugs',
+                    'SadrListOfMedicines'
                 ]
             ]);
             // debug($this->request->getData());
-            // debug($sadr);
-            // exit; 
+
             if ($this->Sadrs->save($sadr, array('validate' => $validate, 'deep' => true))) {
 
-                //      debug($sadr);
-                // exit; 
+                // debug($sadr);
+                // exit;
                 if (!empty($this->request->getData('submitReport'))) {
                     $sadr = $this->Sadrs->get($id, [
                         'contain' => ['Attachments', 'SadrReaction'],
@@ -274,12 +280,19 @@ class SadrsController extends AppController
                     return $this->redirect(array('action' => 'view', $sadr->id));
                 }
                 // debug($this->request->data);
+                $sadr = $this->Sadrs->get($id, [
+                    'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
+                ]);
+
+                $this->request = $this->request->withParsedBody($sadr->toArray());
+                //   debug($this->request->getData('sadr_list_of_drugs') );
+                //                 exit;
                 $this->Flash->success(__('The SADR has been saved'));
                 $this->redirect($this->referer());
             } else {
-                // $errors = $sadr->getErrors();
-                // debug($errors);
-                // exit;
+                $errors = $sadr->getErrors();
+                debug($errors);
+                exit;
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
             }
 
@@ -291,15 +304,24 @@ class SadrsController extends AppController
             // }
             // $this->Flash->error(__('The sadr could not be saved. Please, try again.'));
         }
+        $this->request = $this->request->withParsedBody($sadr->toArray());
 
+
+        // debug($this->request->getData());
+        // exit;
         $users = $this->Sadrs->Users->find('list', ['limit' => 200])->all();
         $pqmps = $this->Sadrs->Pqmps->find('list', ['limit' => 200])->all();
         $medications = $this->Sadrs->Medications->find('list', ['limit' => 200])->all();
         $counties = $this->Sadrs->Counties->find('list', ['limit' => 200])->all();
         $sub_counties = $this->Sadrs->SubCounties->find('list', ['limit' => 200])->all();
         $designations = $this->Sadrs->Designations->find('list', ['limit' => 200])->all();
-        // debug($sadr);
-        // exit;
+
+        $routes = $this->Sadrs->SadrListOfDrugs->Routes->find('list');
+        $this->set(compact('routes'));
+        $frequency = $this->Sadrs->SadrListOfDrugs->Frequencies->find('list');
+        $this->set(compact('frequency'));
+        $dose = $this->Sadrs->SadrListOfDrugs->Doses->find('list');
+        $this->set(compact('dose'));
         $this->set(compact('sadr', 'users', 'pqmps', 'medications', 'counties', 'sub_counties', 'designations'));
     }
 

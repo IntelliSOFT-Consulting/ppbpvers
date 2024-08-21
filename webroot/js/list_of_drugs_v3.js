@@ -4,7 +4,7 @@ $(document).ready(function () {
 	// CONSTRUCT TABLE FOR LIST OF DRUGS
 
 
-	var dates = $("#SadrListOfDrug0StartDate, #SadrListOfDrug0StopDate").datepicker({
+	var dates = $("#sadr-list-of-drug-0-start-date, #sadr-list-of-drug-0-stop-date").datepicker({
 		minDate: "-100Y",
 		maxDate: "-0D",
 		dateFormat: 'dd-mm-yy',
@@ -13,7 +13,7 @@ $(document).ready(function () {
 		changeYear: true,
 		showAnim: 'show',
 		onSelect: function (selectedDate) {
-			var option = this.id == "SadrListOfDrug0StartDate" ? "minDate" : "maxDate",
+			var option = this.id == "sadr-list-of-drug-0-start-date" ? "minDate" : "maxDate",
 				instance = $(this).data("datepicker"),
 				date = $.datepicker.parseDate(
 					instance.settings.dateFormat ||
@@ -28,7 +28,7 @@ $(document).ready(function () {
 
 		var dates2 = $('.date-pick-from, .date-pick-to').datepicker({
 			minDate: "-100Y", maxDate: "-0D",
-			dateFormat: 'dd-mm-yy',
+			dateFormat: 'yy-mm-dd',
 			showButtonPanel: true,
 			changeMonth: true,
 			changeYear: true,
@@ -36,10 +36,43 @@ $(document).ready(function () {
 		});
 		// $('.date-pick-to').datepicker({minDate:"-100Y", maxDate:"-0D", dateFormat:'dd-mm-yy', showButtonPanel:true, changeMonth:true, changeYear:true, showAnim:'show'});
 		$(".autoComblete").autocomplete({
-			source: "/drug_dictionaries/autocomplete.json"
-		});
+			source: function (request, response) {
+				$.ajax({
+					url: '/DrugDictionaries/autocomplete.json', // Replace with your API endpoint
+					data: {
+						term: request.term // Pass the input value to the API
+					},
+					success: function (data) {
+						response($.map(data.groups, function (item) {
+							return item;
+						}));
+					}
+				});
+			},
+			minLength: 2, // Start searching after 2 characters
+			select: function (event, ui) {
+
+			}
+		}
+		);
 		$(".autoComblete2").autocomplete({
-			source: "/drug_dictionaries/autocomblete.json"
+			source: function (request, response) {
+				$.ajax({
+					url: '/DrugDictionaries/autocomplete.json', // Replace with your API endpoint
+					data: {
+						term: request.term // Pass the input value to the API
+					},
+					success: function (data) {
+						response($.map(data.groups, function (item) {
+							return item;
+						}));
+					}
+				});
+			},
+			minLength: 2, // Start searching after 2 characters
+			select: function (event, ui) {
+
+			}
 		});
 		// console.log("original disco man");
 	}
@@ -75,64 +108,53 @@ $(document).ready(function () {
 		var intId2 = intId + 1;
 		var fieldWrapper = $("<tr class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
 		var fName = $("<td>" + intId2 + "</td>");
-		var drugName = $('<td data-title="Generic Name *"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'DrugName" maxlength="100" class="span11 autoComblete autosave-ignore" name="data[SadrListOfDrug][' + intId + '][drug_name]"  data-items="4"  autocomplete="off", ></div></td>');
-		var brandName = $('<td data-title="Brand Name"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'BrandName" maxlength="100" class="span11 autoComblete2 autosave-ignore" name="data[SadrListOfDrug][' + intId + '][brand_name]"></div></td>');
-		var batchNo = $('<td><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'BatchNo" maxlength="100" class="span11" name="data[SadrListOfDrug][' + intId + '][batch_no]"></div></td>');
-		var manufacturer = $('<td><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'Manufacturer" maxlength="100" class="span11" name="data[SadrListOfDrug][' + intId + '][manufacturer]"></div></td>');
-		// 	var dose_dose_id = $('<td><div class="control-group"><input type="number" id="SadrListOfDrug' + intId + 'Dose" maxlength="100" class="span11" name="data[SadrListOfDrug][' + intId + '][dose]"></div></td>');
-		//  var dose_id = $('<td style="border-left:0px;"/>').append($('<div class="control-group"/>').append($('#SadrListOfDrug0DoseId').clone()
-		// 		.attr({ 'id': 'SadrListOfDrug' + intId + 'DoseId', 'name': 'data[SadrListOfDrug][' + intId + '][dose_id]' }).val('')));
-		// var dose_dose_id = $('<td colspan="2"><div class="control-group"><input type="number" id="SadrListOfDrug' + intId + 'Dose" maxlength="100" class="span11" name="data[SadrListOfDrug][' + intId + '][dose]"></div>' +
-		// '<div class="control-group" style="margin-top:5px;"><input type="text" id="SadrListOfDrug' + intId + 'DoseId" maxlength="100" class="span11" name="data[SadrListOfDrug][' + intId + '][dose_id]" value=""></div></td>');
-
+		var drugName = $('<td data-title="Generic Name *"><div class="control-group"><input type="text" id="sadr-list-of-drug' + intId + 'DrugName" maxlength="100" class="span11 autoComblete autosave-ignore" name="sadr_list_of_drugs[' + intId + '][drug_name]"  data-items="4"  autocomplete="off", ></div></td>');
+		var brandName = $('<td data-title="Brand Name"><div class="control-group"><input type="text" id="sadr-list-of-drug' + intId + 'BrandName" maxlength="100" class="span11 autoComblete2 autosave-ignore" name="sadr_list_of_drugs[' + intId + '][brand_name]"></div></td>');
+		var batchNo = $('<td><div class="control-group"><input type="text" id="sadr-list-of-drug' + intId + 'BatchNo" maxlength="100" class="span11" name="sadr_list_of_drugs[' + intId + '][batch_no]"></div></td>');
+		var manufacturer = $('<td><div class="control-group"><input type="text" id="sadr-list-of-drug' + intId + 'Manufacturer" maxlength="100" class="span11" name="sadr_list_of_drugs[' + intId + '][manufacturer]"></div></td>');
 		var dose_dose_id = $('<td colspan="1"/>').attr("data-title", "Dose *").append(
 			$('<div class="control-group"/>')
-				.append($('<input type="number"  id="SadrListOfDrug' + intId + 'Dose"  name="data[SadrListOfDrug][' + intId + '][dose]"/>'))
+				.append($('<input type="number"  id="sadr-list-of-drug' + intId + 'Dose"  name="sadr_list_of_drugs[' + intId + '][dose]"/>'))
 				.append($('<small class="help-block"></small>'))
 				.append($('#SadrListOfDrug0DoseId').clone()
 					.attr({
-						'id': 'SadrListOfDrug' + intId + 'DoseId',
-						'name': 'data[SadrListOfDrug][' + intId + '][dose_id]'
+						'id': 'sadr-list-of-drug' + intId + 'DoseId',
+						'name': 'sadr-list-of-drug][' + intId + '][dose_id]'
 					})
 					.val('')
 				)
 			// Add the new input field here
 		);
-
-		// var route = $('<td><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'Route" maxlength="100" class="span7" name="data[SadrListOfDrug][' + intId + '][route]"></div>');
-		var route = $('<td/>').attr("data-title", "Route *").append($('<div class="control-group"/>').append($('#SadrListOfDrug0RouteId').clone()
-			.attr({ 'id': 'SadrListOfDrug' + intId + 'RouteId', 'name': 'data[SadrListOfDrug][' + intId + '][route_id]' }).val('')));
+		var route = $('<td/>').attr("data-title", "Route *")
+			.append($('<div class="control-group"/>').
+				append($('#SadrListOfDrug0RouteId').clone()
+					.attr({ 
+						'id': 'SadrListOfDrug' + intId + 'RouteId', 
+						'name': 'sadr_list_of_drugs[' + intId + '][route_id]' }).val('')));
 
 		var frequency = $('<td/>').attr("data-title", "Frequency *").append(
 			$('<div class="control-group"/>')
 				.append($('#SadrListOfDrug0FrequencyId').clone()
 					.attr({
 						'id': 'SadrListOfDrug' + intId + 'FrequencyId',
-						'name': 'data[SadrListOfDrug][' + intId + '][frequency_id]'
+						'name': 'sadr_list_of_drugs[' + intId + '][frequency_id]'
 					})
 					.val('')
 				)
 				.append($('<small class="help-block">If Other specify</small>'))
-				.append($('<input type="text"  id="SadrListOfDrug' + intId + 'FrequencyIdOther"  name="data[SadrListOfDrug][' + intId + '][frequency_id_other]" style="margin-top: 10px;"/>')) // Add the new input field here
+				.append($('<input type="text"  id="SadrListOfDrug' + intId + 'FrequencyIdOther"  name="sadr_list_of_drugs[' + intId + '][frequency_id_other]" style="margin-top: 10px;"/>')) // Add the new input field here
 		);
 
 		// CSS style for the small label
 		$('<style>.small-label { font-size: 12px; }</style>').appendTo('head');
-		// var frequencyOther = $frequency.append($('<div class="control-group"/>').append($('#SadrListOfDrug0FrequencyId_other').clone()
-		// 				.attr({'id': 'SadrListOfDrug' + intId + 'FrequencyId', 'name': 'data[SadrListOfDrug][' + intId + '][frequency_other]'}).val('')));
-		// var route = $('<td><div class="control-group"><select id="SadrListOfDrug' + intId + 'Route" class="span12 autosave-ignore" name="data[SadrListOfDrug][' + intId + '][route]">'+ routeOptions +'</select></div>');
-		// var frequency = $('<td><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'Frequency" maxlength="100" class="span7" name="data[SadrListOfDrug][' + intId + '][frequency]"></div></td>');
-		// var frequency = $('<td><div class="control-group"><select id="SadrListOfDrug' + intId + 'Frequency" class="span12 autosave-ignore" name="data[SadrListOfDrug][' + intId + '][frequency]">'+ frequencyOptions +'</select></div></td>');
-		var startDate = $('<td data-title="Date Started (dd-mm-yyyy) *">	<div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'StartDate" class="span11 date-pick-from autosave-ignore" name="data[SadrListOfDrug][' + intId + '][start_date]"></div> </td>');
+		var startDate = $('<td data-title="Date Started (dd-mm-yyyy) *">	<div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'StartDate" class="span11 date-pick-from autosave-ignore" name="sadr_list_of_drugs[' + intId + '][start_date]"></div> </td>');
 
 
-		var stopDate = $('<td data-title="Date Stopped (dd-mm-yyyy)"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'StopDate" class="span11 date-pick-to autosave-ignore" name="data[SadrListOfDrug][' + intId + '][stop_date]"></div></td>');
+		var stopDate = $('<td data-title="Date Stopped (dd-mm-yyyy)"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'StopDate" class="span11 date-pick-to autosave-ignore" name="sadr_list_of_drugs[' + intId + '][stop_date]"></div></td>');
 
 
-		var indication = $('<td data-title="Indication"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'Indication" maxlength="100" class="span9 autosave-ignore" name="data[SadrListOfDrug][' + intId + '][indication]"></div></td>');
-		var suspectedDrug = $('<td data-title="Suspected Drug?"><div class="control-group"><label class="checkbox"><input type="hidden" value="0" id="SadrListOfDrug' + intId + 'SuspectedDrug_" name="data[SadrListOfDrug][' + intId + '][suspected_drug]"><input type="checkbox" id="SadrListOfDrug' + intId + 'SuspectedDrug" value="1" class="" name="data[SadrListOfDrug][' + intId + '][suspected_drug]"></label></div></td>');
-
-		// var removeButton = $("<td><input type=\"button\" class=\"remove\" value=\"&#8722;\" /></td>");
+		var indication = $('<td data-title="Indication"><div class="control-group"><input type="text" id="SadrListOfDrug' + intId + 'Indication" maxlength="100" class="span9 autosave-ignore" name="sadr_list_of_drugs[' + intId + '][indication]"></div></td>');
+		var suspectedDrug = $('<td data-title="Suspected Drug?"><div class="control-group"><label class="checkbox"><input type="hidden" value="0" id="SadrListOfDrug' + intId + 'SuspectedDrug_" name="sadr_list_of_drugs[' + intId + '][suspected_drug]"><input type="checkbox" id="SadrListOfDrug' + intId + 'SuspectedDrug" value="1" class="" name="sadr_list_of_drugs[' + intId + '][suspected_drug]"></label></div></td>');
 		var removeButton_ = $('<button  type="button" class="btn-mini" title="click here to delete row" ><i class="icon-minus"></i></button>"');
 		removeButton_.tooltip();
 		removeButton_.click(function () {

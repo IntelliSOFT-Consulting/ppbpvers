@@ -562,7 +562,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             )
                         );
 
-                        // echo $this->element('multi/sadr_descriptions');
+                        echo $this->element('multi/sadr_descriptions');
 
                         echo $this->Form->control(
                             'medical_history',
@@ -579,10 +579,12 @@ echo $this->Html->css('sadr', array('inline' => false));
                 </div>
                 <!--/row-->
                 <hr>
-                <?php //echo $this->element('multi/list_of_drugs'); 
+                <?php 
+                echo $this->element('multi/list_of_drugs'); 
                 ?>
 
-                <?php //echo $this->element('multi/list_of_medicines'); 
+                <?php 
+                echo $this->element('multi/list_of_medicines'); 
                 ?>
                 <div class="row-fluid">
                     <div class="span6 editable">
