@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Event\EventInterface;
+
 /**
  * Feedbacks Controller
  *
@@ -12,6 +14,14 @@ namespace App\Controller;
  */
 class FeedbacksController extends AppController
 {
+
+    public function beforeFilter(EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        $this->Auth->allow([
+            'add', 
+        ]);
+    }
     /**
      * Index method
      *
@@ -55,6 +65,8 @@ class FeedbacksController extends AppController
      */
     public function add()
     {
+
+        $this->Feedbacks->addBehavior('Captcha.Captcha');
         $previous_messages = array();
         $feedback = $this->Feedbacks->newEmptyEntity();
         if ($this->request->is('post')) {
@@ -62,7 +74,7 @@ class FeedbacksController extends AppController
             if ($this->Feedbacks->save($feedback)) {
                 $this->Flash->success(__('The feedback has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'add']);
             }
             $this->Flash->error(__('The feedback could not be saved. Please, try again.'));
         }

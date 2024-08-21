@@ -8,7 +8,7 @@ $this->assign('Contact-Us', 'active');
         <hr>
         <?php
 
-        echo $this->Form->create();
+        echo $this->Form->create($feedback);
         ?>
 
         <div class="row-fluid">
@@ -40,7 +40,10 @@ $this->assign('Contact-Us', 'active');
                         'label' => array('class' => 'control-label required', 'text' => 'Feedback <span class="sterix">*</span>'),  'escape'=>false,
                         'class' => 'control-large',
                     )
-                );
+                ); 
+                echo $this->Captcha->render([
+                    'placeholder' => __('Please solve the riddle'), 
+                ]);
 
                 ?>
 

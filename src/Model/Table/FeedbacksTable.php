@@ -75,11 +75,11 @@ class FeedbacksTable extends Table
         $validator
             ->scalar('subject')
             ->maxLength('subject', 255)
-            ->allowEmptyString('subject');
+            ->notEmptyString('subject','Please provide a subject');
 
         $validator
             ->scalar('feedback')
-            ->allowEmptyString('feedback');
+            ->notEmptyString('feedback','Please provide your message');
 
         return $validator;
     }
