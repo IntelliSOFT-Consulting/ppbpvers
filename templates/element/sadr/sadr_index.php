@@ -451,7 +451,7 @@ $this->assign('SADRs', 'active');
                                 );
                                 echo "&nbsp;";
                                 if (($prefix == 'manager' || $prefix == 'reviewer') && $sadr['copied'] == 0) echo $this->Form->postLink('<span class="badge badge-success tooltipper" data-toggle="tooltip" title="Copy & Edit"> <i class="fa fa-copy" aria-hidden="true"></i> Copy </span>', array('controller' => 'sadrs', 'action' => 'copy', $sadr['id']), array('escape' => false), __('Create a clean copy to edit?'));
-                                echo $this->Html->link(
+                                if (($prefix == 'manager' || $prefix == 'reviewer') && $sadr['copied'] == 0) echo $this->Html->link(
                                     '<span class="label label-warning tooltipper" title="View"><i class="fa fa-refresh" aria-hidden="true"></i> Archive </span>',
                                     array('controller' => 'sadrs', 'action' => 'archive', $sadr['id']),
                                     array('escape' => false),
@@ -473,7 +473,7 @@ $this->assign('SADRs', 'active');
                             echo "&nbsp;";
                             echo $this->Html->link(
                                 '<span class="label label-default tooltipper" title="View"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </span>',
-                                array('controller' => 'sadrs', 'action' => 'view', 'ext' => 'pdf', $sadr['id']),
+                                array('controller' => 'sadrs', 'action' => 'view', '_ext' => 'pdf', $sadr['id']),
                                 array('escape' => false)
                             );
                             // Check if the user is a reporter and the report is not submitted

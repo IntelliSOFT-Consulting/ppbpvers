@@ -66,8 +66,8 @@ RUN mkdir -p /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # Install wkhtmltopdf
-# RUN apt-get install -y \
-#     wkhtmltopdf
+RUN apt-get install -y \
+    wkhtmltopdf
 # # Copy the migration script
 COPY run_migrations.sh /usr/local/bin/run_migrations.sh
 

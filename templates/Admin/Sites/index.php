@@ -1,48 +1,88 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Site> $sites
- */
+$this->assign('CMS', 'active');
 ?>
-<div class="sites index content">
-    <?= $this->Html->link(__('New Site'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Sites') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('description') ?></th>
-                    <th><?= $this->Paginator->sort('created') ?></th>
-                    <th><?= $this->Paginator->sort('modified') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($sites as $site): ?>
-                <tr>
-                    <td><?= $this->Number->format($site->id) ?></td>
-                    <td><?= h($site->description) ?></td>
-                    <td><?= h($site->created) ?></td>
-                    <td><?= h($site->modified) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $site->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $site->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $site->id], ['confirm' => __('Are you sure you want to delete # {0}?', $site->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+<!-- CMS
+    ================================================== -->
+<h3>Content Management System <small>(Sites)</small></h3>
+<hr>
+
+<div class="row-fluid" style="margin-bottom: 9px;">
+    <div class="span2 columns">
+        <div class="row-fluid">
+            <div class="span12">
+                <?php echo $this->element('admin/contentmenu') ?>
+
+            </div><!--/span-->
+        </div><!--/row-->
+    </div> <!-- /span5 -->
+
+    <div class="span10 columns">
+        <?php
+        echo $this->Html->link('Add A Site', array('controller' => 'sites', 'action' => 'add', 'admin' => true), array('class' => 'btn btn-info'));
+        ?>
+        <div class="row-fluid">
+
+            <?php
+            if (count($sites) >  0) { ?>
+                <p>
+                    <?php
+                    echo $this->Paginator->counter(
+                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                    showing <span class="badge">{{current}}</span> Sites out of 
+                    <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
+                    ending on <span class="badge">{{end}}</span>')
+                    );
+                    ?>
+                </p>
+                <div class="pagination">
+                    <ul>
+
+                        <?= $this->Paginator->first('<< ' . __('first')) ?>
+                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                        <?= $this->Paginator->numbers() ?>
+                        <?= $this->Paginator->next(__('next') . ' >') ?>
+                        <?= $this->Paginator->last(__('last') . ' >>') ?>
+                    </ul>
+                </div>
+                <hr>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th><?php echo $this->Paginator->sort('id', 'ID'); ?></th>
+                            <th><?php echo $this->Paginator->sort('description'); ?></th>
+                            <th><?php echo $this->Paginator->sort('created'); ?></th>
+                            <th><?php echo $this->Paginator->sort('modified'); ?></th>
+                            <th><?php echo __('Actions'); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($sites as $site): ?>
+                            <tr>
+                                <td><?php echo h($site['id']); ?>&nbsp;</td>
+                                <td><?php echo h($site['description']); ?>&nbsp;</td>
+                                <td><?php echo h($site['created']); ?>&nbsp;</td>
+                                <td><?php echo h($site['modified']); ?>&nbsp;</td>
+                                <td>
+                                    <?php echo $this->Html->link(
+                                        '<span class="label label-info"><i class="icon-pencil icon-white"></i> Edit</span>',
+                                        array('controller' => 'sites', 'action' => 'edit', $site['id']),
+                                        array('escape' => false)
+                                    ); ?>&nbsp;
+                                    <?php echo $this->Form->postLink(
+                                        __('<span class="label label-important"><i class="icon-trash icon-white"></i> Delete</span>'),
+                                        array('action' => 'delete', $site['id']),
+                                        array('escape' => false),
+                                        __('Are you sure you want to delete # %s?', $site['id'])
+                                    ); ?>&nbsp;
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php } else { ?>
+                <p>There were no reports that met your search criteria.</p>
+            <?php } ?>
+        </div> <!-- /row-fluid -->
     </div>
 </div>

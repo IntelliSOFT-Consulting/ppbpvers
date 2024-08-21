@@ -31,7 +31,8 @@ class SadrsController extends AppController
         $criteria['Sadrs.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
-            'conditions' => $criteria
+            'conditions' => $criteria,
+            'order'=>['Sadrs.created'=>'DESC']
         ];
         $sadrs = $this->paginate($this->Sadrs);
         $this->set('page_options', $this->page_options);
@@ -48,11 +49,26 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'Sadrs', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
 
-        // debug($sadr);
-        // exit;
+
+        if ($this->request->getParam('_ext') === 'pdf') {
+            //  debug($sadr);
+            //         exit;
+            $reference_no = $sadr['reference_no'];
+            // debug($reference_no);
+            $reference_no = str_replace('/', '_',$reference_no);
+            // debug($reference_no);
+            // exit;
+            $this->viewBuilder()->enableAutoLayout(false);
+            $this->viewBuilder()->setClassName('CakePdf.Pdf');
+            $this->viewBuilder()->setOptions([
+                'pdfConfig' => [
+                    'filename' => $reference_no. '' . '.pdf'
+                ]
+            ]);
+        }
         $this->set(compact('sadr'));
     }
 

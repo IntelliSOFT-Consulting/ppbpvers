@@ -46,9 +46,7 @@ class UsersController extends AppController
         parent::initialize();
         $this->loadComponent('Paginator');
         $this->Auth->allow('logout', 'activate', 'admin');
-        $this->loadComponent('Captcha.Captcha', [
-            'captchaType' => 'math', // or 'image'
-        ]);
+         
     }
     public function admin()
     {
@@ -105,7 +103,7 @@ class UsersController extends AppController
             'login',
             'logout',
             'activateAccount',
-            // 'admin',
+            'admin',
             'forgotPassword',
             'resetPassword',
             'view'

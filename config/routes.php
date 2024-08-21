@@ -86,6 +86,8 @@ Router::prefix('manager', function ($routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('reporter', function ($routes) {
+
+    $routes->setExtensions(['json', 'xml','pdf']);
     $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
 
     $routes->fallbacks(DashedRoute::class);

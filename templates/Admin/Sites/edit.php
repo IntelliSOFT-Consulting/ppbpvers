@@ -1,33 +1,44 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Site $site
- */
+$this->assign('Content', 'active');
+echo $this->Html->script('ckeditor/ckeditor', array('inline' => false));
+echo $this->Html->script('ckeditor/adapters/jquery', array('inline' => false));
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $site->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $site->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Sites'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="sites form content">
-            <?= $this->Form->create($site) ?>
-            <fieldset>
-                <legend><?= __('Edit Site') ?></legend>
-                <?php
-                    echo $this->Form->control('description');
-                    echo $this->Form->control('content');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
-    </div>
+<div class="row-fluid">
+    <?php echo $this->Form->create($site, array(
+        'type' => 'file',
+    ));
+    echo $this->Form->control('id'); ?>
+    <fieldset>
+        <legend>Edit <strong><?php echo $this->Form->value('Site.name'); ?></strong></legend>
+        <?php
+        echo $this->Form->control('id');
+        echo $this->Form->control('description', array('class' => 'control-xlarge'));
+        echo $this->Form->control('content', array(
+            'id'=>'message',
+            'label' => array('class' => 'control-label required message', 'text' => 'Content <span class="sterix">*</span>','escape'=>false),
+            'between' => '<div class="controls">',
+            'placeholder' => 'study title',
+            'rows' => 15,
+            'class' => 'control-large',
+        ));
+        ?>
+    </fieldset>
+    <?php
+
+    echo $this->Html->div(
+        'form-actions',
+        $this->Form->button('Save', [
+            'type' => 'Submit',
+            'class' => 'btn btn-primary',
+            'id' => 'SadrSaveChanges'
+        ])
+    );
+
+    // Close the form
+    echo $this->Form->end();
+    ?>
+
+    <script type="text/javascript">
+        CKEDITOR.replace('message');
+    </script>
 </div>

@@ -2,8 +2,10 @@
 declare(strict_types=1);
 
 namespace App\Controller;
- 
 
+use Cake\Core\Configure;
+use Cake\Http\Exception\NotFoundException;
+use Cake\View\Exception\MissingTemplateException;
 
 /**
  * Pages Controller
@@ -37,7 +39,14 @@ class PagesController extends AppController
             $subpage = $path[1];
         }
         $this->set(compact('page', 'subpage'));
-
+        $content = '';
+		if(!empty($page)) {
+			$this->loadModel('Sites');
+            $content = $this->Sites->find()
+            ->where(['description' => $page])
+            ->first(); 
+			$this->set(compact('content'));
+		}
         try {
             $this->render(implode('/', $path));
         } catch (MissingTemplateException $exception) {
