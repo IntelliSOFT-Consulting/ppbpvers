@@ -106,10 +106,22 @@ class UsersController extends AppController
             'admin',
             'forgotPassword',
             'resetPassword',
-            'view'
+            'view','mpublic','provider',''
         ]);
     }
+    public function mpublic()
+    {
+        $this->render('mpublic');
+    }
+    public function provider()
+    {
+        $this->render('provider');
+    }
 
+    public function holder()
+    {
+        $this->render('holder');
+    }
     public function dashboard()
     {
         if ($this->request->getSession()->read('Auth.User.role_id') == 1) {
