@@ -46,7 +46,8 @@ class AppController extends Controller
 
      public $Notifications;
      public $Messages;
-     public $QueuedJobs;
+     public $QueuedJobs,$Attachments;
+     public $Comments;
 
     public function initialize(): void
     {
@@ -56,7 +57,9 @@ class AppController extends Controller
         // $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash'); 
         $this->Notifications = $this->loadModel('Notifications');
+        $this->Comments = $this->loadModel('Comments');
         $this->Messages = $this->loadModel('Messages');
+        $this->Attachments = $this->loadModel('Attachments');
         $this->QueuedJobs = $this->loadModel('Queue.QueuedJobs'); 
  
         /*

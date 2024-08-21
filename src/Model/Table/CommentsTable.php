@@ -42,13 +42,19 @@ class CommentsTable extends Table
         parent::initialize($config);
 
         $this->setTable('comments');
-        $this->setDisplayField('id');
+        $this->setDisplayField('subject');
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
+        ]);
+        $this->hasMany('Attachments', [
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'Attachments.model' => 'Comments',
+            ]
         ]);
     }
 

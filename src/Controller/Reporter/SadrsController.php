@@ -49,9 +49,10 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'ExternalComment', 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment'=>['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
-
+        // debug($sadr);
+        // exit;
 
         if ($this->request->getParam('_ext') === 'pdf') {
             //  debug($sadr);
@@ -69,7 +70,9 @@ class SadrsController extends AppController
                 ]
             ]);
         }
+        $comment = $this->Comments->newEmptyEntity();
         $this->set(compact('sadr'));
+        $this->set(compact('comment'));
     }
 
     /**
@@ -291,18 +294,11 @@ class SadrsController extends AppController
                 $this->redirect($this->referer());
             } else {
                 $errors = $sadr->getErrors();
-                debug($errors);
-                exit;
+                // debug($errors);
+                // exit;
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
+                $this->Flash->error(__(json_encode($errors)));
             }
-
-            // $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData());
-            // if ($this->Sadrs->save($sadr)) {
-            //     $this->Flash->success(__('The sadr has been saved.'));
-
-            //     return $this->redirect(['action' => 'index']);
-            // }
-            // $this->Flash->error(__('The sadr could not be saved. Please, try again.'));
         }
         $this->request = $this->request->withParsedBody($sadr->toArray());
 

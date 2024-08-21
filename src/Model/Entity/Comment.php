@@ -36,18 +36,6 @@ class Comment extends Entity
      * @var array<string, bool>
      */
     protected $_accessible = [
-        'foreign_key' => true,
-        'user_id' => true,
-        'model_id' => true,
-        'model' => true,
-        'category' => true,
-        'sender' => true,
-        'subject' => true,
-        'content' => true,
-        'review' => true,
-        'deleted' => true,
-        'created' => true,
-        'modified' => true,
-        'user' => true,
+        '*' => true, 
     ];
 }

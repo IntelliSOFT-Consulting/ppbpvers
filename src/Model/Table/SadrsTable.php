@@ -113,7 +113,7 @@ class SadrsTable extends Table
         $this->hasMany('ExternalComment', [
             'className' => 'Comments',
             'foreignKey' => 'foreign_key',
-            'conditions' => ['ExternalComment.model' => 'Sadr', 'ExternalComment.category' => 'external'],
+            'conditions' => ['ExternalComment.model' => 'Sadrs', 'ExternalComment.category' => 'external'],
         ]);
         
     }
