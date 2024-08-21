@@ -1,6 +1,8 @@
 <?php
 $this->assign('SADRs', 'active');
-?> 
+echo $this->Html->script('sadrs_index', array('inline' => false));
+
+?>
 <div class="row-fluid">
     <div class="span12">
         <?php
@@ -20,7 +22,8 @@ $this->assign('SADRs', 'active');
 <div class="row-fluid">
     <div class="span12">
         <?php
-        echo $this->Form->create();
+        // echo $this->Form->create();
+        echo $this->Form->create($sadr, ['type' => 'get']);
         ?>
         <table class="table table-condensed" style="margin-bottom: 2px;">
             <tbody>
@@ -32,7 +35,8 @@ $this->assign('SADRs', 'active');
                             array(
                                 'div' => false,
                                 'placeholder' => 'sadr/2020',
-                                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Reference No.')
+                                'class' => 'span12',
+                                'label' => array('class' => 'required', 'text' => 'Reference No.')
                             )
                         );
                         ?>
@@ -44,38 +48,55 @@ $this->assign('SADRs', 'active');
                             array(
                                 'div' => false,
                                 'placeholder' => 'rash',
-                                'class' => 'unauthorized_index span10', 'label' => array('class' => 'required', 'text' => 'Report Title')
+                                'class' => 'unauthorized_index span10',
+                                'label' => array('class' => 'required', 'text' => 'Report Title')
                             )
                         );
                         ?>
                     </td>
                     <td colspan="2">
-                        <?php
-                        echo $this->Form->control(
-                            'start_date',
-                            array(
-                                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index', 'after' => '-to-',
-                                'label' => array('class' => 'required', 'text' => 'Report Dates'), 'placeHolder' => 'Start Date'
-                            )
-                        );
-                        echo $this->Form->control(
-                            'end_date',
-                            array(
-                                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index',
-                                'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+                        <h5>Report Dates</h5>
+                        <div style="display: flex; align-items: center;">
+                            <?php
+                            echo $this->Form->control(
+                                'start_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'label' => false,
+                                    'placeHolder' => 'Start Date'
+                                )
+                            );
+                            ?>
+                            <span style="margin: 0 10px;">-to-</span>
+                            <?php
+                            echo $this->Form->control(
+                                'end_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                               <em class="accordion-toggle">clear!</em></a>',
-                                'label' => false, 'placeHolder' => 'End Date'
-                            )
-                        );
-                        ?>
+                                    'label' => false,
+                                    'placeHolder' => 'End Date'
+                                )
+                            );
+                            ?>
+                        </div>
                     </td>
+
+
                     <td>
                         <?php
                         echo $this->Form->control(
                             'name_of_institution',
                             array(
-                                'div' => false, 'placeholder' => 'institution',
-                                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'Institution')
+                                'div' => false,
+                                'placeholder' => 'institution',
+                                'class' => 'control-small',
+                                'label' => array('class' => 'required', 'text' => 'Institution')
                             )
                         );
                         ?>
@@ -84,7 +105,9 @@ $this->assign('SADRs', 'active');
                         <h5>Serious?</h5>
                         <?php
                         echo $this->Form->control('serious', array(
-                            'options' => array('Yes' => 'Yes', 'No' => 'No'), 'legend' => false,
+                            'options' => array('Yes' => 'Yes', 'No' => 'No'),
+                            'legend' => false,
+                            'label' => false,
                             'type' => 'radio'
                         ));
                         ?>
@@ -94,8 +117,10 @@ $this->assign('SADRs', 'active');
                         echo $this->Form->control(
                             'county_id',
                             array(
-                                'div' => false, 'empty' => true,
-                                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'County')
+                                'div' => false,
+                                'empty' => true,
+                                'class' => 'control-small',
+                                'label' => array('class' => 'required', 'text' => 'County')
                             )
                         );
                         ?>
@@ -107,8 +132,10 @@ $this->assign('SADRs', 'active');
                         echo $this->Form->control(
                             'drug_name',
                             array(
-                                'div' => false, 'placeholder' => 'brand name',
-                                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Brand Name')
+                                'div' => false,
+                                'placeholder' => 'brand name',
+                                'class' => 'span12 unauthorized_index',
+                                'label' => array('class' => 'required', 'text' => 'Brand Name')
                             )
                         );
                         ?>
@@ -116,8 +143,10 @@ $this->assign('SADRs', 'active');
                         echo $this->Form->control(
                             'manufacturer',
                             array(
-                                'div' => false, 'placeholder' => 'manufacturer',
-                                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Manufacturer')
+                                'div' => false,
+                                'placeholder' => 'manufacturer',
+                                'class' => 'span12 unauthorized_index',
+                                'label' => array('class' => 'required', 'text' => 'Manufacturer')
                             )
                         );
                         ?>
@@ -132,7 +161,8 @@ $this->assign('SADRs', 'active');
                         <h5>Suspected Drugs?<br></h5>
                         <?php
                         echo $this->Form->control('suspected_drug', array(
-                            'type' => 'checkbox', 'hiddenField' => false,
+                            'type' => 'checkbox',
+                            'hiddenField' => false,
                             'label' => array('class' => '', 'text' => 'Only Suspected?')
                         ));
                         ?>
@@ -141,8 +171,8 @@ $this->assign('SADRs', 'active');
                     <td colspan="2">
                         <h5>Report on:</h5>
                         <?php
-                        echo $this->Form->control('report_sadr', array('label' => 'Suspected adverse drug reaction', 'hiddenField' => false));
-                        echo $this->Form->control('report_therapeutic', array('label' => 'Therapeutic Ineffectiveness', 'hiddenField' => false));
+                        echo $this->Form->control('report_sadr', array('label' => 'Suspected adverse drug reaction', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('report_therapeutic', array('label' => 'Therapeutic Ineffectiveness', 'hiddenField' => false, 'type' => 'checkbox'));
                         echo $this->Form->control('report_misuse', array('label' => 'Suspected misuse, abuse and / or dependence on medicines', 'hiddenField' => false, 'type' => 'checkbox',));
                         echo $this->Form->control('report_off_label', array('label' => 'Off-label Use', 'hiddenField' => false, 'type' => 'checkbox',));
 
@@ -152,20 +182,20 @@ $this->assign('SADRs', 'active');
                     <td>
                         <h5>Product</h5>
                         <?php
-                        echo $this->Form->control('medicinal_product', array('label' => 'Medicinal', 'hiddenField' => false));
-                        echo $this->Form->control('blood_products', array('label' => 'Blood product', 'hiddenField' => false));
+                        echo $this->Form->control('medicinal_product', array('label' => 'Medicinal', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('blood_products', array('label' => 'Blood product', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <h5>category</h5>
                         <?php
-                        echo $this->Form->control('herbal_product', array('label' => 'Herbal product', 'hiddenField' => false));
-                        echo $this->Form->control('cosmeceuticals', array('label' => 'Cosmeceuticals', 'hiddenField' => false));
+                        echo $this->Form->control('herbal_product', array('label' => 'Herbal product', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('cosmeceuticals', array('label' => 'Cosmeceuticals', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('product_other', array('label' => 'Other', 'hiddenField' => false));
+                        echo $this->Form->control('product_other', array('label' => 'Other', 'hiddenField' => false, 'type' => 'checkbox'));
                         echo $this->Form->control('product_specify', array('label' => false, 'class' => 'control-small', 'placeholder' => '(specify)'));
                         ?>
                     </td>
@@ -176,8 +206,10 @@ $this->assign('SADRs', 'active');
                         if ($this->request->getSession()->read('Auth.User.user_type') != 'Public Health Program')  echo $this->Form->control(
                             'patient_name',
                             array(
-                                'div' => false, 'placeholder' => 'Patient name',
-                                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Patient Name')
+                                'div' => false,
+                                'placeholder' => 'Patient name',
+                                'class' => 'span12 unauthorized_index',
+                                'label' => array('class' => 'required', 'text' => 'Patient Name')
                             )
                         );
                         ?>
@@ -186,8 +218,10 @@ $this->assign('SADRs', 'active');
                         <h5>Report Type?</h5>
                         <?php
                         echo $this->Form->control('report_type', array(
-                            'options' => array('Initial' => 'Initial', 'Followup' => 'Followup'), 'legend' => false,
-                            'type' => 'radio'
+                            'options' => array('Initial' => 'Initial', 'Followup' => 'Followup'),
+                            'legend' => false,
+                            'type' => 'radio',
+                            'label' => false
                         ));
                         ?>
                     </td>
@@ -195,7 +229,8 @@ $this->assign('SADRs', 'active');
                         <?php
                         echo $this->Form->control('serious_reason', array(
                             'type' => 'select',
-                            'empty' => true, 'class' => 'span12',
+                            'empty' => true,
+                            'class' => 'span12',
                             'options' => array(
                                 'Hospitalization/ Prolonged Hospitalization' => 'Hospitalization',
                                 'Disability' => 'Disability',
@@ -211,7 +246,8 @@ $this->assign('SADRs', 'active');
                         <?php
                         echo $this->Form->control('outcome', array(
                             'type' => 'select',
-                            'empty' => true, 'class' => 'control-small',
+                            'empty' => true,
+                            'class' => 'control-small',
                             'options' => array(
                                 'recovered/resolved' => 'Recovered/resolved',
                                 'recovering/resolving' => 'Recovering/resolving',
@@ -239,8 +275,10 @@ $this->assign('SADRs', 'active');
                         echo $this->Form->control(
                             'designation_id',
                             array(
-                                'div' => false, 'empty' => true,
-                                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'Designation')
+                                'div' => false,
+                                'empty' => true,
+                                'class' => 'control-small',
+                                'label' => array('class' => 'required', 'text' => 'Designation')
                             )
                         );
                         ?>
@@ -249,8 +287,10 @@ $this->assign('SADRs', 'active');
                         <h5>Gender</h5>
                         <?php
                         echo $this->Form->control('gender', array(
-                            'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'), 'legend' => false,
-                            'type' => 'radio'
+                            'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'),
+                            'legend' => false,
+                            'type' => 'radio',
+                            'label' => false
                         ));
                         ?>
                     </td>
@@ -261,34 +301,45 @@ $this->assign('SADRs', 'active');
                         <?php
 
                         echo $this->Form->control('submitted', array(
-                            'options' => array('1' => 'UnSubmitted', '2' => 'Submitted'), 'legend' => false,
-                            'type' => 'radio'
+                            'options' => array('1' => 'UnSubmitted', '2' => 'Submitted'),
+                            'legend' => false,
+                            'type' => 'radio',
+                            'label' => false
                         ));
                         ?>
                     </td>
                     <td> <?php
                             echo $this->Form->control('health_program', array(
-                                'type' => 'select', 'options' => [
-                                    'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
-                                    'Neglected tropical diseases program' => 'Neglected tropical diseases program', 'MNCAH Priority Medicines' => 'MNCAH Priority Medicines', 'TB program' => 'TB program',
-                                    'NASCOP program' => 'NASCOP program', 'Cancer/Oncology program' => 'Cancer/Oncology program'
-                                ], 'empty' => true,
+                                'type' => 'select',
+                                'options' => [
+                                    'Malaria program' => 'Malaria program',
+                                    'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
+                                    'Neglected tropical diseases program' => 'Neglected tropical diseases program',
+                                    'MNCAH Priority Medicines' => 'MNCAH Priority Medicines',
+                                    'TB program' => 'TB program',
+                                    'NASCOP program' => 'NASCOP program',
+                                    'Cancer/Oncology program' => 'Cancer/Oncology program'
+                                ],
+                                'empty' => true,
                                 'label' => array('class' => 'control-label', 'text' => 'Public Health Program'),
                                 'class' => 'control-xlarge'
                             ));  ?>
                     </td>
                     <td><?php
                         echo $this->Form->control('device', array(
-                            'type' => 'select', 'options' => [
+                            'type' => 'select',
+                            'options' => [
                                 '0' => 'Web',
                                 '1' => 'Mobile',
-                            ], 'empty' => true,
+                            ],
+                            'empty' => true,
                             'label' => array('class' => 'control-label', 'text' => 'Sending Device'),
                             'class' => 'control-xlarge'
                         ));  ?></td>
                     <td><?php
                         echo $this->Form->control('mah', array(
-                            'type' => 'select', 'options' => [
+                            'type' => 'select',
+                            'options' => [
                                 '0' => 'MAH',
                                 '1' => 'Non MAH',
                             ],
@@ -300,10 +351,12 @@ $this->assign('SADRs', 'active');
                         <h5>Vigiflow status:</h5>
                         <?php
                         echo $this->Form->control('vigiflow', array(
-                            'type' => 'select', 'options' => [
+                            'type' => 'select',
+                            'options' => [
                                 '0' => 'Uploaded',
                                 '1' => 'Pending',
-                            ], 'empty' => true,
+                            ],
+                            'empty' => true,
                             'label' => array('class' => 'control-label', 'text' => ''),
                             'class' => 'control-xlarge'
                         ));
@@ -336,7 +389,9 @@ $this->assign('SADRs', 'active');
                         <?php
                         echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
                             'escapeTitle' => false,
-                            'class' => 'btn btn-primary', 'div' => 'control-group', 'div' => false,
+                            'class' => 'btn btn-primary',
+                            'div' => 'control-group',
+                            'div' => false,
                             'formnovalidate' => 'formnovalidate',
                             'style' => array('margin-bottom: 5px')
                         ));
@@ -397,7 +452,7 @@ $this->assign('SADRs', 'active');
                     <tr class="">
                         <td><?php echo h($sadr['id']); ?>&nbsp;</td>
                         <td>
-                            <?php             
+                            <?php
                             if ($sadr['submitted'] > 1) {
                                 echo $this->Html->link($sadr['reference_no'], array('action' => 'view', $sadr['id']), array('escape' => false, 'class' => 'text-' . ((isset($sadr['serious']) && $sadr['serious'] == 'Yes') ? 'error' : 'success')));
                             } else {
@@ -405,9 +460,9 @@ $this->assign('SADRs', 'active');
                             }
                             ?>&nbsp;</td>
                         <td><?php
-                        if (!empty($sadr['report_title'])) {
-                         echo $this->Text->truncate($sadr['report_title'], 42);
-                        }
+                            if (!empty($sadr['report_title'])) {
+                                echo $this->Text->truncate($sadr['report_title'], 42);
+                            }
                             if ($sadr['report_type'] == 'Followup') {
                                 echo "<br> Initial: ";
                                 echo $this->Html->link(
@@ -420,7 +475,7 @@ $this->assign('SADRs', 'active');
                         </td>
                         <td><?php echo ($this->request->getSession()->read('Auth.User.user_type') != 'Public Health Program') ? h($sadr['patient_name']) : h($sadr['gender']); ?>&nbsp;</td>
                         <?php if ($prefix == 'manager' || $prefix == 'reviewer') { ?><td><?php echo h($sadr['vigiflow_ref']);
-                                                                                        echo "\n" . $sadr['vigiflow_date']; ?></td> <?php } ?>
+                                                                                            echo "\n" . $sadr['vigiflow_date']; ?></td> <?php } ?>
                         <td><?php echo h($sadr['reporter_date']); ?>&nbsp;</td>
                         <td><?php echo h($sadr['created']); ?>&nbsp;</td>
                         <td><?php echo h($sadr['submitted_date']); ?>&nbsp;</td>

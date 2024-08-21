@@ -34,9 +34,11 @@ class SadrsController extends AppController
             'conditions' => $criteria,
             'order' => ['Sadrs.created' => 'DESC']
         ];
+        $sadr = $this->Sadrs->newEmptyEntity();
         $sadrs = $this->paginate($this->Sadrs);
         $this->set('page_options', $this->page_options);
         $this->set(compact('sadrs'));
+        $this->set(compact('sadr'));
     }
 
     /**
