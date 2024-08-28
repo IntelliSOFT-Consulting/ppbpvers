@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Manager;
@@ -17,30 +18,31 @@ class UsersController extends AppController
 
     public function dashboard()
     {
-        $users=[];
+        $users = [];
         $this->set(compact('users'));
-       
+
         $sadrs = $this->Users->Sadrs->find('all', array(
-            'limit' => 7, 
+            'limit' => 7,
             'contain' => array(),
             'fields' => array('Sadrs.id', 'Sadrs.user_id', 'Sadrs.created', 'Sadrs.report_title', 'Sadrs.submitted', 'Sadrs.reference_no', 'Sadrs.created', 'Sadrs.serious'),
             'order' => array('Sadrs.created' => 'desc'),
             'conditions' => array(
                 // only show SADRs that have been not been deleted 
                 'Sadrs.deleted' => false,
-                'Sadrs.user_id' => $this->Auth->User('id')
+                'Sadrs.submitted' => 2
+                // 'Sadrs.user_id' => $this->Auth->User('id')
             ),
         ));
         $this->set(compact('sadrs'));
-        $aefis=[];
+        $aefis = [];
         $this->set(compact('aefis'));
-        $pqmps=[];
+        $pqmps = [];
         $this->set(compact('pqmps'));
-        $devices=[];
+        $devices = [];
         $this->set(compact('devices'));
-        $medications=[];
+        $medications = [];
         $this->set(compact('medications'));
-        $transfusions=[];
+        $transfusions = [];
         $this->set(compact('transfusions'));
         $notifications = $this->Notifications->find('all', array(
             'limit' => 7,
@@ -53,9 +55,9 @@ class UsersController extends AppController
             )
         ));
         $this->set(compact('notifications'));
-        $padrs=[];
-        $this->set(compact('padrs')); 
-        $saes=[];
+        $padrs = [];
+        $this->set(compact('padrs'));
+        $saes = [];
         $this->set(compact('saes'));
     }
     /**

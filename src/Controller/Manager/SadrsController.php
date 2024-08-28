@@ -30,11 +30,21 @@ class SadrsController extends AppController
         $criteria['Sadrs.archived'] = false;
         $criteria['Sadrs.submitted'] = 2;
         $criteria['Sadrs.copied !='] = '1';
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
         $this->paginate = [
             'contain' => array('Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'),
             'conditions' => $criteria
         ]; 
-        $this->set('sadrs', $this->paginate());
+        $this->paginate = [
+            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
+            'conditions' => $criteria,
+            'order' => ['Sadrs.created' => 'DESC'],
+            'limit'=>$limit
+        ]; 
+        $sadrs = $this->paginate($this->Sadrs->find('search', ['search' => $this->request->getQuery()]));
+ 
+        $this->set('sadrs', $sadrs);
         $this->set('page_options', $this->page_options);
     }
 
@@ -49,7 +59,7 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations', 'Sadrs', 'AttachmentsOld', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment'=>['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
 
         $this->set(compact('sadr'));

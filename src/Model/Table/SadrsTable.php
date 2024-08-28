@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -59,6 +60,85 @@ class SadrsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Search.Search');
+
+        $this->searchManager() 
+            ->value('report_title')
+            ->add('reference_no', 'Search.Like', [ 
+                'before' => true,
+                'after' => true,
+                'fieldMode' => 'OR',
+                'comparison' => 'LIKE',
+                'wildcardAny' => '*',
+                'wildcardOne' => '?',
+                'fields' => ['reference_no'],
+            ])
+            ->value('name_of_institution')
+            ->value('serious')
+            ->compare('start_date', ['operator' => '>=', 'fields' => ['CAST(Sadrs.submitted_date as DATE)']])
+            ->compare('end_date', ['operator' => '<=', 'fields' => ['CAST(Sadrs.submitted_date as DATE)']])
+            ->value('report_sadr')
+            ->value('report_therapeutic')
+            ->value('report_misuse')
+            ->value('report_off_label')
+            ->value('device')
+            ->value('medicinal_product')
+            ->value('blood_products')
+            ->value('herbal_product')
+            ->value('product_other')
+            ->value('product_specify') 
+            ->add('patient_name', 'Search.Like', [ 
+                'before' => true,
+                'after' => true,
+                'fieldMode' => 'OR',
+                'comparison' => 'LIKE',
+                'wildcardAny' => '*',
+                'wildcardOne' => '?',
+                'fields' => ['patient_name'],
+            ])
+            ->add('reporter', 'Search.Like', [ 
+                'before' => true,
+                'after' => true,
+                'fieldMode' => 'OR',
+                'comparison' => 'LIKE',
+                'wildcardAny' => '*',
+                'wildcardOne' => '?',
+                'fields' => ['reporter_name','reporter_email','reporter_name_diff','reporter_email_diff'],
+            ])
+            ->value('report_type')
+            ->value('serious_reason')
+            ->value('outcome')
+            ->value('gender')
+            ->callback('custom_field', [
+                'callback' => [$this, 'myCustomSearch'],
+                'args' => ['custom_field'] // Specify the argument to be passed to the custom function
+            ])
+            ->value('county_id');
+
+        /******* 
+         *  
+        'range' => array('type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'CAST(Sadr.reporter_date as DATE) BETWEEN ? AND ?'),
+        'start_date' => array('type' => 'query', 'method' => 'dummy'),
+        'end_date' => array('type' => 'query', 'method' => 'dummy'),
+        ' ' => array('type' => 'value'),
+        'mah' => array('type' => 'query', 'method' => 'findByMarketAuthority', 'encode' => true),
+        'drug_name' => array('type' => 'query', 'method' => 'findByDrugName', 'encode' => true),
+        'health_program' => array('type' => 'query', 'method' => 'findByHealthProgram', 'encode' => true),
+        'inn' => array('type' => 'query', 'method' => 'findByDrugINNName', 'encode' => true),
+        'manufacturer' => array('type' => 'query', 'method' => 'findByManufacturerName', 'encode' => true),
+        'vigiflow' => array('type' => 'query', 'method' => 'findByVigiflowStatus', 'encode' => true),
+        'suspected_drug' => array('type' => 'query', 'method' => 'dummy'), 
+        '' => array('type' => 'value'),
+        '' => array('type' => 'value'),
+        '' => array('type' => 'query', 'method' => 'reporterFilter', 'encode' => true),
+        'designation_id' => array('type' => 'value'),
+        'gender' => array('type' => 'value'),
+        'submitted' => array('type' => 'value'),
+        'submit' => array('type' => 'query', 'method' => 'orConditions', 'encode' => true),
+         * 
+         * 
+         * 
+         */
 
         $this->belongsTo('Sadrs', [
             'foreignKey' => 'sadr_id',
@@ -115,7 +195,6 @@ class SadrsTable extends Table
             'foreignKey' => 'foreign_key',
             'conditions' => ['ExternalComment.model' => 'Sadrs', 'ExternalComment.category' => 'external'],
         ]);
-        
     }
 
     /**

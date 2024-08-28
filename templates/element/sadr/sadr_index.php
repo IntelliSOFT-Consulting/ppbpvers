@@ -1,6 +1,6 @@
 <?php
 $this->assign('SADRs', 'active');
-echo $this->Html->script('sadrs_index', array('inline' => false));
+echo $this->Html->script('search/sadr', array('inline' => false));
 
 ?>
 <div class="row-fluid">
@@ -22,8 +22,7 @@ echo $this->Html->script('sadrs_index', array('inline' => false));
 <div class="row-fluid">
     <div class="span12">
         <?php
-        // echo $this->Form->create();
-        echo $this->Form->create($sadr, ['type' => 'get']);
+        echo $this->Form->create(null, ['valueSources' => 'query']);
         ?>
         <table class="table table-condensed" style="margin-bottom: 2px;">
             <tbody>
@@ -295,6 +294,7 @@ echo $this->Html->script('sadrs_index', array('inline' => false));
                         ?>
                     </td>
                 </tr>
+                <?php if($prefix =="manager"){?>
                 <tr>
                     <td>
                         <h5>Report Status</h5>
@@ -365,6 +365,7 @@ echo $this->Html->script('sadrs_index', array('inline' => false));
                     <td></td>
                     <td></td>
                 </tr>
+                <?php } ?>
                 <tr>
                     <td><label for="SadrPages" class="required">Pages</label></td>
                     <td>

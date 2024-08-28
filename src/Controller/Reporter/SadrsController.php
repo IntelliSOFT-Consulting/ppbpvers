@@ -18,7 +18,7 @@ use Cake\View\Helper\HtmlHelper;
  */
 class SadrsController extends AppController
 {
-    public $page_options = array('25' => '25', '50' => '50', '100' => '100');
+    public $page_options = array('5' => '5','10' => '10','25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -27,18 +27,19 @@ class SadrsController extends AppController
     public function index()
     {
         $criteria = array();
-
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
         $criteria['Sadrs.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
             'conditions' => $criteria,
-            'order' => ['Sadrs.created' => 'DESC']
-        ];
-        $sadr = $this->Sadrs->newEmptyEntity();
-        $sadrs = $this->paginate($this->Sadrs);
+            'order' => ['Sadrs.created' => 'DESC'],
+            'limit'=>$limit
+        ]; 
+        $sadrs = $this->paginate($this->Sadrs->find('search', ['search' => $this->request->getQuery()]));
+ 
         $this->set('page_options', $this->page_options);
-        $this->set(compact('sadrs'));
-        $this->set(compact('sadr'));
+        $this->set(compact('sadrs')); 
         $counties = $this->Sadrs->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
         $this->set(compact('counties'));
         $designations = $this->Sadrs->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
