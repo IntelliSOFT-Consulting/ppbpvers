@@ -15,6 +15,7 @@
         "dereuromark/cakephp-captcha": "^1.4",
         "dereuromark/cakephp-queue": "^6.9",
         "friendsofcake/cakepdf": "^4.1",
+        "friendsofcake/search": "^6.2",
         "josegonzalez/cakephp-upload": "^7.0",
         "mobiledetect/mobiledetectlib": "^3.74"
     },

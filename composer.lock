@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9c58a99e14c6edfa78f0e68a9f68c5c",
+    "content-hash": "75cd46e8540923a78a36c942422e1244",
     "packages": [
         {
             "name": "brick/math",
@@ -1030,6 +1030,65 @@
                 "source": "https://github.com/FriendsOfCake/CakePdf/tree/4.1.2"
             },
             "time": "2022-08-31T13:06:10+00:00"
+        },
+        {
+            "name": "friendsofcake/search",
+            "version": "6.2.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfCake/search.git",
+                "reference": "d99b5c73948e632b9b0db1a31aa98ae489aa1502"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfCake/search/zipball/d99b5c73948e632b9b0db1a31aa98ae489aa1502",
+                "reference": "d99b5c73948e632b9b0db1a31aa98ae489aa1502",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.0"
+            },
+            "require-dev": {
+                "cakephp/bake": "^2.3",
+                "cakephp/cakephp-codesniffer": "^4.0",
+                "cakephp/twig-view": "^1.1.1",
+                "muffin/webservice": "^3.0",
+                "phpunit/phpunit": "~8.5.0 || ^9.3"
+            },
+            "type": "cakephp-plugin",
+            "autoload": {
+                "psr-4": {
+                    "Search\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Christian Winther",
+                    "role": "Author"
+                },
+                {
+                    "name": "ADmad",
+                    "homepage": "https://github.com/admad",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "CakePHP Search plugin using PRG pattern",
+            "homepage": "https://github.com/FriendsOfCake/search",
+            "keywords": [
+                "cakephp",
+                "filter",
+                "prg",
+                "search"
+            ],
+            "support": {
+                "issues": "https://github.com/FriendsOfCake/search/issues",
+                "source": "https://github.com/FriendsOfCake/search"
+            },
+            "time": "2023-03-12T12:50:17+00:00"
         },
         {
             "name": "josegonzalez/cakephp-upload",

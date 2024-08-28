@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Admin;
@@ -25,21 +26,18 @@ class MessagesController extends AppController
      */
     public function index()
     {
-        // $page_options = array('25' => '25', '20' => '20');
-        // $messages = $this->paginate($this->Messages); 
-        // $this->set('page_options', $page_options);
-        // $this->set(compact('messages'));
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
 
-        $filters = [
-            'name' => $this->request->getQuery('name'),
-            // 'email' => $this->request->getQuery('email'),
-            // 'status' => $this->request->getQuery('status'),
-        ];
+        $messages = $this->paginate(
+            $this->Messages->find(
+                'search',
+                ['search' => $this->request->getQuery()]
+            ),
+            ['limit' => $limit]
+        );
 
-        $query = $this->Messages->find();
-        $query = $this->Messages->search($query, $filters);
-        $page_options = array('25' => '25', '20' => '20');
-        $messages = $this->paginate($query);
+        $page_options = array('5' => '5', '10' => '10', '25' => '25', '20' => '20');
         $this->set(compact('messages'));
         $this->set('page_options', $page_options);
     }

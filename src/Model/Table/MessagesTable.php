@@ -44,7 +44,17 @@ class MessagesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-        // $this->addBehavior('Search.Search');
+        
+        $this->addBehavior('Search.Search');
+
+        $this->searchManager()
+            ->value('subject')
+            ->value('content')
+            ->like('name', ['fields' => ['name']])
+            ->value('sms');
+            // ->compare('start_date', ['operator' => '>=', 'fields' => ['created']])
+            // ->compare('end_date', ['operator' => '<=', 'fields' => ['created']])
+            // ->value('designation_id');
     }
 
     public function search(Query $query, array $filters): Query

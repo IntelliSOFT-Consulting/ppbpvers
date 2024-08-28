@@ -6,8 +6,10 @@ $this->assign('Content', 'active');
     <div class="span-12">
 
 
-        <?php
-        echo $this->Form->create(); ?>
+        <?php 
+        
+        echo $this->Form->create(null, ['valueSources' => 'query']);
+        ?>
         <table class="table table-condensed table-bordered" style="margin-bottom: 2px;">
             <thead>
                 <tr>

@@ -76,6 +76,7 @@ class Application extends BaseApplication
         // Load more plugins here 
         $this->addPlugin('Josegonzalez/Upload');
         $this->addPlugin('CakePdf');
+        $this->addPlugin('Search');
     }
 
     /**

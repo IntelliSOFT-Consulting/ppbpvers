@@ -1,4 +1,5 @@
 <?php
+echo $this->Html->script('search/users', array('inline' => false));
 $this->assign('Users', 'active');
 ?>
 
@@ -36,7 +37,7 @@ $this->assign('Users', 'active');
 
     <div class="span10 columns">
         <?php
-        echo $this->Form->create();
+        echo $this->Form->create(null, ['valueSources' => 'query']);
         // 'User', array(
         //     'url' => array_merge(array('action' => 'admin_index'), $this->params['pass']),
         //     'class' => 'well',
@@ -54,6 +55,7 @@ $this->assign('Users', 'active');
                     // 'default' => $this->request->getQuery('pages') ?? $this->request->getQuery('paging')['limit'],
                     'empty' => true, // Adds an empty option
                     'options' => [
+                        1=>1,
                         5 => 5,
                         10 => 10,
                         20 => 20,
@@ -75,8 +77,11 @@ $this->assign('Users', 'active');
                 echo $this->Form->control(
                     'username',
                     array(
-                        'div' => false, 'id' => 'adminTitleId', 'required' => false,
-                        'class' => 'span9', 'label' => array('class' => 'required', 'text' => 'Username')
+                        'div' => false,
+                        'id' => 'adminTitleId',
+                        'required' => false,
+                        'class' => 'span9',
+                        'label' => array('class' => 'required', 'text' => 'Username')
                     )
                 );
                 ?>
@@ -86,130 +91,149 @@ $this->assign('Users', 'active');
                 echo $this->Form->control(
                     'email',
                     array(
-                        'div' => false, 'id' => 'adminSearchId', 'required' => false,
-                        'type' => 'text', 'class' => 'span9', 'label' => array('class' => 'required', 'text' => 'Email Address')
+                        'div' => false,
+                        'id' => 'adminSearchId',
+                        'required' => false,
+                        'type' => 'text',
+                        'class' => 'span9',
+                        'label' => array('class' => 'required', 'text' => 'Email Address')
                     )
                 );
                 ?>
             </div>
             <div class="span4 columns">
-                <?php
-                echo $this->Form->control(
-                    'start_date',
-                    array(
-                        'div' => false, 'type' => 'text', 'class' => 'control-small',  'id' => 'SadrStartDate', 'after' => '-to-',
-                        'label' => array('class' => 'required', 'text' => 'User Created Dates'), 'placeHolder' => 'Start Date'
-                    )
-                );
-                echo $this->Form->control(
-                    'end_date',
-                    array(
-                        'div' => false, 'type' => 'text', 'class' => 'control-small', 'id' => 'SadrEndDate',
-                        'after' => '<a style="font-weight:normal" onclick="$(\'#SadrStartDate\').val(\'\');	$(\'#SadrEndDate\').val(\'\');
-													$(\'#adminSearchId\').val(\'\');	$(\'#adminTitleId\').val(\'\');" >										
-												<em>clear</em></a>',
-                        'label' => false, 'placeHolder' => 'End Date'
-                    )
-                );
-                ?>
-            </div>
-        </div>
-        <hr>
-        <div class="row-fluid">
-            <div class="span4">
-                <?php
-                echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
-                    'escapeTitle' => false,
-                    'class' => 'btn btn-inverse', 'div' => 'control-group', 'div' => false,
-                ));
-                ?>
-            </div>
-            <div class="span4">
-                <?php
-                echo $this->Html->link('<i class="icon-plus"></i> Add User', array('controller' => 'users', 'action' => 'add'), array(
-                    'class' => 'btn', 'div' => false, 'escape' => false,
-                ));
-                ?>
-            </div>
-            <div class="span4">
-                <?php
-
-                ?>
-            </div>
-        </div>
-        <?php echo $this->Form->end(); ?>
-
-        <div class="row-fluid">
-
-            <?php
-            if (count($users) >  0) { ?>
-                <p>
+                <h5>User Created Dates</h5>
+                <div style="display: flex; align-items: center;">
                     <?php
-                    echo $this->Paginator->counter(
-                        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+                    echo $this->Form->control(
+                        'start_date',
+                        array(
+                            'div' => false,
+                            'type' => 'text',
+                            'class' => 'control-small unauthorized_index',
+                            'label' => false,
+                            'placeHolder' => 'Start Date'
+                        )
+                    );
+                    ?>
+                    <span style="margin: 0 10px;">-to-</span>
+                    <?php
+                    echo $this->Form->control(
+                        'end_date',
+                        array(
+                            'div' => false,
+                            'type' => 'text',
+                            'class' => 'control-small unauthorized_index',
+                            'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+                              <em class="accordion-toggle">clear!</em></a>',
+                            'label' => false,
+                            'placeHolder' => 'End Date'
+                        )
+                    );
+                    ?>
+                </div>
+            </div>
+        </div>
+            <hr>
+            <div class="row-fluid">
+                <div class="span4">
+                    <?php
+                    echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
+                        'escapeTitle' => false,
+                        'class' => 'btn btn-inverse',
+                        'div' => 'control-group',
+                        'div' => false,
+                    ));
+                    ?>
+                </div>
+                <div class="span4">
+                    <?php
+                    echo $this->Html->link('<i class="icon-plus"></i> Add User', array('controller' => 'users', 'action' => 'add'), array(
+                        'class' => 'btn',
+                        'div' => false,
+                        'escape' => false,
+                    ));
+                    ?>
+                </div>
+                <div class="span4">
+                    <?php
+
+                    ?>
+                </div>
+            </div>
+            <?php echo $this->Form->end(); ?>
+
+            <div class="row-fluid">
+
+                <?php
+                if (count($users) >  0) { ?>
+                    <p>
+                        <?php
+                        echo $this->Paginator->counter(
+                            __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
                         showing <span class="badge">{{current}}</span> Users out of 
                         <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
                         ending on <span class="badge">{{end}}</span>')
-                    );
+                        );
 
 
-                    ?>
-                </p>
-                <div class="pagination">
-                    <ul>
-                        <?= $this->Paginator->first('<< ' . __('first')) ?>
-                        <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                        <?= $this->Paginator->numbers() ?>
-                        <?= $this->Paginator->next(__('next') . ' >') ?>
-                        <?= $this->Paginator->last(__('last') . ' >>') ?>
-                    </ul>
-                </div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th style="width:3%">#</th>
-                            <th><?php echo $this->Paginator->sort('Username'); ?></th>
-                            <th><?php echo $this->Paginator->sort('email'); ?></th>
-                            <th><?php echo $this->Paginator->sort('created', 'Date Created'); ?></th>
-                            <th><?php echo __('Actions'); ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        $counder = 0; // ($this->request->paging['User']['page'] - 1) * $this->request->paging['User']['limit'];
-                        foreach ($users as $user) :
                         ?>
+                    </p>
+                    <div class="pagination">
+                        <ul>
+                            <?= $this->Paginator->first('<< ' . __('first')) ?>
+                            <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                            <?= $this->Paginator->numbers() ?>
+                            <?= $this->Paginator->next(__('next') . ' >') ?>
+                            <?= $this->Paginator->last(__('last') . ' >>') ?>
+                        </ul>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>
-                                    <p class="tablenums">
-                                        <?php $counder++;
-                                        echo $counder; ?>.</p>
-                                </td>
-                                <td><?php echo '<span class="badge badge-success">' . $user['username'] . '</span>'; ?>&nbsp;</td>
-                                <td><?php echo h($user['email']); ?>&nbsp;</td>
-                                <td><?php echo h($user['created']); ?>&nbsp;</td>
-                                <td>
-                                    <?php echo $this->Html->link(
-                                        '<span class="label label-info tooltipper" title="Edit"><i class="icon-pencil icon-white"></i> </span>',
-                                        array('controller' => 'users', 'action' => 'edit', $user['id']),
-                                        array('escape' => false)
-                                    ); ?>&nbsp;
-                                    <?php echo $this->Form->postLink(
-                                        __('<span class="label label-important tooltipper" title="Delete"><i class="icon-trash icon-white"></i> </span>'),
-                                        array('action' => 'delete', $user['id']),
-                                        array('escape' => false),
-                                        __('Are you sure you want to Delete the User %s?', $user['username'])
-                                    ); ?>&nbsp;
-                                </td>
+                                <th style="width:3%">#</th>
+                                <th><?php echo $this->Paginator->sort('Username'); ?></th>
+                                <th><?php echo $this->Paginator->sort('email'); ?></th>
+                                <th><?php echo $this->Paginator->sort('created', 'Date Created'); ?></th>
+                                <th><?php echo __('Actions'); ?></th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $counder = 0; // ($this->request->paging['User']['page'] - 1) * $this->request->paging['User']['limit'];
+                            foreach ($users as $user) :
+                            ?>
+                                <tr>
+                                    <td>
+                                        <p class="tablenums">
+                                            <?php $counder++;
+                                            echo $counder; ?>.</p>
+                                    </td>
+                                    <td><?php echo '<span class="badge badge-success">' . $user['username'] . '</span>'; ?>&nbsp;</td>
+                                    <td><?php echo h($user['email']); ?>&nbsp;</td>
+                                    <td><?php echo h($user['created']); ?>&nbsp;</td>
+                                    <td>
+                                        <?php echo $this->Html->link(
+                                            '<span class="label label-info tooltipper" title="Edit"><i class="icon-pencil icon-white"></i> </span>',
+                                            array('controller' => 'users', 'action' => 'edit', $user['id']),
+                                            array('escape' => false)
+                                        ); ?>&nbsp;
+                                        <?php echo $this->Form->postLink(
+                                            __('<span class="label label-important tooltipper" title="Delete"><i class="icon-trash icon-white"></i> </span>'),
+                                            array('action' => 'delete', $user['id']),
+                                            array('escape' => false),
+                                            __('Are you sure you want to Delete the User %s?', $user['username'])
+                                        ); ?>&nbsp;
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
 
-            <?php } else { ?>
-                <p>There were no reports that met your search criteria.</p>
-            <?php } ?>
-        </div> <!-- /row-fluid -->
-    </div> <!-- /span6 -->
+                <?php } else { ?>
+                    <p>There were no reports that met your search criteria.</p>
+                <?php } ?>
+            </div> <!-- /row-fluid -->
+        </div> <!-- /span6 -->
 
-</div> <!-- /row-fluid -->
+    </div> <!-- /row-fluid -->

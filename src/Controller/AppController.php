@@ -68,6 +68,7 @@ class AppController extends Controller
          */
         //$this->loadComponent('FormProtection'); 
         $this->loadComponent('Paginator');
+         $this->loadComponent('Search.Search');
 
         $this->loadComponent('Acl', [
             'className' => 'Acl.Acl'

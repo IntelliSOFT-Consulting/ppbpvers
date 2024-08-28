@@ -14,7 +14,11 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
-
+    public function initialize(): void
+    {
+        parent::initialize();
+ 
+    }
 
     public function dashboard()
     {
@@ -29,12 +33,15 @@ class UsersController extends AppController
      */
     public function index()
     {
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
         $this->paginate = [
             'contain' => ['Designations', 'Counties', 'Roles'],
-        ];
-        $users = $this->paginate($this->Users);
-        // dd($users);
-
+            'limit'=>$limit
+        
+        ]; 
+        $users = $this->paginate($this->Users->find('search', ['search' => $this->request->getQuery()]));
+ 
         $this->set(compact('users'));
     }
 

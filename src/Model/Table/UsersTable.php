@@ -59,7 +59,7 @@ class UsersTable extends Table
         array('name' => 'username', 'type' => 'like'),
         array('name' => 'name', 'type' => 'like'),
         array('name' => 'email', 'type' => 'like'),
-		array('name' => 'range', 'type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'Users.created BETWEEN ? AND ?'),
+        array('name' => 'range', 'type' => 'expression', 'method' => 'makeRangeCondition', 'field' => 'Users.created BETWEEN ? AND ?'),
     );
 
     /**
@@ -78,6 +78,27 @@ class UsersTable extends Table
 
         $this->addBehavior('Timestamp');
         $this->addBehavior('Acl.Acl', ['type' => 'requester']);
+
+        $this->addBehavior('Search.Search');
+
+        $this->searchManager()
+            ->value('username')
+            ->value('role_id')
+            ->value('email')
+            ->compare('start_date', ['operator' => '>=', 'fields' => ['created']])
+            ->compare('end_date', ['operator' => '<=', 'fields' => ['created']])
+            ->value('designation_id');
+            // ->like('name', ['fields' => ['name', 'username', 'email', 'phone_no']])
+            
+            // ->add('search', 'Search.Like', [
+            //     'before' => true,
+            //     'after' => true,
+            //     'fieldMode' => 'OR',
+            //     'comparison' => 'LIKE',
+            //     'wildcardAny' => '*',
+            //     'wildcardOne' => '?',
+            //     'fields' => ['name', 'email'],
+            // ]);
 
 
         $this->belongsTo('Designations', [
@@ -163,7 +184,7 @@ class UsersTable extends Table
             ->scalar('username')
             ->maxLength('username', 255)
             ->requirePresence('username', 'create')
-            ->notEmptyString('username','Please provide username')
+            ->notEmptyString('username', 'Please provide username')
             ->add('username', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
@@ -179,7 +200,7 @@ class UsersTable extends Table
                 'message' => 'Passwords do not match'
             ])
 
-            ->notEmptyString('password','Please provide password');
+            ->notEmptyString('password', 'Please provide password');
 
         $validator
             ->scalar('confirm_password')
@@ -193,12 +214,12 @@ class UsersTable extends Table
 
         $validator
             ->email('email')
-            ->notEmptyString('email','Please provide email address')
+            ->notEmptyString('email', 'Please provide email address')
             ->add('email', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
 
         $validator
             ->integer('role_id')
-            ->notEmptyString('role_id','Please select a role');
+            ->notEmptyString('role_id', 'Please select a role');
 
         $validator
             ->scalar('name_of_institution')
