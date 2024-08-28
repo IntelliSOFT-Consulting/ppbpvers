@@ -1,11 +1,12 @@
 <?php
 $this->assign('DEV', 'active');
+echo $this->Html->script('sadrs_index', array('inline' => false));
 ?>
 
 <div class="row-fluid">
   <div class="span12">
 
-    <?php 
+    <?php
     if ($prefix == 'reporter') {
     ?>
       <div class="row-fluid">
@@ -44,7 +45,8 @@ $this->assign('DEV', 'active');
               array(
                 'div' => false,
                 'placeholder' => 'device/2020',
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Reference No.')
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Reference No.')
               )
             );
             ?>
@@ -56,38 +58,53 @@ $this->assign('DEV', 'active');
               array(
                 'div' => false,
                 'placeholder' => 'brand name',
-                'class' => 'unauthorized_index span10', 'label' => array('class' => 'required', 'text' => 'Brand name')
+                'class' => 'unauthorized_index span10',
+                'label' => array('class' => 'required', 'text' => 'Brand name')
               )
             );
             ?>
           </td>
           <td colspan="2">
-            <?php
-            echo $this->Form->control(
-              'start_date',
-              array(
-                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index', 'after' => '-to-',
-                'label' => array('class' => 'required', 'text' => 'Report Dates'), 'placeHolder' => 'Start Date'
-              )
-            );
-            echo $this->Form->control(
-              'end_date',
-              array(
-                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index',
-                'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+            <h5>Report Dates</h5>
+            <div style="display: flex; align-items: center;">
+              <?php
+              echo $this->Form->control(
+                'start_date',
+                array(
+                  'div' => false,
+                  'type' => 'text',
+                  'class' => 'control-small unauthorized_index',
+                  'label' => false,
+                  'placeHolder' => 'Start Date'
+                )
+              );
+              ?>
+              <span style="margin: 0 10px;">-to-</span>
+              <?php
+              echo $this->Form->control(
+                'end_date',
+                array(
+                  'div' => false,
+                  'type' => 'text',
+                  'class' => 'control-small unauthorized_index',
+                  'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                               <em class="accordion-toggle">clear!</em></a>',
-                'label' => false, 'placeHolder' => 'End Date'
-              )
-            );
-            ?>
+                  'label' => false,
+                  'placeHolder' => 'End Date'
+                )
+              );
+              ?>
+            </div>
           </td>
           <td>
             <?php
             echo $this->Form->control(
               'name_of_institution',
               array(
-                'div' => false, 'placeholder' => 'institution',
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Institution')
+                'div' => false,
+                'placeholder' => 'institution',
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Institution')
               )
             );
             ?>
@@ -99,7 +116,8 @@ $this->assign('DEV', 'active');
               array(
                 'div' => false,
                 'placeholder' => 'Report title',
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Report Title')
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Report Title')
               )
             );
             ?>
@@ -109,8 +127,10 @@ $this->assign('DEV', 'active');
             echo $this->Form->control(
               'county_id',
               array(
-                'div' => false, 'empty' => true,
-                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'County')
+                'div' => false,
+                'empty' => true,
+                'class' => 'control-small',
+                'label' => array('class' => 'required', 'text' => 'County')
               )
             );
             ?>
@@ -121,7 +141,8 @@ $this->assign('DEV', 'active');
             <?php
             echo $this->Form->control('serious', array(
               'type' => 'select',
-              'empty' => true, 'class' => 'control',
+              'empty' => true,
+              'class' => 'control',
               'options' => array(
                 'Fatal' => 'Fatal',
                 'Serious' => 'Serious',
@@ -137,7 +158,8 @@ $this->assign('DEV', 'active');
             <?php
             echo $this->Form->control('serious_yes', array(
               'type' => 'select',
-              'empty' => true, 'class' => 'control',
+              'empty' => true,
+              'class' => 'control',
               'options' => array(
                 'Death' => 'Death',
                 'Life-threatening' => 'Life-threatening',
@@ -153,7 +175,8 @@ $this->assign('DEV', 'active');
             <?php
             echo $this->Form->control('outcome', array(
               'type' => 'select',
-              'empty' => true, 'class' => 'control',
+              'empty' => true,
+              'class' => 'control',
               'options' => array(
                 'Recovered' => 'Recovered',
                 'Recovering' => 'Recovering',
@@ -173,7 +196,8 @@ $this->assign('DEV', 'active');
               array(
                 'div' => false,
                 'placeholder' => 'common name',
-                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'Common name')
+                'class' => 'control-small',
+                'label' => array('class' => 'required', 'text' => 'Common name')
               )
             );
             ?>
@@ -185,7 +209,8 @@ $this->assign('DEV', 'active');
               array(
                 'div' => false,
                 'placeholder' => 'manufacturer',
-                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'Manufacturer')
+                'class' => 'control-small',
+                'label' => array('class' => 'required', 'text' => 'Manufacturer')
               )
             );
             ?>
@@ -194,7 +219,9 @@ $this->assign('DEV', 'active');
             <h5>Problem noted prior?</h5>
             <?php
             echo $this->Form->control('problem_noted', array(
-              'options' => array('Yes' => 'Yes', 'No' => 'No'), 'legend' => false,
+              'options' => array('Yes' => 'Yes', 'No' => 'No'),
+              'legend' => false,
+              'label'=>false,
               'type' => 'radio'
             ));
             ?>
@@ -206,8 +233,10 @@ $this->assign('DEV', 'active');
             echo $this->Form->control(
               'patient_name',
               array(
-                'div' => false, 'placeholder' => 'Patient name',
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Patient Name')
+                'div' => false,
+                'placeholder' => 'Patient name',
+                'class' => 'span12 unauthorized_index',
+                'label' => array('class' => 'required', 'text' => 'Patient Name')
               )
             );
             echo $this->Form->control('submitted', array(
@@ -226,15 +255,23 @@ $this->assign('DEV', 'active');
             <h5>Report Type?</h5>
             <?php
             echo $this->Form->control('report_type', array(
-              'options' => array('Initial' => 'Initial', 'Followup' => 'Followup'), 'legend' => false,
+              'options' => array('Initial' => 'Initial', 'Followup' => 'Followup'),
+              'legend' => false,
+              'label'=>false,
               'type' => 'radio'
             ));
             echo $this->Form->control('health_program', array(
-              'type' => 'select', 'options' => [
-                'Malaria program' => 'Malaria program', 'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
-                'Neglected tropical diseases program' => 'Neglected tropical diseases program', 'MNCAH Priority Medicines' => 'MNCAH Priority Medicines', 'TB program' => 'TB program',
-                'NASCOP program' => 'NASCOP program', 'Cancer/Oncology program' => 'Cancer/Oncology program'
-              ], 'empty' => true,
+              'type' => 'select',
+              'options' => [
+                'Malaria program' => 'Malaria program',
+                'National Vaccines and immunisation program' => 'National Vaccines and immunisation program',
+                'Neglected tropical diseases program' => 'Neglected tropical diseases program',
+                'MNCAH Priority Medicines' => 'MNCAH Priority Medicines',
+                'TB program' => 'TB program',
+                'NASCOP program' => 'NASCOP program',
+                'Cancer/Oncology program' => 'Cancer/Oncology program'
+              ],
+              'empty' => true,
               'label' => array('class' => 'control-label', 'text' => 'Public Health Program'),
               'class' => 'control-xlarge'
             ));
@@ -244,7 +281,8 @@ $this->assign('DEV', 'active');
             <?php
             echo $this->Form->control('operator', array(
               'type' => 'select',
-              'empty' => true, 'class' => 'control-small',
+              'empty' => true,
+              'class' => 'control-small',
               'options' => array(
                 'Healthcare professional' => 'Healthcare professional',
                 'Patient' => 'Patient',
@@ -260,7 +298,8 @@ $this->assign('DEV', 'active');
             <?php
             echo $this->Form->control('device_usage', array(
               'type' => 'select',
-              'empty' => true, 'class' => 'control-small',
+              'empty' => true,
+              'class' => 'control-small',
               'options' => array(
                 'Single use' => 'Single use',
                 'Reuse of reusable' => 'Reuse of reusable',
@@ -279,10 +318,12 @@ $this->assign('DEV', 'active');
             );
 
             echo $this->Form->control('sending_device', array(
-              'type' => 'select', 'options' => [
+              'type' => 'select',
+              'options' => [
                 '1' => 'Web',
                 '2' => 'Mobile',
-              ], 'empty' => true,
+              ],
+              'empty' => true,
               'label' => array('class' => 'control-label', 'text' => 'Sending Device'),
               'class' => 'control-xlarge'
             ));  ?>
@@ -292,8 +333,10 @@ $this->assign('DEV', 'active');
             echo $this->Form->control(
               'designation_id',
               array(
-                'div' => false, 'empty' => true,
-                'class' => 'control-small', 'label' => array('class' => 'required', 'text' => 'Designation')
+                'div' => false,
+                'empty' => true,
+                'class' => 'control-small',
+                'label' => array('class' => 'required', 'text' => 'Designation')
               )
             );
             echo $this->Form->control('mah', array(
@@ -312,8 +355,10 @@ $this->assign('DEV', 'active');
             <h5>Gender</h5>
             <?php
             echo $this->Form->control('gender', array(
-              'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'), 'legend' => false,
-              'type' => 'radio'
+              'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'),
+              'legend' => false,
+              'type' => 'radio',
+              'label'=>false,
             ));
             ?>
           </td>
@@ -323,22 +368,26 @@ $this->assign('DEV', 'active');
           <td>
             <?php
             echo $this->Form->control('pages', array(
-              'type' => 'select', 'div' => false, 'class' => 'control-small', 
-            //   'selected' => $this->request->params['paging']['limit'],
+              'type' => 'select',
+              'div' => false,
+              'class' => 'control-small',
+              //   'selected' => $this->request->params['paging']['limit'],
               'empty' => true,
               'options' => $page_options,
               'label' => false,
             ));
             ?>
           </td>
-          <td> 
+          <td>
           </td>
           <td></td>
           <td>
             <?php
             echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
-              'class' => 'btn btn-primary', 'div' => 'control-group', 'div' => false,
-              'escapeTitle'=>false,
+              'class' => 'btn btn-primary',
+              'div' => 'control-group',
+              'div' => false,
+              'escapeTitle' => false,
               'formnovalidate' => 'formnovalidate',
               'style' => array('margin-bottom: 5px')
             ));
@@ -358,27 +407,27 @@ $this->assign('DEV', 'active');
       </tbody>
     </table>
     <p>
-    <?php
+      <?php
 
-echo $this->Paginator->counter(
-    __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+      echo $this->Paginator->counter(
+        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
 showing <span class="badge">{{current}}</span> Devices out of 
 <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
 ending on <span class="badge">{{end}}</span>')
-);
-?>
+      );
+      ?>
 
-</p>
-<?php echo $this->Form->end(); ?>
-<div class="pagination">
-<ul>
-    <?= $this->Paginator->first('<< ' . __('first')) ?>
-    <?= $this->Paginator->prev('< ' . __('previous')) ?>
-    <?= $this->Paginator->numbers() ?>
-    <?= $this->Paginator->next(__('next') . ' >') ?>
-    <?= $this->Paginator->last(__('last') . ' >>') ?>
-</ul>
-</div>
+    </p>
+    <?php echo $this->Form->end(); ?>
+    <div class="pagination">
+      <ul>
+        <?= $this->Paginator->first('<< ' . __('first')) ?>
+        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+        <?= $this->Paginator->numbers() ?>
+        <?= $this->Paginator->next(__('next') . ' >') ?>
+        <?= $this->Paginator->last(__('last') . ' >>') ?>
+      </ul>
+    </div>
 
 
     <table class="table  table-bordered table-striped">

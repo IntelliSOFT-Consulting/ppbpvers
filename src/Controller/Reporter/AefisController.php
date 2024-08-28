@@ -34,6 +34,11 @@ class AefisController extends AppController
 
         $this->set('page_options', $this->page_options);
         $this->set(compact('aefis'));
+
+        $counties = $this->Aefis->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Aefis->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**

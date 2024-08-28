@@ -1,6 +1,7 @@
 <?php
 
 
+echo $this->Html->script('sadrs_index', array('inline' => false));
 $this->assign('Poor-Quality Health Products and Technologies', 'active');
 ?>
 
@@ -67,31 +68,36 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                         ?>
                     </td>
                     <td colspan="2">
-                        <?php
-                        echo $this->Form->control(
-                            'start_date',
-                            array(
-                                'div' => false,
-                                'type' => 'text',
-                                'class' => 'control-small unauthorized_index',
-                                'after' => '-to-',
-                                'label' => array('class' => 'required', 'text' => 'Report Dates'),
-                                'placeHolder' => 'Start Date'
-                            )
-                        );
-                        echo $this->Form->control(
-                            'end_date',
-                            array(
-                                'div' => false,
-                                'type' => 'text',
-                                'class' => 'control-small unauthorized_index',
-                                'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+                        <h5>Report Dates</h5>
+                        <div style="display: flex; align-items: center;">
+                            <?php
+                            echo $this->Form->control(
+                                'start_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'label' => false,
+                                    'placeHolder' => 'Start Date'
+                                )
+                            );
+                            ?>
+                            <span style="margin: 0 10px;">-to-</span>
+                            <?php
+                            echo $this->Form->control(
+                                'end_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                               <em class="accordion-toggle">clear!</em></a>',
-                                'label' => false,
-                                'placeHolder' => 'End Date'
-                            )
-                        );
-                        ?>
+                                    'label' => false,
+                                    'placeHolder' => 'End Date'
+                                )
+                            );
+                            ?>
+                        </div>
                     </td>
                     <td>
                         <?php
@@ -158,22 +164,22 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                     <td colspan="2">
                         <h5>Product</h5>
                         <?php
-                        echo $this->Form->control('medicinal_product', array('label' => 'Medicinal', 'hiddenField' => false));
-                        echo $this->Form->control('blood_products', array('label' => 'Blood product', 'hiddenField' => false));
-                        echo $this->Form->control('product_vaccine', array('label' => 'Vaccine', 'hiddenField' => false));
+                        echo $this->Form->control('medicinal_product', array('label' => 'Medicinal', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('blood_products', array('label' => 'Blood product', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('product_vaccine', array('label' => 'Vaccine', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <h5>Category</h5>
                         <?php
-                        echo $this->Form->control('herbal_product', array('label' => 'Herbal product', 'hiddenField' => false));
-                        echo $this->Form->control('medical_device', array('label' => 'Medical device', 'hiddenField' => false));
-                        echo $this->Form->control('cosmeceuticals', array('label' => 'Cosmeceuticals', 'hiddenField' => false));
+                        echo $this->Form->control('herbal_product', array('label' => 'Herbal product', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('medical_device', array('label' => 'Medical device', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('cosmeceuticals', array('label' => 'Cosmeceuticals', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('product_other', array('label' => 'Other', 'hiddenField' => false));
+                        echo $this->Form->control('product_other', array('label' => 'Other', 'hiddenField' => false, 'type' => 'checkbox'));
                         echo $this->Form->control('product_specify', array('label' => false, 'class' => 'control-small', 'placeholder' => '(specify)'));
                         ?>
                     </td>
@@ -246,12 +252,13 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                     <td>
                         <h5>Complaint</h5>
                         <?php
-                        echo $this->Form->control('colour_change', array('label' => 'Colour change', 'hiddenField' => false));
-                        echo $this->Form->control('separating', array('label' => 'Separating', 'hiddenField' => false));
-                        echo $this->Form->control('powdering', array('label' => 'Powdering / crumbling', 'hiddenField' => false));
-                        echo $this->Form->control('caking', array('label' => 'Caking', 'hiddenField' => false));
-                        echo $this->Form->control('moulding', array('label' => 'Moulding', 'hiddenField' => false));
+                        echo $this->Form->control('colour_change', array('label' => 'Colour change', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('separating', array('label' => 'Separating', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('powdering', array('label' => 'Powdering / crumbling', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('caking', array('label' => 'Caking', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('moulding', array('label' => 'Moulding', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
+                        <h5>Sending Device</h5>
                         <?php
                         echo $this->Form->control('sending_device', array(
                             'type' => 'select',
@@ -260,29 +267,29 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                                 '2' => 'Mobile',
                             ],
                             'empty' => true,
-                            'label' => array('class' => 'control-label', 'text' => '<b>Sending Device</b>'),
+                            'label' => array('class' => 'control-label', 'text' => ''),
                             'class' => 'control-xlarge'
                         ));  ?>
                     </td>
 
                     <td>
                         <?php
-                        echo $this->Form->control('odour_change', array('label' => 'Change of odour', 'hiddenField' => false));
-                        echo $this->Form->control('mislabeling', array('label' => 'Mislabeling', 'hiddenField' => false));
-                        echo $this->Form->control('incomplete_pack', array('label' => 'Incomplete pack', 'hiddenField' => false));
-                        echo $this->Form->control('therapeutic_ineffectiveness', array('label' => 'Therapeutic ineffectiveness', 'hiddenField' => false));
-                        echo $this->Form->control('particulate_matter', array('label' => 'Particulate matter', 'hiddenField' => false));
-                        echo $this->Form->control('complaint_other', array('label' => 'Other', 'hiddenField' => false));
+                        echo $this->Form->control('odour_change', array('label' => 'Change of odour', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('mislabeling', array('label' => 'Mislabeling', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('incomplete_pack', array('label' => 'Incomplete pack', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('therapeutic_ineffectiveness', array('label' => 'Therapeutic ineffectiveness', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('particulate_matter', array('label' => 'Particulate matter', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('complaint_other', array('label' => 'Other', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <h5>Medical Device</h5>
                         <?php
-                        echo $this->Form->control('packaging', array('label' => 'Packaging', 'hiddenField' => false));
-                        echo $this->Form->control('labelling', array('label' => 'Labelling', 'hiddenField' => false));
-                        echo $this->Form->control('sampling', array('label' => 'Sampling', 'hiddenField' => false));
-                        echo $this->Form->control('mechanism', array('label' => 'Mechanism', 'hiddenField' => false));
-                        echo $this->Form->control('electrical', array('label' => 'Electrical', 'hiddenField' => false));
+                        echo $this->Form->control('packaging', array('label' => 'Packaging', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('labelling', array('label' => 'Labelling', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('sampling', array('label' => 'Sampling', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('mechanism', array('label' => 'Mechanism', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('electrical', array('label' => 'Electrical', 'hiddenField' => false, 'type' => 'checkbox'));
 
                         echo $this->Form->control('mah', array(
                             'type' => 'select',
@@ -298,11 +305,11 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('device_data', array('label' => 'Data', 'hiddenField' => false));
-                        echo $this->Form->control('software', array('label' => 'Software', 'hiddenField' => false));
-                        echo $this->Form->control('environmental', array('label' => 'Environmental', 'hiddenField' => false));
-                        echo $this->Form->control('results', array('label' => 'Results', 'hiddenField' => false));
-                        echo $this->Form->control('readings', array('label' => 'Readings', 'hiddenField' => false));
+                        echo $this->Form->control('device_data', array('label' => 'Data', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('software', array('label' => 'Software', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('environmental', array('label' => 'Environmental', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('results', array('label' => 'Results', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('readings', array('label' => 'Readings', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
@@ -350,7 +357,7 @@ $this->assign('Poor-Quality Health Products and Technologies', 'active');
                         <?php
                         echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
                             'class' => 'btn btn-primary',
-                            'escapeTitle'=>false,
+                            'escapeTitle' => false,
                             'div' => 'control-group',
                             'div' => false,
                             'formnovalidate' => 'formnovalidate',

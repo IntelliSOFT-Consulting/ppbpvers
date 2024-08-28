@@ -35,6 +35,12 @@ class DevicesController extends AppController
 
         $this->set('page_options', $this->page_options);
         $this->set(compact('devices'));
+
+
+        $counties = $this->Devices->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Devices->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**

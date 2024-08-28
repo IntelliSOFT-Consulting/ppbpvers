@@ -33,6 +33,14 @@ class PqmpsController extends AppController
 
         $this->set('page_options', $this->page_options);
         $this->set(compact('pqmps'));
+
+        $counties = $this->Pqmps->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Pqmps->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
+
+        $countries = $this->Pqmps->Countries->find('list', array('order' => array('Countries.name' => 'ASC')));
+        $this->set(compact('countries'));
     }
 
     /**

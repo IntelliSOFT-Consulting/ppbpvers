@@ -1,5 +1,6 @@
 <?php
 $this->assign('TRN', 'active');
+echo $this->Html->script('sadrs_index', array('inline' => false));
 ?>
 
 <div class="row-fluid">
@@ -62,31 +63,44 @@ $this->assign('TRN', 'active');
             ?>
           </td>
           <td colspan="2">
-            <?php
-            echo $this->Form->control(
-              'start_date',
-              array(
-                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index', 'after' => '-to-',
-                'label' => array('class' => 'required', 'text' => 'Report Dates'), 'placeHolder' => 'Start Date'
-              )
-            );
-            echo $this->Form->control(
-              'end_date',
-              array(
-                'div' => false, 'type' => 'text', 'class' => 'control-small unauthorized_index',
-                'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+          <h5>Report Dates</h5>
+            <div style="display: flex; align-items: center;">
+              <?php
+              echo $this->Form->control(
+                'start_date',
+                array(
+                  'div' => false,
+                  'type' => 'text',
+                  'class' => 'control-small unauthorized_index',
+                  'label' => false,
+                  'placeHolder' => 'Start Date'
+                )
+              );
+              ?>
+              <span style="margin: 0 10px;">-to-</span>
+              <?php
+              echo $this->Form->control(
+                'end_date',
+                array(
+                  'div' => false,
+                  'type' => 'text',
+                  'class' => 'control-small unauthorized_index',
+                  'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                               <em class="accordion-toggle">clear!</em></a>',
-                'label' => false, 'placeHolder' => 'End Date'
-              )
-            );
-            ?>
+                  'label' => false,
+                  'placeHolder' => 'End Date'
+                )
+              );
+              ?>
+            </div>
           </td>
           <td>
             <h5>Previous transfusion</h5>
             <?php
             echo $this->Form->control('previous_transfusion', array(
               'options' => array('Yes' => 'Yes', 'No' => 'No'), 'legend' => false,
-              'type' => 'radio'
+              'type' => 'radio',
+              'label'=>false
             ));
             ?>
           </td>
@@ -95,7 +109,7 @@ $this->assign('TRN', 'active');
             <?php
             echo $this->Form->control('previous_reactions', array(
               'options' => array('Yes' => 'Yes', 'No' => 'No'), 'legend' => false,
-              'type' => 'radio'
+              'type' => 'radio', 'label'=>false
             ));
             ?>
           </td>
@@ -287,7 +301,7 @@ $this->assign('TRN', 'active');
             <?php
             echo $this->Form->control('gender', array(
               'options' => array('Male' => 'Male', 'Female' => 'Female'), 'legend' => false,
-              'type' => 'radio'
+              'type' => 'radio', 'label'=>false
             ));
             ?>
           </td>

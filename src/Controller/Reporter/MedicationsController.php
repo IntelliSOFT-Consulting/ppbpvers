@@ -32,6 +32,11 @@ class MedicationsController extends AppController
 
         $this->set('page_options', $this->page_options);
         $this->set(compact('medications'));
+
+        $counties = $this->Medications->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Medications->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**

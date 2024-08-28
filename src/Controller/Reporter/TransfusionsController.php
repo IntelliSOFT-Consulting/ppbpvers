@@ -33,6 +33,10 @@ class TransfusionsController extends AppController
 
         $this->set('page_options', $this->page_options);
         $this->set(compact('transfusions'));
+        $counties = $this->Transfusions->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Transfusions->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**

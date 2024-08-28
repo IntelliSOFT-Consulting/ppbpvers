@@ -66,31 +66,36 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         ?>
                     </td>
                     <td colspan="2">
-                        <?php
-                        echo $this->Form->control(
-                            'start_date',
-                            array(
-                                'div' => false,
-                                'type' => 'text',
-                                'class' => 'control-small unauthorized_index',
-                                'after' => '-to-',
-                                'label' => array('class' => 'required', 'text' => 'Report Dates'),
-                                'placeHolder' => 'Start Date'
-                            )
-                        );
-                        echo $this->Form->control(
-                            'end_date',
-                            array(
-                                'div' => false,
-                                'type' => 'text',
-                                'class' => 'control-small unauthorized_index',
-                                'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
+                        <h5>Report Dates</h5>
+                        <div style="display: flex; align-items: center;">
+                            <?php
+                            echo $this->Form->control(
+                                'start_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'label' => false,
+                                    'placeHolder' => 'Start Date'
+                                )
+                            );
+                            ?>
+                            <span style="margin: 0 10px;">-to-</span>
+                            <?php
+                            echo $this->Form->control(
+                                'end_date',
+                                array(
+                                    'div' => false,
+                                    'type' => 'text',
+                                    'class' => 'control-small unauthorized_index',
+                                    'after' => '<a style="font-weight:normal" onclick="$(\'.unauthorized_index\').val(\'\');" >
                               <em class="accordion-toggle">clear!</em></a>',
-                                'label' => false,
-                                'placeHolder' => 'End Date'
-                            )
-                        );
-                        ?>
+                                    'label' => false,
+                                    'placeHolder' => 'End Date'
+                                )
+                            );
+                            ?>
+                        </div>
                     </td>
                     <td>
                         <?php
@@ -111,6 +116,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         echo $this->Form->control('serious', array(
                             'options' => array('Yes' => 'Yes', 'No' => 'No'),
                             'legend' => false,
+                            'label'=>false,
                             'type' => 'radio'
                         ));
                         ?>
@@ -132,37 +138,38 @@ $this->assign('Adverse Event Following Immunization', 'active');
                 <tr>
                     <td>
                         <?php
-                        echo $this->Form->control('bcg', array('label' => 'BCG Lymphadenitis', 'hiddenField' => false));
-                        echo $this->Form->control('convulsion', array('label' => 'Convulsion', 'hiddenField' => false));
-                        echo $this->Form->control('urticaria', array('label' => 'Generalized urticaria', 'hiddenField' => false));
+                        echo $this->Form->control('bcg', array('label' => 'BCG Lymphadenitis', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('convulsion', array('label' => 'Convulsion', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('urticaria', array('label' => 'Generalized urticaria', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
-                    <td>
+                    <td> 
+                        <!-- 782327 -->
                         <?php
-                        echo $this->Form->control('high_fever', array('label' => 'High Fever', 'hiddenField' => false));
-                        echo $this->Form->control('abscess', array('label' => 'Injection site abscess', 'hiddenField' => false));
+                        echo $this->Form->control('high_fever', array('label' => 'High Fever', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('abscess', array('label' => 'Injection site abscess', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td colspan="2">
                         <?php
-                        echo $this->Form->control('local_reaction', array('label' => 'Severe Local Reaction', 'hiddenField' => false));
-                        echo $this->Form->control('anaphylaxis', array('label' => 'Anaphylaxis', 'hiddenField' => false));
+                        echo $this->Form->control('local_reaction', array('label' => 'Severe Local Reaction', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('anaphylaxis', array('label' => 'Anaphylaxis', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('meningitis', array('label' => 'Encephalopathy', 'hiddenField' => false));
-                        echo $this->Form->control('paralysis', array('label' => 'Paralysis', 'hiddenField' => false));
+                        echo $this->Form->control('meningitis', array('label' => 'Encephalopathy', 'hiddenField' => false, 'type' => 'checkbox'));
+                        echo $this->Form->control('paralysis', array('label' => 'Paralysis', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('toxic_shock', array('label' => 'Toxic shock', 'hiddenField' => false));
+                        echo $this->Form->control('toxic_shock', array('label' => 'Toxic shock', 'hiddenField' => false, 'type' => 'checkbox'));
                         ?>
                     </td>
                     <td>
                         <?php
-                        echo $this->Form->control('complaint_other', array('label' => 'Other', 'hiddenField' => false));
+                        echo $this->Form->control('complaint_other', array('label' => 'Other', 'hiddenField' => false, 'type' => 'checkbox'));
                         echo $this->Form->control('complaint_other_specify', array('type' => 'text', 'label' => false, 'class' => 'control-small', 'placeholder' => '(specify)'));
                         ?>
                     </td>
@@ -187,6 +194,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         echo $this->Form->control('report_type', array(
                             'options' => array('Initial' => 'Initial', 'Followup' => 'Followup'),
                             'legend' => false,
+                            'label'=>false,
                             'type' => 'radio'
                         ));
                         ?>
@@ -254,6 +262,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         echo $this->Form->control('gender', array(
                             'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'),
                             'legend' => false,
+                            'label'=>false,
                             'type' => 'radio'
                         ));
                         ?>
@@ -266,6 +275,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         echo $this->Form->control('submitted', array(
                             'options' => array('1' => 'UnSubmitted', '2' => 'Submitted'),
                             'legend' => false,
+                            'label'=>false,
                             'type' => 'radio'
                         ));
                         ?>
@@ -350,7 +360,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                         <?php
                         echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
                             'class' => 'btn btn-primary',
-                            'escapeTitle'=>false,
+                            'escapeTitle' => false,
                             'div' => 'control-group',
                             'div' => false,
                             'formnovalidate' => 'formnovalidate',
@@ -381,7 +391,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
             ending on <span class="badge">{{end}}</span>')
             );
             ?>
-            
+
         </p>
         <?php echo $this->Form->end(); ?>
         <div class="pagination">
@@ -393,7 +403,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
                 <?= $this->Paginator->last(__('last') . ' >>') ?>
             </ul>
         </div>
-    
+
 
         <table class="table  table-bordered table-striped">
             <thead>
@@ -571,26 +581,31 @@ $this->assign('Adverse Event Following Immunization', 'active');
 
 <script type="text/javascript">
     $(function() {
-        var adates = $('#AefiStartDate, #AefiEndDate').datepicker({
+        $('#start-date').datepicker({
             minDate: "-100Y",
             maxDate: "-0D",
             dateFormat: 'dd-mm-yy',
-            format: 'dd-mm-yyyy',
-            endDate: '-0d',
             showButtonPanel: true,
             changeMonth: true,
             changeYear: true,
             showAnim: 'show',
             onSelect: function(selectedDate) {
-                var option = this.id == "AefiStartDate" ? "minDate" : "maxDate",
-                    instance = $(this).data("datepicker"),
-                    date = $.datepicker.parseDate(
-                        instance.settings.dateFormat ||
-                        $.datepicker._defaults.dateFormat,
-                        selectedDate, instance.settings);
-                adates.not(this).datepicker("option", option, date);
+                // Set the minDate of the end date picker based on the selected start date
+                $('#end-date').datepicker("option", "minDate", selectedDate);
             }
         });
+
+        // Initialize end date picker
+        $('#end-date').datepicker({
+            minDate: "-100Y", // This will be dynamically updated
+            maxDate: "-0D",
+            dateFormat: 'dd-mm-yy',
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true,
+            showAnim: 'show'
+        });
+
 
     });
 </script>

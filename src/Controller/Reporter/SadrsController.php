@@ -39,6 +39,10 @@ class SadrsController extends AppController
         $this->set('page_options', $this->page_options);
         $this->set(compact('sadrs'));
         $this->set(compact('sadr'));
+        $counties = $this->Sadrs->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Sadrs->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**
