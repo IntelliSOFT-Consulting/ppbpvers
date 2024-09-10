@@ -1,9 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller\Manager;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\Http\Client;
 
 /**
  * Drugs Controller
@@ -13,6 +16,8 @@ use App\Controller\AppController;
  */
 class DrugsController extends AppController
 {
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -21,10 +26,61 @@ class DrugsController extends AppController
     public function index()
     {
         $drugs = $this->paginate($this->Drugs);
-
+        $this->set('page_options', $this->page_options);
         $this->set(compact('drugs'));
     }
+    public function sync()
+    {
+        # code...
+        $http = new Client();
 
+
+        $url = Configure::read('drug_registry_api');
+        $header = Configure::read('drug_registry_header');
+        $headers = [
+            'Authorization' => $header,
+            'Accept' => 'application/json',
+        ];
+
+        // Make a GET request to the API endpoint with headers
+        $results = $http->get($url, [], ['headers' => $headers]);
+
+        if ($results->isOk()) {
+            $data = $results->getJson();
+            // debug($data);
+            // exit;
+            // $data = json_decode($data); 
+            // for each data in the array
+            $this->Drugs->query('TRUNCATE TABLE drugs');
+            //create a array to store the data 
+            foreach ($data as $drugdata) {
+                // save the drug to the database
+                $drug = $this->Drugs->newEmptyEntity();
+                // debug($drugdata);
+                // exit;
+                $payload = array(
+                    'batch_number' => $drugdata['registration_no'],
+                    'brand_name' => $drugdata['brand_name'],
+                    'inn_name' => $drugdata['inn_of_api'],
+                    'manufacturer' => $drugdata['mah_name'],
+                    'registration_status' => $drugdata['registration_status'],
+                    'retention_status' => $drugdata['retention_status'],
+                    'local_trade_rep' => $drugdata['local_trade_rep']
+                );
+                // debug($payload);
+                // exit;
+                $drug = $this->Drugs->patchEntity($drug, $payload);
+                $this->Drugs->save($drug);
+            }
+            $this->Flash->success('Drug list successfully updated');
+            $this->redirect($this->referer());
+        } else {
+            $body = $results->getJson();
+            $this->Flash->error('Error syncing... please try again later!!');
+            $this->Flash->error($body);
+            $this->redirect($this->referer());
+        }
+    }
     /**
      * View method
      *

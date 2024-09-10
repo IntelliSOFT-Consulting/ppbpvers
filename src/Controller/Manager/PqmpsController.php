@@ -13,6 +13,8 @@ use App\Controller\AppController;
  */
 class PqmpsController extends AppController
 {
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -25,6 +27,7 @@ class PqmpsController extends AppController
         ];
         $pqmps = $this->paginate($this->Pqmps);
 
+        $this->set('page_options', $this->page_options);
         $this->set(compact('pqmps'));
     }
 

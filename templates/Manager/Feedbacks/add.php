@@ -1,32 +1,113 @@
 <?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Feedback $feedback
- * @var \Cake\Collection\CollectionInterface|string[] $users
- */
+$this->assign('ContactUs', 'active');
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Html->link(__('List Feedbacks'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column-responsive column-80">
-        <div class="feedbacks form content">
-            <?= $this->Form->create($feedback) ?>
-            <fieldset>
-                <legend><?= __('Add Feedback') ?></legend>
+
+<div class="row-fluid">
+    <div class="span12">
+        <h3>Contact us <small>:PPB will get back to you using the provided email address.</small> </h3>
+        <hr>
+        <?php
+
+        echo $this->Form->create($feedback, array(
+            // 'class' => 'form-horizontal',
+
+        ));
+        ?>
+
+
+
+        <div class="row-fluid">
+            <div class="span6">
                 <?php
-                    echo $this->Form->control('email');
-                    echo $this->Form->control('user_id', ['options' => $users, 'empty' => true]);
-                    echo $this->Form->control('foreign_key');
-                    echo $this->Form->control('subject');
-                    echo $this->Form->control('feedback');
+                echo $this->Form->control(
+                    'email',
+                    array(
+                        'label' => array('class' => 'control-label required', 'text' => 'Email <span class="sterix">*</span>','escape'=>false),
+                        'type' => 'email',
+                        'value' => $this->request->getSession()->read('Auth.User.email'),
+                        'disabled'=>'disabled'
+                    )
+                );
+                echo $this->Form->control(
+                    'subject',
+                    array('label' => array('class' => 'control-label required', 'text' => 'Subject <span class="sterix">*</span>','escape'=>false),)
+                );
+                echo $this->Form->control(
+                    'feedback',
+                    array(
+                        'label' => array('class' => 'control-label required', 'text' => 'Feedback <span class="sterix">*</span>','escape'=>false),
+                        'class' => 'control-large',
+                    )
+                );
+
                 ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
-        </div>
+
+                <?php
+               
+                echo $this->Captcha->render([
+                    'placeholder' => __('Please solve the riddle'),
+                ]);
+
+                ?>
+
+                <?php
+
+                echo $this->Html->div(
+                    'form-actions',
+                    $this->Form->button('<i class="icon-search icon-white"></i> Submit', [
+                        'escapeTitle' => false,
+                        'type' => 'Submit',
+                        'class' => 'btn btn-primary',
+                        'id' => 'SadrSaveChanges'
+                    ])
+                );
+                echo $this->Form->end();
+                ?>
+            </div><!--/span-->
+            <div class="span6">
+                <div style="margin-left: 20px;">
+                    <?php if (count($previous_messages) > 0) { ?>
+                        <h4 style="text-decoration: underline;">My Previous Comments</h4>
+                        <dl>
+                            <?php
+                            $count = 1;
+                            foreach ($previous_messages as $previous_message) {
+                                // debug($previous_message);
+                                echo "<dt>" . $count . ". " . $previous_message['subject'] . " <small class='muted'> created on " . date('d-m-Y H:i:s', strtotime($previous_message['created'])) . "</small></dt>";
+                                echo "<dd class='morecontent'>" . $previous_message['feedback'] . "</dd>";
+                                $count++;
+                            }
+                            ?>
+                        </dl>
+                        <div class="pagination pull-right">
+                            <ul>
+                                <?php
+                                echo $this->Paginator->prev('&laquo;', array('tag' => 'li', 'escape' => false), null, array('class' => 'disabled', 'tag' => 'li', 'escape' => false));
+                                echo $this->Paginator->numbers(array('separator' => '', 'tag' => 'li', 'currentClass' => 'active'));
+                                echo $this->Paginator->next('&raquo;', array('tag' => 'li', 'escape' => false), null, array('class' => 'disabled', 'tag' => 'li', 'escape' => false));
+                                ?>
+                            </ul>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div><!--/span-->
+        </div><!--/row-->
+        <hr>
+
     </div>
 </div>
+<div class="row-fluid">
+    <div class="blank_contact"></div>
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script>
+    jQuery('.creload').on('click', function() {
+        var mySrc = $(this).prev().attr('src');
+        var glue = '?';
+        if (mySrc.indexOf('?') != -1) {
+            glue = '&';
+        }
+        $(this).prev().attr('src', mySrc + glue + new Date().getTime());
+        return false;
+    });
+</script>

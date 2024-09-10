@@ -215,7 +215,7 @@ class SadrsController extends AppController
                         'reference_no' => $sadr['reference_no'],
                         'reference_link' => $html->link(
                             $sadr['reference_no'],
-                            $reference,
+                            $referenceLink,
                             array('escape' => false)
                         ),
                         'modified' => $sadr['modified']
@@ -275,8 +275,8 @@ class SadrsController extends AppController
                             'message' => Text::insert($message['content'], $variables)
                         );
 
-                        $this->QueuedTask->createJob('GenericEmail', $datum);
-                        $this->QueuedTask->createJob('GenericNotification', $datum);
+                        $this->QueuedJobs->createJob('GenericEmail', $datum); 
+                        $this->QueuedJobs->createJob('GenericNotification', $datum);
                     }
                     // **********************************    END   *********************************
 

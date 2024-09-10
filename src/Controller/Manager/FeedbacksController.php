@@ -20,12 +20,17 @@ class FeedbacksController extends AppController
      */
     public function index()
     {
+      
+        $userId = $this->Auth->user('id');
         $this->paginate = [
-            'contain' => ['Users'],
+            'contain' => array('Users'),
+            'conditions' => array(
+                'Feedbacks.user_id' => $userId
+            )
         ];
-        $feedbacks = $this->paginate($this->Feedbacks);
+        $previous_messages = $this->paginate($this->Feedbacks);
 
-        $this->set(compact('feedbacks'));
+        $this->set(compact('previous_messages'));
     }
 
     /**
@@ -51,18 +56,27 @@ class FeedbacksController extends AppController
      */
     public function add()
     {
+       
+        $this->Feedbacks->addBehavior('Captcha.Captcha');
+        $previous_messages = array();
         $feedback = $this->Feedbacks->newEmptyEntity();
         if ($this->request->is('post')) {
             $feedback = $this->Feedbacks->patchEntity($feedback, $this->request->getData());
             if ($this->Feedbacks->save($feedback)) {
                 $this->Flash->success(__('The feedback has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'add']);
             }
             $this->Flash->error(__('The feedback could not be saved. Please, try again.'));
         }
+
+        if ($this->Auth->User('id')) {
+            $this->paginate['limit'] = 5;
+            $previous_messages = $this->paginate($this->Feedbacks); 
+        }
         $users = $this->Feedbacks->Users->find('list', ['limit' => 200])->all();
         $this->set(compact('feedback', 'users'));
+        $this->set('previous_messages', $previous_messages);
     }
 
     /**
