@@ -13,6 +13,8 @@ use App\Controller\AppController;
  */
 class DevicesController extends AppController
 {
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -20,12 +22,24 @@ class DevicesController extends AppController
      */
     public function index()
     {
+         
+
+
+        $criteria = array(); 
+ 
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Counties', 'Designations'],
+            'conditions' => $criteria
         ];
         $devices = $this->paginate($this->Devices);
 
+        $this->set('page_options', $this->page_options);
         $this->set(compact('devices'));
+
+        $counties = $this->Devices->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Devices->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**

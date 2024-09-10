@@ -13,18 +13,26 @@ use App\Controller\AppController;
  */
 class SaesController extends AppController
 {
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function index()
-    {
+    { 
+
+        $criteria = array(); 
+
+        // $criteria['Aefis.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Countries'],
+            'conditions' => $criteria
         ];
         $saes = $this->paginate($this->Saes);
 
+        $this->set('page_options', $this->page_options);
         $this->set(compact('saes'));
     }
 

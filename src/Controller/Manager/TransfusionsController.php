@@ -13,6 +13,8 @@ use App\Controller\AppController;
  */
 class TransfusionsController extends AppController
 {
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -20,12 +22,23 @@ class TransfusionsController extends AppController
      */
     public function index()
     {
+        
+        $criteria = array(); 
+
+        // $criteria['Aefis.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Counties', 'Designations'],
+            'conditions' => $criteria
         ];
         $transfusions = $this->paginate($this->Transfusions);
 
+        $this->set('page_options', $this->page_options);
         $this->set(compact('transfusions'));
+
+        $counties = $this->Transfusions->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
+        $this->set(compact('counties'));
+        $designations = $this->Transfusions->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
+        $this->set(compact('designations'));
     }
 
     /**
