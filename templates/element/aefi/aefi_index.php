@@ -398,7 +398,7 @@ $this->assign('Adverse Event Following Immunization', 'active');
             <ul>
                 <?= $this->Paginator->first('<< ' . __('first')) ?>
                 <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                <?= $this->Paginator->numbers() ?>
+                <?= $this->Paginator->numbers() ?> 
                 <?= $this->Paginator->next(__('next') . ' >') ?>
                 <?= $this->Paginator->last(__('last') . ' >>') ?>
             </ul>
