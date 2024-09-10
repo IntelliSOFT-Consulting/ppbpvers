@@ -25,7 +25,15 @@ class DrugsController extends AppController
      */
     public function index()
     {
-        $drugs = $this->paginate($this->Drugs);
+
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
+        $this->paginate = [
+            'contain' => [],
+            'limit'=>$limit
+        
+        ]; 
+        $drugs = $this->paginate($this->Drugs->find('search', ['search' => $this->request->getQuery()]));
         $this->set('page_options', $this->page_options);
         $this->set(compact('drugs'));
     }

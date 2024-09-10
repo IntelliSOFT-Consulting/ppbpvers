@@ -81,11 +81,7 @@ class FeedbacksController extends AppController
 
         if ($this->Auth->User('id')) {
             $this->paginate['limit'] = 5;
-            $previous_messages = $this->paginate($this->Feedbacks);
-            // $this->paginate['conditions'] = array('user_id' => $this->Auth->User('id'));
-            // 
-            // $previous_messages = $this->Feedback->find('all', array('conditions' => array('id' => $this->Auth->User('id'))));
-            // $previous_messages = $this->paginate();
+            $previous_messages = $this->paginate($this->Feedbacks); 
         }
         $users = $this->Feedbacks->Users->find('list', ['limit' => 200])->all();
         $this->set(compact('feedback', 'users'));

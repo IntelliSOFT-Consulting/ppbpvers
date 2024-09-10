@@ -6,9 +6,8 @@ namespace App\Controller\Manager;
 use App\Controller\AppController;
 
 /**
- * Reports Controller
- *
- * @method \App\Model\Entity\Report[]|\Cake\Datasource\ResultSetInterface paginate($object = null, array $settings = [])
+ *  
+ * 
  */
 class ReportsController extends AppController
 {
@@ -19,7 +18,8 @@ class ReportsController extends AppController
      */
     public function index()
     {
-        $reports = $this->paginate($this->Reports);
+       
+        $reports =[]; 
 
         $this->set(compact('reports'));
     }

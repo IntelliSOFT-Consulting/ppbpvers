@@ -13,6 +13,9 @@ use App\Controller\AppController;
  */
 class AggregatesController extends AppController
 {
+
+
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -20,11 +23,16 @@ class AggregatesController extends AppController
      */
     public function index()
     {
+        
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
         $this->paginate = [
             'contain' => ['Users', 'Counties', 'SubCounties', 'Designations'],
-        ];
-        $aggregates = $this->paginate($this->Aggregates);
-
+            'limit'=>$limit
+        
+        ]; 
+        $aggregates = $this->paginate($this->Aggregates->find('search', ['search' => $this->request->getQuery()]));
+        $this->set('page_options', $this->page_options);
         $this->set(compact('aggregates'));
     }
 

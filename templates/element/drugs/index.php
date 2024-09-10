@@ -4,7 +4,7 @@ $this->assign('Registry', 'active');
 
 <div class="row-fluid">
   <div class="span12">
- 
+
     <div class="row-fluid">
       <div class="span12">
         <?php
@@ -27,11 +27,7 @@ $this->assign('Registry', 'active');
     </div>
 
     <?php
-    echo $this->Form->create();
-    // 'Drug', array(
-    //   'url' => array_merge(array('action' => 'index'), $this->params['pass']),
-    //   'class' => 'ctr-groups', 'style' => array('padding:9px;', 'background-color: #F5F5F5'),
-    // ));
+    echo $this->Form->create(null, ['valueSources' => 'query']);
     ?>
     <table class="table table-condensed" style="margin-bottom: 2px;">
       <tbody>
@@ -42,7 +38,8 @@ $this->assign('Registry', 'active');
               'brand_name',
               array(
                 'div' => false,
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Brand Name')
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Brand Name')
               )
             );
             ?>
@@ -53,7 +50,8 @@ $this->assign('Registry', 'active');
               'inn_name',
               array(
                 'div' => false,
-                'class' => 'unauthorized_index span10', 'label' => array('class' => 'required', 'text' => 'INN Name')
+                'class' => 'unauthorized_index span10',
+                'label' => array('class' => 'required', 'text' => 'INN Name')
               )
             );
             ?>
@@ -64,7 +62,8 @@ $this->assign('Registry', 'active');
               'batch_number',
               array(
                 'div' => false,
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Batch Number')
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Batch Number')
               )
             );
             ?>
@@ -75,7 +74,8 @@ $this->assign('Registry', 'active');
               'manufacturer',
               array(
                 'div' => false,
-                'class' => 'span12', 'label' => array('class' => 'required', 'text' => 'Manufacturer')
+                'class' => 'span12',
+                'label' => array('class' => 'required', 'text' => 'Manufacturer')
               )
             );
             ?>
@@ -93,7 +93,8 @@ $this->assign('Registry', 'active');
               'registration_status',
               array(
                 'div' => false,
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Registration Status')
+                'class' => 'span12 unauthorized_index',
+                'label' => array('class' => 'required', 'text' => 'Registration Status')
               )
             );
             ?>
@@ -104,7 +105,8 @@ $this->assign('Registry', 'active');
               'retention_status',
               array(
                 'div' => false,
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Retention Status')
+                'class' => 'span12 unauthorized_index',
+                'label' => array('class' => 'required', 'text' => 'Retention Status')
               )
             );
             ?>
@@ -115,7 +117,8 @@ $this->assign('Registry', 'active');
               'donation',
               array(
                 'div' => false,
-                'class' => 'span12 unauthorized_index', 'label' => array('class' => 'required', 'text' => 'Donation')
+                'class' => 'span12 unauthorized_index',
+                'label' => array('class' => 'required', 'text' => 'Donation')
               )
             );
             ?>
@@ -136,8 +139,10 @@ $this->assign('Registry', 'active');
           <td>
             <?php
             echo $this->Form->control('pages', array(
-              'type' => 'select', 'div' => false, 'class' => 'control-small', 
-            //   'selected' => $this->request->params['paging']['limit'],
+              'type' => 'select',
+              'div' => false,
+              'class' => 'control-small',
+              //   'selected' => $this->request->params['paging']['limit'],
               'empty' => true,
               'options' => $page_options,
               'label' => false,
@@ -150,8 +155,10 @@ $this->assign('Registry', 'active');
           <td>
             <?php
             echo $this->Form->button('<i class="icon-search icon-white"></i> Search', array(
-                'escapeTitle'=>false,
-              'class' => 'btn btn-primary', 'div' => 'control-group', 'div' => false,
+              'escapeTitle' => false,
+              'class' => 'btn btn-primary',
+              'div' => 'control-group',
+              'div' => false,
               'formnovalidate' => 'formnovalidate',
               'style' => array('margin-bottom: 5px')
             ));
@@ -170,27 +177,27 @@ $this->assign('Registry', 'active');
     </table>
     <p>
       <?php
-          echo $this->Paginator->counter(
-            __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
+      echo $this->Paginator->counter(
+        __('Page <span class="badge">{{page}}</span> of <span class="badge">{{pages}}</span>, 
         showing <span class="badge">{{current}}</span> Drugs out of 
         <span class="badge badge-inverse">{{count}}</span> total, starting on record <span class="badge">{{start}}</span>, 
         ending on <span class="badge">{{end}}</span>')
-        );
+      );
       ?>
     </p>
     <?php echo $this->Form->end(); ?>
 
     <div class="pagination">
       <ul>
-      <?= $this->Paginator->first('<< ' . __('first')) ?>
-                <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                <?= $this->Paginator->numbers() ?>
-                <?= $this->Paginator->next(__('next') . ' >') ?>
-                <?= $this->Paginator->last(__('last') . ' >>') ?>
+        <?= $this->Paginator->first('<< ' . __('first')) ?>
+        <?= $this->Paginator->prev('< ' . __('previous')) ?>
+        <?= $this->Paginator->numbers() ?>
+        <?= $this->Paginator->next(__('next') . ' >') ?>
+        <?= $this->Paginator->last(__('last') . ' >>') ?>
       </ul>
     </div>
 
-    <table class="table  table-bordered table-striped"> 
+    <table class="table  table-bordered table-striped">
       <thead>
         <tr>
           <th><?php echo $this->Paginator->sort('id'); ?></th>
@@ -209,20 +216,20 @@ $this->assign('Registry', 'active');
       <tbody>
         <?php
         foreach ($drugs as $drug) : ?>
-        <tr>
-          <td><?php echo h($drug['id']); ?>&nbsp;</td>
-          <td><?php echo h($drug['batch_number']); ?>&nbsp;</td>
-          <td><?php echo h($drug['brand_name']); ?>&nbsp;</td>
-          <td><?php echo h($drug['inn_name']); ?>&nbsp;</td>
-          <td><?php echo h($drug['manufacturer']); ?>&nbsp;</td>
-          <td><?php echo h($drug['local_trade_rep']); ?>&nbsp;</td>
-          <td><?php echo h($drug['registration_status']); ?>&nbsp;</td>
-          <td><?php echo h($drug['retention_status']); ?>&nbsp;</td>
-          <td><?php echo h($drug['donation']); ?>&nbsp;</td>
-          <td><?php echo h($drug['created']); ?>&nbsp;</td>
-          <td><?php echo h($drug['modified']); ?>&nbsp;</td>
           <tr>
-        <?php endforeach; ?>
+            <td><?php echo h($drug['id']); ?>&nbsp;</td>
+            <td><?php echo h($drug['batch_number']); ?>&nbsp;</td>
+            <td><?php echo h($drug['brand_name']); ?>&nbsp;</td>
+            <td><?php echo h($drug['inn_name']); ?>&nbsp;</td>
+            <td><?php echo h($drug['manufacturer']); ?>&nbsp;</td>
+            <td><?php echo h($drug['local_trade_rep']); ?>&nbsp;</td>
+            <td><?php echo h($drug['registration_status']); ?>&nbsp;</td>
+            <td><?php echo h($drug['retention_status']); ?>&nbsp;</td>
+            <td><?php echo h($drug['donation']); ?>&nbsp;</td>
+            <td><?php echo h($drug['created']); ?>&nbsp;</td>
+            <td><?php echo h($drug['modified']); ?>&nbsp;</td>
+          <tr>
+          <?php endforeach; ?>
       </tbody>
     </table>
   </div>

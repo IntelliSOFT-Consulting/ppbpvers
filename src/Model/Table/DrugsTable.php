@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -44,6 +45,16 @@ class DrugsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Search.Search');
+
+        $this->searchManager()
+            ->value('retention_status')
+            ->value('donation')
+            ->value('manufacturer')
+            ->value('brand_name')
+            ->value('batch_number')
+            ->value('registration_status')
+            ->value('inn_name');
     }
 
     /**

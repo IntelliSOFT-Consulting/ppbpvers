@@ -52,6 +52,9 @@ class AggregatesTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Search.Search');
+        $this->searchManager()
+            ->value('retention_status');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',

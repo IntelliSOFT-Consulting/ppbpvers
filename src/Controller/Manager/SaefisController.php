@@ -22,22 +22,17 @@ class SaefisController extends AppController
      */
     public function index()
     { 
-        $criteria = array();
-
-        // $criteria['Aefis.user_id'] = $this->Auth->user('id');
+    
+        $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
+       
         $this->paginate = [
-            'contain' => ['Users'],
-            'conditions' => $criteria
-        ];
-        $saefis = $this->paginate($this->Saefis);
-
+            'contain' => [],
+            'limit'=>$limit
+        
+        ]; 
+        $saefis = $this->paginate($this->Saefis->find('search', ['search' => $this->request->getQuery()]));
         $this->set('page_options', $this->page_options);
         $this->set(compact('saefis'));
-
-        // $counties = $this->Saefis->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
-        // $this->set(compact('counties'));
-        // $designations = $this->Saefis->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
-        // $this->set(compact('designations'));
     }
 
     /**

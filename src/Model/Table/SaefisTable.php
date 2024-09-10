@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -51,6 +52,9 @@ class SaefisTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+        $this->addBehavior('Search.Search');
+        $this->searchManager()
+            ->value('retention_status');
 
         $this->belongsTo('Users', [
             'foreignKey' => 'user_id',
