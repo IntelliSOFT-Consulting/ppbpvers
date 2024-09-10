@@ -23,7 +23,7 @@ class AefisController extends AppController
      */
     public function index()
     {
-        $criteria = array();
+        $criteria = array(); 
 
         // $criteria['Aefis.user_id'] = $this->Auth->user('id');
         $this->paginate = [
