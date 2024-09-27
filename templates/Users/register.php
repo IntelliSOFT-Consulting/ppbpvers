@@ -27,9 +27,7 @@ echo $this->Html->script('registration', array('inline' => false));
 						echo $this->Form->control('password', [
 							'label' => 'Password ',
 							'escape' => false,
-							'templates' => [
-								'inputContainerError' => '<div class="input {{type}}{{required}} error">{{content}}{{error}}</div>',
-							],
+							 
 						]);
 						
 						echo $this->Form->control('confirm_password', ['type' => 'password', 'label' => 'Confirm Password ', 'escape' => false]);

@@ -13,8 +13,7 @@ echo $this->Form->create(null, array(
 echo $this->Form->control('model_id', ['type' => 'hidden', 'value' => $model['model_id'], 'escape' => false]);
 echo $this->Form->control('foreign_key', ['type' => 'hidden', 'value' => $model['foreign_key']]);
 echo $this->Form->control('model', ['type' => 'hidden', 'value' => $model['model']]);
-
-// echo $this->Form->control('model', ['type' => 'hidden', 'value' => 'ssssss']);
+ 
 echo $this->Form->control('category', ['type' => 'hidden', 'value' => $model['category']]);
 echo $this->Form->control('user_id', ['type' => 'hidden', 'value' => $this->request->getSession()->read('Auth.User.id')]);
 ?>
@@ -30,9 +29,9 @@ echo $this->Form->control('user_id', ['type' => 'hidden', 'value' => $this->requ
 
       echo $this->Form->control('review', ['label' => array('class' => 'required'), 'type' => 'textarea']);
     } else {
-      echo $this->Form->control('subject', ['label' => array('class' => 'required', 'text' => 'Subject')]);
-      echo $this->Form->control('content', ['label' => array('class' => 'required'), 'type' => 'textarea']);
- 
+      echo $this->Form->control('subject', ['label' => array('class' => 'form-control required', 'text' => 'Subject')]);
+      echo '<br>';
+      echo $this->Form->control('content', ['label' => array('class' => ' form-control required'), 'type' => 'textarea']); 
     }
     ?>
   </div>

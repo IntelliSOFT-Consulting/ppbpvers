@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\Manager;
 
 use App\Controller\AppController;
+use Cake\Http\Exception\NotFoundException;
 
 /**
  * Sadrs Controller
@@ -62,8 +63,8 @@ class SadrsController extends AppController
         $sadr = $this->Sadrs->get($id, [
             'contain' => ['Users', 'Pqmps', 'ExternalComment' => ['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs' => ['Routes', 'Frequencies', 'Doses'], 'SadrListOfMedicines', 'SadrReaction'],
         ]);
-// debug($sadr);
-// exit;
+        // debug($sadr);
+        // exit;
         // Set the Sadr data to be used in the template
         $this->set(compact('sadr'));
 
@@ -156,26 +157,160 @@ class SadrsController extends AppController
     public function edit($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => [],
+            'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData());
-            if ($this->Sadrs->save($sadr)) {
-                $this->Flash->success(__('The sadr has been saved.'));
+            $data = $this->request->getData();
+            $validate = false;
+            if (!empty($this->request->getData('submitReport'))) {
+                $validate = true;
+            } 
+            $sadr = $this->Sadrs->patchEntity($sadr, $data, [
+                'validate' => $validate,
+                'associated' => [
+                    'Attachments',
+                    'SadrReaction',
+                    'SadrListOfDrugs'=>[ 'validate' => $validate],
+                    'SadrListOfMedicines'=>[ 'validate' => $validate],
+                ]
+            ]);
 
-                return $this->redirect(['action' => 'index']);
+            if ($this->Sadrs->save($sadr, ['validate' => $validate, 'deep' => true])) {
+                if (!empty($this->request->getData('submitReport'))) {
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction'],
+                    ]);
+                    $dataTable = $this->getTableLocator()->get('sadrs');
+                    // Update the field using the query builder
+                    $result = $dataTable->query()
+                        ->update()
+                        ->set([
+                            'submitted' => 2,
+                            'submitted_date' => date("Y-m-d H:i:s"),
+                        ])
+                        ->where(['id' => $id])
+                        ->execute();
+
+
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction'],
+                    ]);
+
+                    $this->Flash->success(__('The SADR has been submitted'));
+                    return $this->redirect(array('action' => 'view', $sadr->id));
+                } else {
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
+                    ]);
+
+                    $this->request = $this->request->withParsedBody($sadr->toArray());
+                    $this->Flash->success(__('The SADR has been saved'));
+                    return $this->redirect($this->referer());
+                }
+            } else {
+                $errors = $sadr->getErrors(); 
+                $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
             }
-            $this->Flash->error(__('The sadr could not be saved. Please, try again.'));
         }
+        $this->request = $this->request->withParsedBody($sadr->toArray());
+
         $users = $this->Sadrs->Users->find('list', ['limit' => 200])->all();
         $pqmps = $this->Sadrs->Pqmps->find('list', ['limit' => 200])->all();
         $medications = $this->Sadrs->Medications->find('list', ['limit' => 200])->all();
         $counties = $this->Sadrs->Counties->find('list', ['limit' => 200])->all();
         $subCounties = $this->Sadrs->SubCounties->find('list', ['limit' => 200])->all();
         $designations = $this->Sadrs->Designations->find('list', ['limit' => 200])->all();
+        $routes = $this->Sadrs->SadrListOfDrugs->Routes->find('list');
+        $this->set(compact('routes'));
+        $frequency = $this->Sadrs->SadrListOfDrugs->Frequencies->find('list');
+        $this->set(compact('frequency'));
+        $dose = $this->Sadrs->SadrListOfDrugs->Doses->find('list');
+        $this->set(compact('dose'));
         $this->set(compact('sadr', 'users', 'pqmps', 'medications', 'counties', 'subCounties', 'designations'));
     }
 
+    public function copy($id = null)
+    {
+        $sadr = $this->Sadrs->get($id, [
+            'contain' => ['SadrListOfDrugs', 'SadrReaction', 'SadrDescriptions', 'SadrListOfMedicines']
+        ]);
+
+        if (!$sadr) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+        // debug($sadr);
+        // exit;
+        // Check if a clean copy already exists
+        if ($sadr->copied) {
+            $this->Flash->error(__('A clean copy already exists. Click on edit to update changes.'));
+            return $this->redirect(['action' => 'index']);
+        }
+
+        // Remove unwanted IDs
+        $sadrListOfDrug = $sadr->get('sadr_list_of_drugs');
+        // debug($sadrListOfDrug);
+        // exit;
+        if ($sadrListOfDrug) {
+            foreach ($sadrListOfDrug as &$drug) {
+                unset($drug->id);
+            }
+        }
+        $sadrListOfMedicine = $sadr->get('sadr_list_of_medicines');
+
+        if ($sadrListOfMedicine) {
+            foreach ($sadrListOfMedicine as &$medicine) {
+                unset($medicine->id);
+            }
+        }
+
+        unset($sadr->id);
+        $dataSave = $sadr->toArray();
+        if ($sadrListOfDrug) {
+            $dataSave['sadr_list_of_drugs'] = $sadrListOfDrug;
+        }
+        if ($sadrListOfMedicine) {
+            $dataSave['sadr_list_of_medicines'] = $sadrListOfMedicine;
+        }
+        $dataSave['sadr_id'] = $id;
+        $dataSave['user_id'] = $this->Auth->user('id');
+        $dataSave['copied'] = 2;
+
+
+        // debug($dataSave);
+        // exit;
+
+        // Mark the original SADR as copied 
+        $dataTable = $this->getTableLocator()->get('sadrs');
+        // Update the field using the query builder
+        $result = $dataTable->query()
+            ->update()
+            ->set([
+                'copied' => 1
+            ])
+            ->where(['id' => $id])
+            ->execute();
+        // Save the new clean copy
+
+        $sadr = $this->Sadrs->newEmptyEntity();
+
+        $sadr = $this->Sadrs->patchEntity($sadr, $dataSave, [
+            'validate' => false,
+            'associated' => [
+                'Attachments',
+                'SadrReaction',
+                'SadrListOfDrugs',
+                'SadrListOfMedicines'
+            ]
+        ]);
+
+        if ($this->Sadrs->save($sadr, ['validate' => false, 'deep' => true])) {
+            $this->Flash->success(__('Clean copy of ' . $dataSave['reference_no'] . ' has been created.'));
+            return $this->redirect(['action' => 'edit', $sadr->id]);
+        } else {
+            $this->Flash->error(__('The clean copy could not be created. Please, try again.'));
+            return $this->redirect($this->referer());
+        }
+    }
     /**
      * Delete method
      *
