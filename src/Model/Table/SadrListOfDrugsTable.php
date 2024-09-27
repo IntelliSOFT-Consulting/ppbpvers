@@ -78,76 +78,33 @@ class SadrListOfDrugsTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator
-            ->integer('sadr_id')
-            ->allowEmptyString('sadr_id');
 
         $validator
-            ->integer('sadr_followup_id')
-            ->allowEmptyString('sadr_followup_id');
+            ->notEmptyString('drug_name', 'Please provide drug name');
 
         $validator
-            ->integer('dose_id')
-            ->allowEmptyString('dose_id');
+            ->notEmptyString('brand_name', 'Please specify the brand name of the suspected drug');
 
         $validator
-            ->integer('route_id')
-            ->allowEmptyString('route_id');
+            ->notEmptyString('dose', 'Please specify the dosage')
+            ->numeric('dose', 'dose must be a numeric value.'); // Enforce numeric validation if input is provided
 
         $validator
-            ->integer('frequency_id')
-            ->allowEmptyString('frequency_id');
+            ->notEmptyString('dose_id', 'Please specify the dose units');
 
         $validator
-            ->scalar('frequency_id_other')
-            ->maxLength('frequency_id_other', 255)
-            ->allowEmptyString('frequency_id_other');
+            ->notEmptyString('route_id', 'Please specify the route');
 
         $validator
-            ->scalar('drug_name')
-            ->maxLength('drug_name', 255)
-            ->allowEmptyString('drug_name');
+            ->notEmptyString('frequency_id', 'Please specify the frequency');
 
         $validator
-            ->scalar('brand_name')
-            ->maxLength('brand_name', 255)
-            ->allowEmptyString('brand_name');
+            ->notEmptyString('start_date', 'Please specify the start date for the suspected drug');
 
-        $validator
-            ->scalar('batch_no')
-            ->maxLength('batch_no', 255)
-            ->allowEmptyString('batch_no');
-
-        $validator
-            ->scalar('manufacturer')
-            ->maxLength('manufacturer', 255)
-            ->allowEmptyString('manufacturer');
-
-        $validator
-            ->scalar('dose')
-            ->maxLength('dose', 100)
-            ->allowEmptyString('dose');
-
-        $validator
-            ->date('start_date')
-            ->allowEmptyDate('start_date');
-
-        $validator
-            ->date('stop_date')
-            ->allowEmptyDate('stop_date');
-
-        $validator
-            ->scalar('indication')
-            ->maxLength('indication', 100)
-            ->allowEmptyString('indication');
-
-        $validator
-            ->scalar('suspected_drug')
-            ->maxLength('suspected_drug', 100)
-            ->allowEmptyString('suspected_drug');
 
         return $validator;
     }
+   
 
     /**
      * Returns a rules checker object that will be used for validating

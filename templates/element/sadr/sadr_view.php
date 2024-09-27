@@ -199,9 +199,9 @@ $nchecked = "&#x2610;";
 								<td><?php echo $sadrListOfDrug['batch_no']; ?></td>
 								<td><?php echo $sadrListOfDrug['manufacturer']; ?></td>
 								<td><?php echo $sadrListOfDrug['dose'];
-									if (!empty($sadrListOfDrug['Dose']['name'])) echo ' - ' . $sadrListOfDrug['Dose']['name']; ?></td>
-								<td style="width: 10%;"><?php if (!empty($sadrListOfDrug['Route']['name'])) echo $sadrListOfDrug['Route']['name']; ?></td>
-								<td style="width: 10%;"><?php if (!empty($sadrListOfDrug['Frequency']['name'])) echo $sadrListOfDrug['Frequency']['name']; ?><br>
+									if (!empty($sadrListOfDrug['doses_entity']['name'])) echo ' - ' . $sadrListOfDrug['doses_entity']['name']; ?></td>
+								<td style="width: 10%;"><?php if (!empty($sadrListOfDrug['route']['name'])) echo $sadrListOfDrug['route']['name']; ?></td>
+								<td style="width: 10%;"><?php if (!empty($sadrListOfDrug['frequency']['name'])) echo $sadrListOfDrug['frequency']['name']; ?><br>
 									<span><?php echo $sadrListOfDrug['frequency_id_other']; ?></span>
 								</td>
 								<td style="width: 10%;"><?php echo $sadrListOfDrug['start_date']; ?></td>

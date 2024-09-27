@@ -285,7 +285,7 @@ echo $this->Html->css('sadr', array('inline' => false));
 
                             ]);
 
-                            if (!empty($sadr->getErrors('has_age_or_dob'))) {
+                            if (!empty($sadr->getErrors()['has_age_or_dob'])) {
                                 $error = $sadr->getErrors()['has_age_or_dob']['valid'];
                                 echo '<div class="text-danger" style="color: red;">' . $error . '</div>';
                                 // echo '<div class="text-danger">' . implode(', ', $sadr->getErrors('has_age_or_dob')) . '</div>';
@@ -575,6 +575,12 @@ echo $this->Html->css('sadr', array('inline' => false));
                 <hr>
                 <?php
                 echo $this->element('multi/list_of_drugs');
+
+                if (!empty($sadr->getErrors()['sadr_list_of_drugs'])) {
+                    $error = $sadr->getErrors()['sadr_list_of_drugs']['atLeastOneSuspectedDrug'];
+                    echo '<div class="text-danger" style="color: red;">' . $error . '</div>';
+                    // echo '<div class="text-danger">' . implode(', ', $sadr->getErrors('has_age_or_dob')) . '</div>';
+                }
                 ?>
 
                 <?php

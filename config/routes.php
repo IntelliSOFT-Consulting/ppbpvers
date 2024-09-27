@@ -44,7 +44,7 @@
  */
 Router::defaultRouteClass(DashedRoute::class);
 
-Router::extensions(['json', 'xml', 'csv']);
+Router::extensions(['json', 'xml', 'csv','pdf']);
 Router::prefix('api', function ($routes) {
     $routes->setExtensions(['json', 'xml','pdf']);
     $routes->resources('Sadrs', [

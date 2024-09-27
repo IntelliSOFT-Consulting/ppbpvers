@@ -15,7 +15,7 @@ use App\Controller\AppController;
 class SadrsController extends AppController
 {
 
- 
+
     public $page_options = array('25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
@@ -24,26 +24,26 @@ class SadrsController extends AppController
      */
 
     public function index()
-    { 
+    {
         $criteria = array();
         $criteria['Sadrs.deleted'] = false;
         $criteria['Sadrs.archived'] = false;
         $criteria['Sadrs.submitted'] = 2;
         $criteria['Sadrs.copied !='] = '1';
         $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
-       
+
         $this->paginate = [
             'contain' => array('Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'),
             'conditions' => $criteria
-        ]; 
+        ];
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
             'conditions' => $criteria,
             'order' => ['Sadrs.created' => 'DESC'],
-            'limit'=>$limit
-        ]; 
+            'limit' => $limit
+        ];
         $sadrs = $this->paginate($this->Sadrs->find('search', ['search' => $this->request->getQuery()]));
- 
+
         $this->set('sadrs', $sadrs);
         $this->set('page_options', $this->page_options);
     }
@@ -56,12 +56,67 @@ class SadrsController extends AppController
      * @return \Cake\Http\Response|null|void Renders view
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
+    public function download($id = null)
+    {
+        // Retrieve the Sadr record with all related data
+        $sadr = $this->Sadrs->get($id, [
+            'contain' => ['Users', 'Pqmps', 'ExternalComment' => ['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs' => ['Routes', 'Frequencies', 'Doses'], 'SadrListOfMedicines', 'SadrReaction'],
+        ]);
+// debug($sadr);
+// exit;
+        // Set the Sadr data to be used in the template
+        $this->set(compact('sadr'));
+
+        // Define the filename for download
+        $filename = 'SADR_' . $sadr['id'] . '.xml';
+
+        // Render the template and set the response for download
+        $this->viewBuilder()->enableAutoLayout(false); // Disable the layout
+        $this->response = $this->response
+            ->withType('xml') // Set the response content type to XML
+            ->withDownload($filename); // Force the file download
+
+        return $this->render('download');
+        // $filename = 'SADR_' . $sadr['id'] . '.xml';
+        // $sadr = json_encode($sadr);
+
+        // // Set the response headers for file download
+        // $response = $this->response
+        //     ->withType('xml')  // Set the response content type to XML
+        //     ->withStringBody($sadr)  // Set the XML content as the body
+        //     ->withDownload($filename);  // Force the file download
+
+        // return $response;
+    }
+
+
+
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'ExternalComment'=>['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment' => ['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs' => [
+                'Routes',
+                'Frequencies',
+                'Doses'
+            ], 'SadrListOfMedicines', 'SadrReaction'],
         ]);
 
+        if ($this->request->getParam('_ext') === 'pdf') {
+            //  debug($sadr);
+            //         exit;
+            $reference_no = $sadr['reference_no'];
+            // debug($reference_no);
+            $reference_no = str_replace('/', '_', $reference_no);
+            // debug($reference_no);
+            // exit;
+            $this->viewBuilder()->enableAutoLayout(false);
+            $this->viewBuilder()->setClassName('CakePdf.Pdf');
+            $this->viewBuilder()->setOptions([
+                'pdfConfig' => [
+                    'filename' => $reference_no . '' . '.pdf'
+                ]
+            ]);
+        }
         $this->set(compact('sadr'));
     }
 

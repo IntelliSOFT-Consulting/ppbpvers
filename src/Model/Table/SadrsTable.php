@@ -207,8 +207,6 @@ class SadrsTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
 
-
-
         // Set validation rules here *****
 
         $validator
@@ -283,8 +281,41 @@ class SadrsTable extends Table
                     return true; // If no date_of_birth, skip validation
                 },
                 'message' => 'Date of onset of reaction must be on or after date of birth.',
+            ])
+            ->add('date_of_onset_of_reaction', 'dateAfterStartDates', [
+                'rule' => function ($value, $context) {
+                    // Check if sadr_list_of_drugs is present and loop through it
+                    if (!empty($context['data']['sadr_list_of_drugs'])) {
+                        foreach ($context['data']['sadr_list_of_drugs'] as $drug) {
+                            // Check if the drug is suspected and has a start_date
+                            if (!empty($drug['start_date']) && !empty($drug['suspected_drug']) && $drug['suspected_drug'] == 1) {
+                                // Compare the date_of_onset_of_reaction with start_date
+                                if (strtotime($value) <= strtotime($drug['start_date'])) {
+                                    return false; // Validation fails if date is not after start_date
+                                }
+                            }
+                        }
+                    }
+                    return true; // Validation passes if all checks are satisfied
+                },
+                'message' => 'The date of onset of the reaction must come after the start date of the suspected drug(s).',
             ]);
-
+            
+            $validator  ->add('sadr_list_of_drugs', 'atLeastOneSuspectedDrug', [
+                'rule' => function ($value, $context) {
+                    // Check if sadr_list_of_drugs is present and loop through it
+                    if (!empty($context['data']['sadr_list_of_drugs'])) {
+                        foreach ($context['data']['sadr_list_of_drugs'] as $drug) {
+                            // Check if at least one drug is suspected
+                            if (!empty($drug['suspected_drug']) && $drug['suspected_drug'] == 1) {
+                                return true; // Validation passes if at least one suspected drug is found
+                            }
+                        }
+                    }
+                    return false; // Validation fails if no suspected drugs are found
+                },
+                'message' => 'At least one drug must be marked as suspected.',
+            ]);
 
         $validator
             ->scalar('description_of_reaction')
@@ -306,6 +337,8 @@ class SadrsTable extends Table
         $validator
             ->scalar('outcome')
             ->notEmptyString('outcome', 'Please specify outcome');
+
+
         $validator
             ->scalar('reporter_name')
             ->notEmptyString('reporter_name', 'Please provide reporter name');
@@ -324,6 +357,9 @@ class SadrsTable extends Table
             ->scalar('weight')
             ->allowEmptyString('weight') // Allow empty weight
             ->numeric('weight', 'Weight must be a numeric value.'); // Enforce numeric validation if input is provided
+
+
+
             $validator
             ->scalar('height')
             ->allowEmptyString('height') // Allow empty height

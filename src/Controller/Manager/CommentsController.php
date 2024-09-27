@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Controller\Manager;
 
 use App\Controller\AppController;
+use Cake\Filesystem\File;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Text;
 use Cake\View\Helper\HtmlHelper;
@@ -16,6 +17,7 @@ use Cake\View\Helper\HtmlHelper;
  */
 class CommentsController extends AppController
 {
+
     /**
      * Index method
      *
@@ -203,5 +205,36 @@ class CommentsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function commentFileDownload($id = null)
+    {
+        $attachment = $this->Attachments->get($id);
+
+        if (!$attachment) {
+            $this->Flash->error(__('The requested file does not exist!'));
+            return $this->redirect($this->referer());
+        }
+
+        // Get the directory name and file name from the attachment entity
+        $directory = $attachment->dirname;
+        $fileName = $attachment->basename;
+
+        // Construct the full file path
+        $filePath = ROOT . DS . $directory  . $fileName;
+
+        // Create a File object for the file
+        $file = new File($filePath);
+        if (!$file->exists()) {
+            $this->Flash->error(__('The requested file does not exist!'));
+            return $this->redirect($this->referer());
+        }
+
+        $response = $this->response->withFile(
+            $file->path,
+            ['download' => true, 'name' => $attachment->basename]
+        );
+
+        return $response;
     }
 }

@@ -196,7 +196,7 @@ $nchecked = "&#x2610;";
                                 <td><?php echo $sadrListOfDrug['batch_no']; ?></td>
                                 <td><?php echo $sadrListOfDrug['manufacturer']; ?></td>
                                 <td><?php echo $sadrListOfDrug['dose'];
-                                    if (!empty($sadrListOfDrug['dose_entity']['name'])) echo ' - ' . $sadrListOfDrug['dose_entity']['name']; ?></td>
+                                    if (!empty($sadrListOfDrug['doses_entity']['name'])) echo ' - ' . $sadrListOfDrug['doses_entity']['name']; ?></td>
                                 <td style="width: 10%;"><?php if (!empty($sadrListOfDrug['route']['name'])) echo $sadrListOfDrug['route']['name']; ?></td>
                                 <td style="width: 10%;"><?php if (!empty($sadrListOfDrug['frequency']['name'])) echo $sadrListOfDrug['frequency']['name']; ?><br>
                                     <span><?php echo $sadrListOfDrug['frequency_id_other']; ?></span>
@@ -240,7 +240,7 @@ $nchecked = "&#x2610;";
                                 <td><?php echo $sadrListOfMedicine['batch_no']; ?></td>
                                 <td><?php echo $sadrListOfMedicine['manufacturer']; ?></td>
                                 <td><?php echo $sadrListOfMedicine['dose'];
-                                    if (!empty($sadrListOfMedicine['dose_entity']['name'])) echo ' - ' . $sadrListOfMedicine['dose_entity']['name']; ?></td>
+                                    if (!empty($sadrListOfMedicine['doses_entity']['name'])) echo ' - ' . $sadrListOfMedicine['doses_entity']['name']; ?></td>
                                 <td style="width: 10%;"><?php if (!empty($sadrListOfMedicine['route']['name'])) echo $sadrListOfMedicine['route']['name']; ?></td>
                                 <td style="width: 10%;"><?php if (!empty($sadrListOfMedicine['frequency']['name'])) echo $sadrListOfMedicine['frequency']['name']; ?><br>
                                     <span><?php echo $sadrListOfMedicine['frequency_other']; ?></span>

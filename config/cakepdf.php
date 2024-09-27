@@ -10,6 +10,7 @@ return [
                 'dpi' => 96, 
                 'no-stop-slow-scripts' => true,
                 'enable-local-file-access' => true,
+                '--javascript-delay' =>5000
             ],
         ],
         'margin' => [
