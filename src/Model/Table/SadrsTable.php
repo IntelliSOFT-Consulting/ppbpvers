@@ -60,11 +60,12 @@ class SadrsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
         $this->addBehavior('Search.Search');
 
-        $this->searchManager() 
+        $this->searchManager()
             ->value('report_title')
-            ->add('reference_no', 'Search.Like', [ 
+            ->add('reference_no', 'Search.Like', [
                 'before' => true,
                 'after' => true,
                 'fieldMode' => 'OR',
@@ -86,8 +87,8 @@ class SadrsTable extends Table
             ->value('blood_products')
             ->value('herbal_product')
             ->value('product_other')
-            ->value('product_specify') 
-            ->add('patient_name', 'Search.Like', [ 
+            ->value('product_specify')
+            ->add('patient_name', 'Search.Like', [
                 'before' => true,
                 'after' => true,
                 'fieldMode' => 'OR',
@@ -96,14 +97,14 @@ class SadrsTable extends Table
                 'wildcardOne' => '?',
                 'fields' => ['patient_name'],
             ])
-            ->add('reporter', 'Search.Like', [ 
+            ->add('reporter', 'Search.Like', [
                 'before' => true,
                 'after' => true,
                 'fieldMode' => 'OR',
                 'comparison' => 'LIKE',
                 'wildcardAny' => '*',
                 'wildcardOne' => '?',
-                'fields' => ['reporter_name','reporter_email','reporter_name_diff','reporter_email_diff'],
+                'fields' => ['reporter_name', 'reporter_email', 'reporter_name_diff', 'reporter_email_diff'],
             ])
             ->value('report_type')
             ->value('serious_reason')
@@ -205,21 +206,165 @@ class SadrsTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator
-            ->integer('sadr_id')
-            ->allowEmptyString('sadr_id');
+
+
+
+        // Set validation rules here *****
 
         $validator
-            ->integer('user_id')
-            ->allowEmptyString('user_id');
+            ->scalar('report_title')
+            ->maxLength('report_title', 255)
+            ->notEmptyString('report_title', 'Please provide report title');
+
+        $validator->add('report_sadr', 'atLeastOne', [
+            'rule' => function ($value, $context) {
+                return !empty($context['data']['report_sadr']) ||
+                    !empty($context['data']['report_therapeutic']) ||
+                    !empty($context['data']['report_misuse']) ||
+                    !empty($context['data']['report_off_label']);
+            },
+            'message' => 'Please select at least one report type.'
+        ]);
 
         $validator
-            ->integer('pqmp_id')
-            ->allowEmptyString('pqmp_id');
+            ->scalar('product_category')
+            ->maxLength('product_category', 255)
+            ->notEmptyString('product_category', 'Please provide product category');
 
         $validator
-            ->integer('medication_id')
-            ->allowEmptyString('medication_id');
+            ->scalar('county_id')
+            ->maxLength('county_id', 255)
+            ->notEmptyString('county_id', 'Please provide county');
+
+        $validator
+            ->scalar('sub_county_id')
+            ->maxLength('sub_county_id', 255)
+            ->notEmptyString('sub_county_id', 'Please provide sub county');
+
+        $validator
+            ->scalar('patient_name')
+            ->maxLength('patient_name', 255)
+            ->notEmptyString('patient_name', 'Please provide patient name');
+
+        $validator->add('has_age_or_dob', 'valid', [
+            'rule' => function ($value, $context) {
+                return !empty($context['data']['date_of_birth']) || !empty($context['data']['age_group']);
+            },
+            'message' => 'Please provide either Date of Birth or Age Group.',
+        ]);
+
+
+        $validator
+            ->scalar('gender')
+            ->maxLength('gender', 255)
+            ->notEmptyString('gender', 'Please provide gender');
+
+
+        $validator
+            ->scalar('pregnancy_status')
+            ->maxLength('pregnancy_status', 255)
+            ->notEmptyString('pregnancy_status', 'Please provide pregnancy status');
+
+
+        $validator
+            ->scalar('reaction')
+            ->maxLength('reaction', 255)
+            ->notEmptyString('reaction', 'Please provide reaction');
+
+        $validator
+            ->maxLength('date_of_onset_of_reaction', 255)
+            ->notEmptyString('date_of_onset_of_reaction', 'Please provide Date of onset of reaction')
+            ->add('date_of_onset_of_reaction', 'validRange', [
+                'rule' => function ($value, $context) {
+                    // Check if date_of_birth exists and compare dates
+                    if (!empty($context['data']['date_of_birth'])) {
+                        return strtotime($value) >= strtotime($context['data']['date_of_birth']);
+                    }
+                    return true; // If no date_of_birth, skip validation
+                },
+                'message' => 'Date of onset of reaction must be on or after date of birth.',
+            ]);
+
+
+        $validator
+            ->scalar('description_of_reaction')
+            ->notEmptyString('description_of_reaction', 'Please provide description of reaction');
+
+        $validator
+            ->scalar('action_taken')
+            ->notEmptyString('action_taken', 'Please provide action taken');
+
+
+        $validator
+            ->scalar('outcome')
+            ->notEmptyString('outcome', 'Please specify outcome');
+
+        $validator
+            ->scalar('designation_id')
+            ->notEmptyString('designation_id', 'Please provide reporter designation');
+
+        $validator
+            ->scalar('outcome')
+            ->notEmptyString('outcome', 'Please specify outcome');
+        $validator
+            ->scalar('reporter_name')
+            ->notEmptyString('reporter_name', 'Please provide reporter name');
+
+        $validator
+            ->scalar('reporter_email')
+            ->notEmptyString('reporter_email', 'Please provide reporter email');
+
+
+        $validator
+            ->scalar('reporter_date')
+            ->notEmptyString('reporter_date', 'Please provide reporte date');
+
+
+            $validator
+            ->scalar('weight')
+            ->allowEmptyString('weight') // Allow empty weight
+            ->numeric('weight', 'Weight must be a numeric value.'); // Enforce numeric validation if input is provided
+            $validator
+            ->scalar('height')
+            ->allowEmptyString('height') // Allow empty height
+            ->numeric('height', 'Height must be a numeric value.'); // Enforce numeric validation if input is provided
+                
+
+        return $validator;
+
+
+        /*****
+         * 
+         *    
+		  
+		'date_of_onset_of_reaction' => array(
+            'atLeastYear' => array(
+                'rule'     => 'atLeastYear',
+                'allowEmpty' => true,
+                'message'  => 'Please specify date \ Year of onset of the reaction'
+            ),
+            'notInFuture' => array(
+                'rule'     => 'notInFuture',
+                'allowEmpty' => true,
+                'message'  => 'Date of onset of reaction greater than today'
+            ),
+			'dateAfterStartDates' => array(
+                'rule'     => 'dateAfterStartDates',
+                'allowEmpty' => true,
+                'message'  => 'The date of onset of the reaction must come after a start date in the list of start dates below'
+            ),
+			'greaterBirth' => array(
+                'rule'     => 'greaterBirth',
+                'allowEmpty' => true,
+                'message'  => 'The date / year of birth cannot be less than the date of birth of the patient'
+            ),
+        ),
+		   
+	  
+         * 
+         * 
+         * /
+ 
 
         $validator
             ->integer('county_id')
@@ -368,7 +513,7 @@ class SadrsTable extends Table
             ->allowEmptyString('pregnant');
 
         $validator
-            ->scalar('pregnancy_status')
+            ->scalar('reaction')
             ->maxLength('pregnancy_status', 20)
             ->allowEmptyString('pregnancy_status');
 
@@ -577,7 +722,7 @@ class SadrsTable extends Table
         $validator
             ->allowEmptyString('copied');
 
-        return $validator;
+         */
     }
 
     /**

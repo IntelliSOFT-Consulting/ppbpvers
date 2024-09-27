@@ -18,7 +18,7 @@ use Cake\View\Helper\HtmlHelper;
  */
 class SadrsController extends AppController
 {
-    public $page_options = array('5' => '5','10' => '10','25' => '25', '50' => '50', '100' => '100');
+    public $page_options = array('5' => '5', '10' => '10', '25' => '25', '50' => '50', '100' => '100');
     /**
      * Index method
      *
@@ -28,18 +28,18 @@ class SadrsController extends AppController
     {
         $criteria = array();
         $limit = $this->request->getQuery('pages', 1000); // Default to 10 if 'pages' is not set
-       
+
         $criteria['Sadrs.user_id'] = $this->Auth->user('id');
         $this->paginate = [
             'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
             'conditions' => $criteria,
             'order' => ['Sadrs.created' => 'DESC'],
-            'limit'=>$limit
-        ]; 
+            'limit' => $limit
+        ];
         $sadrs = $this->paginate($this->Sadrs->find('search', ['search' => $this->request->getQuery()]));
- 
+
         $this->set('page_options', $this->page_options);
-        $this->set(compact('sadrs')); 
+        $this->set(compact('sadrs'));
         $counties = $this->Sadrs->Counties->find('list', array('order' => array('Counties.county_name' => 'ASC')));
         $this->set(compact('counties'));
         $designations = $this->Sadrs->Designations->find('list', array('order' => array('Designations.name' => 'ASC')));
@@ -56,7 +56,7 @@ class SadrsController extends AppController
     public function view($id = null)
     {
         $sadr = $this->Sadrs->get($id, [
-            'contain' => ['Users', 'Pqmps', 'ExternalComment'=>['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
+            'contain' => ['Users', 'Pqmps', 'ExternalComment' => ['Attachments'], 'Medications', 'Counties', 'Attachments', 'SubCounties', 'Designations', 'SadrDescriptions', 'SadrFollowups', 'SadrListOfDrugs', 'SadrListOfMedicines', 'SadrReaction'],
         ]);
         // debug($sadr);
         // exit;
@@ -126,20 +126,18 @@ class SadrsController extends AppController
         $sadr = $this->Sadrs->get($id, [
             'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
         ]);
-        // debug($sadr);
-        //     exit; 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
-            // debug($sadr);
-            // debug($data);
-            // exit; 
             $validate = false;
             if (!empty($this->request->getData('submitReport'))) {
-                $validate = 'first';
-                // debug("submitting....");
+                $validate = true;
+
+                // debug($data);
+                // exit;
             }
 
             $sadr = $this->Sadrs->patchEntity($sadr, $this->request->getData(), [
+                'validate' => $validate,
                 'associated' => [
                     'Attachments',
                     'SadrReaction',
@@ -147,9 +145,9 @@ class SadrsController extends AppController
                     'SadrListOfMedicines'
                 ]
             ]);
-            // debug($this->request->getData());
 
-            if ($this->Sadrs->save($sadr, array('validate' => $validate, 'deep' => true))) {
+            if ($this->Sadrs->save($sadr, ['validate' => $validate, 'deep' => true])) {
+
 
                 // debug($sadr);
                 // exit;
@@ -275,7 +273,7 @@ class SadrsController extends AppController
                             'message' => Text::insert($message['content'], $variables)
                         );
 
-                        $this->QueuedJobs->createJob('GenericEmail', $datum); 
+                        $this->QueuedJobs->createJob('GenericEmail', $datum);
                         $this->QueuedJobs->createJob('GenericNotification', $datum);
                     }
                     // **********************************    END   *********************************
@@ -288,23 +286,23 @@ class SadrsController extends AppController
 
                     $this->Flash->success(__('The SADR has been submitted to PPB'));
                     return $this->redirect(array('action' => 'view', $sadr->id));
-                }
-                // debug($this->request->data);
-                $sadr = $this->Sadrs->get($id, [
-                    'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
-                ]);
+                } else {
+                    // debug($this->request->data);
+                    $sadr = $this->Sadrs->get($id, [
+                        'contain' => ['Attachments', 'SadrReaction', 'SadrListOfDrugs', 'SadrListOfMedicines'],
+                    ]);
 
-                $this->request = $this->request->withParsedBody($sadr->toArray());
-                //   debug($this->request->getData('sadr_list_of_drugs') );
-                //                 exit;
-                $this->Flash->success(__('The SADR has been saved'));
-                $this->redirect($this->referer());
+                    $this->request = $this->request->withParsedBody($sadr->toArray());
+                    //   debug($this->request->getData('sadr_list_of_drugs') );
+                    //                 exit;
+                    $this->Flash->success(__('The SADR has been saved'));
+                    return $this->redirect($this->referer());
+                }
             } else {
                 $errors = $sadr->getErrors();
                 // debug($errors);
                 // exit;
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
-                $this->Flash->error(__(json_encode($errors)));
             }
         }
         $this->request = $this->request->withParsedBody($sadr->toArray());

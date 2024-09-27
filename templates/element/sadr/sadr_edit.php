@@ -11,8 +11,13 @@ echo $this->Html->css('sadr', array('inline' => false));
 <section id="sadrsadd">
 
     <?php
+
+
+
+
     echo $this->Form->create($sadr, [
         'type' => 'file',
+        // 'class' => 'form-horizontal',
     ]);
     ?>
     <div class="row-fluid">
@@ -50,7 +55,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             marked with <span style="color:red;">*</span> are mandatory</p>
                         <?php
                         echo $this->Form->control(
-                            'report_title', 
+                            'report_title',
                         );
                         ?>
                     </div>
@@ -69,6 +74,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                     <div class="span6">
                         <?php
                         echo "<h4>The report is on  <span style='color:red;'>*</span>:</h4>";
+
                         echo $this->Form->control('report_sadr', array(
                             'type' => 'checkbox',
                             'label' => array('class' => 'control-label', 'text' => 'Suspected adverse drug reaction'),
@@ -93,9 +99,13 @@ echo $this->Html->css('sadr', array('inline' => false));
                     <div class="span6">
                         <?php
                         echo "<h4>Product category (Tick appropriate box) <span style='color:red;'>*</span></h4>";
+
+                        // Using a wrapper div to align radio buttons horizontally
+                        echo '<div class="product-category-group">';
+
                         echo $this->Form->control(
                             'product_category',
-                            array(
+                            [
                                 'type' => 'radio',
                                 'label' => false,
                                 'legend' => false,
@@ -103,61 +113,65 @@ echo $this->Html->css('sadr', array('inline' => false));
                                 'hiddenField' => false,
                                 'error' => false,
                                 'class' => 'product_category',
-                                'before' => '<label class="radio inline">',
-                                'after' => '</label>',
-                                'options' => array('Medicinal product' => 'Medicinal product'),
+                                'before' => '<div class="form-check form-check-inline">',
+                                'after' => '</div>',
+                                'options' => ['Medicinal product' => 'Medicinal product'],
                                 'onclick' => '$("#SadrProductSpecify").attr("disabled","disabled")',
-                            )
-                        );
-                        echo $this->Form->control(
-                            'product_category',
-                            array(
-                                'type' => 'radio',
-                                'label' => false,
-                                'legend' => false,
-                                'div' => false,
-                                'hiddenField' => false,
-                                'error' => false,
-                                'class' => 'product_category',
-                                'before' => '<label class="radio inline">',
-                                'after' => '</label>',
-                                'options' => array('Herbal product' => 'Herbal product'),
-                                'onclick' => '$(".product_specify").attr("disabled","disabled")',
-                            )
-                        );
-                        echo $this->Form->control(
-                            'product_category',
-                            array(
-                                'type' => 'radio',
-                                'label' => false,
-                                'legend' => false,
-                                'div' => false,
-                                'hiddenField' => false,
-                                'error' => false,
-                                'class' => 'product_category',
-                                'before' => '<label class="radio inline">',
-                                'after' => '</label>',
-                                'options' => array('Cosmeceuticals' => 'Cosmeceuticals'),
-                                'onclick' => '$(".product_specify").attr("disabled","disabled")',
-                            )
-                        );
-                        echo $this->Form->control(
-                            'product_category',
-                            array(
-                                'type' => 'radio',
-                                'label' => false,
-                                'legend' => false,
-                                'div' => false,
-                                'hiddenField' => false,
-                                'error' => false,
-                                'class' => 'product_category',
-                                'before' => '<label class="radio inline">',
-                                'after' => '</label><br>',
-                                'options' => array('Others' => 'Others'),
-                                'onclick' => '$(".product_specify").removeAttr("disabled")',
-                            )
+                            ]
                         );
 
+                        echo $this->Form->control(
+                            'product_category',
+                            [
+                                'type' => 'radio',
+                                'label' => false,
+                                'legend' => false,
+                                'div' => false,
+                                'hiddenField' => false,
+                                'error' => false,
+                                'class' => 'product_category',
+                                'before' => '<div class="form-check form-check-inline">',
+                                'after' => '</div>',
+                                'options' => ['Herbal product' => 'Herbal product'],
+                                'onclick' => '$(".product_specify").attr("disabled","disabled")',
+                            ]
+                        );
+
+                        echo $this->Form->control(
+                            'product_category',
+                            [
+                                'type' => 'radio',
+                                'label' => false,
+                                'legend' => false,
+                                'div' => false,
+                                'hiddenField' => false,
+                                'error' => false,
+                                'class' => 'product_category',
+                                'before' => '<div class="form-check form-check-inline">',
+                                'after' => '</div>',
+                                'options' => ['Cosmeceuticals' => 'Cosmeceuticals'],
+                                'onclick' => '$(".product_specify").attr("disabled","disabled")',
+                            ]
+                        );
+
+                        echo $this->Form->control(
+                            'product_category',
+                            [
+                                'type' => 'radio',
+                                'label' => false,
+                                'legend' => false,
+                                'div' => false,
+                                'hiddenField' => false,
+                                'error' => false,
+                                'class' => 'product_category',
+                                'before' => '<div class="form-check form-check-inline">',
+                                'after' => '</div>',
+                                'options' => ['Others' => 'Others'],
+                                'onclick' => '$(".product_specify").removeAttr("disabled")',
+                            ]
+                        );
+
+                        echo '</div>'; // Closing the wrapper div
 
                         ?>
                         <br>
@@ -263,50 +277,38 @@ echo $this->Html->css('sadr', array('inline' => false));
                         ?>
                         <div class="well-mine">
                             <?php
- 
-                            echo $this->Form->control(
-                                'date_of_birth',
-                                array(
-                                    'type' => 'text', 
-                                    'empty' => array('day' => '(choose day)', 'month' => '(choose month)', 'year' => '(choose year)'),
-                                    'label' => array('class' => 'control-label required', 'text' => 'DATE OF BIRTH <span style="color:red;">*</span>', 'escape' => false),
-                                    'title' => 'select beginning of the month if unsure',
-                                    'data-content' => 'If selected, year is mandatory.',
-                                    'after' => ' <a style="font-weight:normal" onclick="$(\'.birthdate\').removeAttr(\'disabled\'); $(\'.birthdate\').val(\'\');
-								$(\'#SadrAgeGroup\').attr(\'disabled\',\'disabled\'); $(\'#SadrAgeGroup\').val(\'\');" >
-								<em class="accordion-toggle">clear!</em></a>
-								<p class="help-block">	If selected, year is mandatory.  </p></div>',
-                                    'class' => 'tooltipper birthdate autosave-ignore ',
-                                    //add onclick to clear disable age group
 
 
-                                )
-                            );
+                            echo $this->Form->control('date_of_birth', [
+                                'type' => 'text',
+                                'label' => array('class' => 'control-label', 'text' => 'DATE OF BIRTH <span style="color:red;">*</span>', 'escape' => false),
 
+                            ]);
+
+                            if (!empty($sadr->getErrors('has_age_or_dob'))) {
+                                $error = $sadr->getErrors()['has_age_or_dob']['valid'];
+                                echo '<div class="text-danger" style="color: red;">' . $error . '</div>';
+                                // echo '<div class="text-danger">' . implode(', ', $sadr->getErrors('has_age_or_dob')) . '</div>';
+                            }
                             ?>
                             <h5 class="controls">--OR--</h5>
                             <?php
-                            echo $this->Form->control(
-                                'age_group',
-                                array(
-                                    'type' => 'select',
-                                    'empty' => true,
-                                    'options' => array(
-                                        'neonate' => 'neonate [0-1 month]',
-                                        'infant' => 'infant [1 month-1 year]',
-                                        'child' => 'child [1 year - 11 years]',
-                                        'adolescent' => 'adolescent [12-17 years]',
-                                        'adult' => 'adult [18-64 years]',
-                                        'elderly' => 'elderly [>65 years]',
-                                    ),
-                                    'label' => array('class' => 'control-label required', 'text' => 'AGE GROUP'),
-                                    'after' => '<a onclick="$(\'#SadrAgeGroup\').removeAttr(\'disabled\'); $(\'#SadrAgeGroup\').val(\'\');
-									$(\'.birthdate\').attr(\'disabled\',\'disabled\'); $(\'.birthdate\').val(\'\');" >
-								<em class="accordion-toggle">clear!</em></a> </div>',
-                                )
-                            );
-                            //disable age group if birthdate is selected
+                            echo $this->Form->control('age_group', [
+                                'type' => 'select',
+                                'empty' => true,
+                                'options' => array(
+                                    'neonate' => 'neonate [0-1 month]',
+                                    'infant' => 'infant [1 month-1 year]',
+                                    'child' => 'child [1 year - 11 years]',
+                                    'adolescent' => 'adolescent [12-17 years]',
+                                    'adult' => 'adult [18-64 years]',
+                                    'elderly' => 'elderly [>65 years]',
+                                ),
+                                'label' => array('class' => 'control-label', 'text' => 'AGE GROUP'),
 
+                            ]);
+
+                            echo $this->Form->control('has_age_or_dob', array('type' => 'hidden'));
 
                             ?>
                         </div>
@@ -316,7 +318,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                             'known_allergy',
                             array(
                                 'type' => 'radio',
-                                'label' => array('class' => 'control-label required','text'=>'ANY KNOWN ALLERGY'),
+                                'label' => array('class' => 'control-label required', 'text' => 'ANY KNOWN ALLERGY'),
                                 'legend' => false,
                                 'div' => false,
                                 'hiddenField' => false,
@@ -537,7 +539,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                         echo $this->Form->control(
                             'date_of_onset_of_reaction',
                             array(
-                                'type' => 'text', 
+                                'type' => 'text',
                                 'empty' => true,
                                 'label' => array('class' => 'control-label required', 'text' => 'DATE OF ONSET OF REACTION <span style="color:red;">*</span>', 'escape' => false),
                                 'after' => '<p class="help-block"> When did the reaction start </p></div>',
@@ -571,12 +573,12 @@ echo $this->Html->css('sadr', array('inline' => false));
                 </div>
                 <!--/row-->
                 <hr>
-                <?php 
-                echo $this->element('multi/list_of_drugs'); 
+                <?php
+                echo $this->element('multi/list_of_drugs');
                 ?>
 
-                <?php 
-                echo $this->element('multi/list_of_medicines'); 
+                <?php
+                echo $this->element('multi/list_of_medicines');
                 ?>
                 <div class="row-fluid">
                     <div class="span6 editable">
@@ -1166,8 +1168,8 @@ echo $this->Html->css('sadr', array('inline' => false));
                     </div>
                 </div>
 
-                <?php 
-                echo $this->element('help/assessment'); 
+                <?php
+                echo $this->element('help/assessment');
                 ?>
 
                 <div class="row-fluid">
@@ -1383,7 +1385,7 @@ echo $this->Html->css('sadr', array('inline' => false));
                     <hr>
                     <?php
                     echo $this->Form->button(
-                        '<i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit',
+                        '<i class="fa fa-paper-plane-o" aria-hidden="true"></i> Submit    ',
                         array(
                             'name' => 'submitReport',
                             'escapeTitle' => false,
@@ -1428,11 +1430,3 @@ echo $this->Html->css('sadr', array('inline' => false));
     </div> <!-- /row -->
     <?php echo $this->Form->end(); ?>
 </section> <!-- /row -->
-
-<style>
-    /* Custom CSS for radio inputs */
-    .radio-spacing {
-        margin-right: 15px;
-        /* Adjust this value to control the spacing between radio button and label */
-    }
-</style>

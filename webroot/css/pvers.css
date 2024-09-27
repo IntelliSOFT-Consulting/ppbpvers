@@ -75,6 +75,10 @@ footer {
   font-weight: bold;
   /* Add any other styling you need */
 }
+.form-check {
+  display: flex;
+  align-items: center;
+}
 
 
 /* Making Footer Responsive */
