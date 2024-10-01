@@ -178,7 +178,7 @@
 				echo "\n";
 			?>
             <patientweight><?php echo $sadr['weight']; ?></patientweight>
-            <patientheight><?php echo round($sadr['height']);?></patientheight>
+            <patientheight><?php echo round(floatval($sadr['height']));?></patientheight>
             <patientsex><?php
 				if($sadr['gender'] == 'Male') echo 1 ;
 				elseif($sadr['gender'] == 'Female') echo 2 ;

@@ -38,17 +38,37 @@ class SadrsController extends AppController
             'conditions' => $criteria
         ];
         $this->paginate = [
-            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations'],
+            'contain' => ['Users', 'Pqmps', 'Medications', 'Counties', 'SubCounties', 'Designations','SadrListOfDrugs' => ['Routes', 'Frequencies', 'Doses'],],
             'conditions' => $criteria,
             'order' => ['Sadrs.created' => 'DESC'],
             'limit' => $limit
         ];
         $sadrs = $this->paginate($this->Sadrs->find('search', ['search' => $this->request->getQuery()]));
+        // if (isset($this->request->getParams()['ext']) && $this->request->getParams()['ext'] == 'csv') {
 
+        if ($this->request->getParam('_ext') === 'csv') {
+            $this->csv_export($sadrs);
+          }
         $this->set('sadrs', $sadrs);
         $this->set('page_options', $this->page_options);
     }
+    private function csv_export($csadrs = ''){ 
 
+
+        // debug($csadrs);
+        // exit;
+
+        $filename = 'SADRa_'.date('Ymd_Hi'). '.csv';
+ 
+        $this->viewBuilder()->enableAutoLayout(false); // Disable the layout
+        $this->response = $this->response
+            ->withType('csv') // Set the response content type to XML
+            ->withDownload($filename); // Force the file download
+ 
+        $this->set(compact('csadrs'));
+        $this->layout = false;
+        // $this->render('csv_export');
+    }
 
     /**
      * View method
@@ -77,17 +97,7 @@ class SadrsController extends AppController
             ->withType('xml') // Set the response content type to XML
             ->withDownload($filename); // Force the file download
 
-        return $this->render('download');
-        // $filename = 'SADR_' . $sadr['id'] . '.xml';
-        // $sadr = json_encode($sadr);
-
-        // // Set the response headers for file download
-        // $response = $this->response
-        //     ->withType('xml')  // Set the response content type to XML
-        //     ->withStringBody($sadr)  // Set the XML content as the body
-        //     ->withDownload($filename);  // Force the file download
-
-        // return $response;
+        return $this->render('download'); 
     }
 
 
@@ -164,14 +174,14 @@ class SadrsController extends AppController
             $validate = false;
             if (!empty($this->request->getData('submitReport'))) {
                 $validate = true;
-            } 
+            }
             $sadr = $this->Sadrs->patchEntity($sadr, $data, [
                 'validate' => $validate,
                 'associated' => [
                     'Attachments',
                     'SadrReaction',
-                    'SadrListOfDrugs'=>[ 'validate' => $validate],
-                    'SadrListOfMedicines'=>[ 'validate' => $validate],
+                    'SadrListOfDrugs' => ['validate' => $validate],
+                    'SadrListOfMedicines' => ['validate' => $validate],
                 ]
             ]);
 
@@ -208,7 +218,7 @@ class SadrsController extends AppController
                     return $this->redirect($this->referer());
                 }
             } else {
-                $errors = $sadr->getErrors(); 
+                $errors = $sadr->getErrors();
                 $this->Flash->error(__('The SADR could not be saved. Please review the error(s) and resubmit and try again.'));
             }
         }
@@ -228,6 +238,49 @@ class SadrsController extends AppController
         $this->set(compact('dose'));
         $this->set(compact('sadr', 'users', 'pqmps', 'medications', 'counties', 'subCounties', 'designations'));
     }
+
+    public function vigiflow($id = null) 
+    {
+
+        $sadr = $this->Sadrs->get($id, [
+            'contain' => ['SadrListOfDrugs', 'SadrReaction', 'SadrDescriptions', 'SadrListOfMedicines']
+        ]);
+
+        if (!$sadr) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+        $this->Flash->success(__('Coming soon!!'));
+        return $this->redirect(['action' => 'index']);
+    }
+    public function archive($id = null) 
+    {
+
+        $sadr = $this->Sadrs->get($id, [
+            'contain' => ['SadrListOfDrugs', 'SadrReaction', 'SadrDescriptions', 'SadrListOfMedicines']
+        ]);
+
+        if (!$sadr) {
+            throw new NotFoundException(__('Invalid SADR'));
+        }
+
+        $fieldsToUpdate = [
+            'archived' => true,
+            'archived_date' =>  date("Y-m-d H:i:s")
+            // Add more fields as needed
+        ];
+
+        // Update the specific fields
+        $this->Sadrs->patchEntity($sadr, $fieldsToUpdate);
+
+        // Save the entity
+        if ($this->Sadrs->save($sadr)) {
+            $this->Flash->success(__('Report has been archived successfully'));
+            return $this->redirect(['action' => 'index']);
+        } else {
+            $this->Flash->error(__('Unable to archive the report. Please, try again.'));
+        }
+    }
+
 
     public function copy($id = null)
     {

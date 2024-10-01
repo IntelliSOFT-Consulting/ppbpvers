@@ -65,7 +65,7 @@ Router::prefix('api', function ($routes) {
 
 Router::prefix('admin', function ($routes) {
 
-    $routes->setExtensions(['json', 'xml','pdf']);
+    $routes->setExtensions(['json', 'xml','pdf','csv']);
     // All routes here will be prefixed with `/admin`
     // And have the prefix => admin route element added.
     $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Admin']);
@@ -74,20 +74,20 @@ Router::prefix('admin', function ($routes) {
 });
 Router::prefix('base', function ($routes) {
 
-    $routes->setExtensions(['json', 'xml','pdf']);
+    $routes->setExtensions(['json', 'xml','pdf','csv']);
     $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Base']);
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('manager', function ($routes) {
 
-    $routes->setExtensions(['json', 'xml','pdf']);
+    $routes->setExtensions(['json', 'xml','pdf','csv']);
     $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Manager']);
 
     $routes->fallbacks(DashedRoute::class);
 });
 Router::prefix('reporter', function ($routes) {
 
-    $routes->setExtensions(['json', 'xml','pdf']);
+    $routes->setExtensions(['json', 'xml','pdf','csv']);
     $routes->connect('/', ['controller' => 'Users', 'action' => 'dashboard', 'prefix' => 'Reporter']);
 
     $routes->fallbacks(DashedRoute::class);

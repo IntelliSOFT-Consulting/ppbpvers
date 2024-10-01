@@ -405,7 +405,7 @@ echo $this->Html->script('search/sadr', array('inline' => false));
                     </td>
                     <td>
                         <?php
-                        echo $this->Html->link('<i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel', array('action' => 'index', 'ext' => 'csv', '?' => $this->request->getQuery()), array('class' => 'btn btn-success', 'escape' => false));
+                        echo $this->Html->link('<i class="fa fa-file-excel-o" aria-hidden="true"></i> Excel', array('action' => 'index', '_ext' => 'csv', '?' => $this->request->getQuery()), array('class' => 'btn btn-success', 'escape' => false));
                         ?>
                     </td>
                 </tr>
