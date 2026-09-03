@@ -473,6 +473,18 @@ class Aefi extends AppModel
                 'required' => true,
                 'message'  => 'Please provide the date of submission of the report'
             ),
+            'notBeforeAdministrationOrReaction' => array(
+                'rule'     => 'notBeforeAdministrationOrReaction',
+                'required' => false,
+                'message'  => 'Date of reporting cannot be before the date the reaction started or any of the vaccination dates!!'
+            ),
+        ),
+        'reporter_date_diff' => array(
+            'notBeforeAdministrationOrReaction' => array(
+                'rule'     => 'notBeforeAdministrationOrReaction',
+                'required' => false,
+                'message'  => 'Date of reporting cannot be before the date the reaction started or any of the vaccination dates!!'
+            ),
         ),
         'reporter_email' => array(
             'notBlank' => array(
@@ -481,27 +493,18 @@ class Aefi extends AppModel
                 'message'  => 'Please provide a valid email address'
             ),
         ),
+        // Accepts either a local Kenyan number e.g. 0724743788 (0 + 9 digits)
+        // or the same number with Kenya's country code e.g. +254724743788
+        // (+254 + 9 digits).
         'reporter_phone' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please provide a valid phone number'
             ),
-        ),
-
-        //ensure reporter phone is numeric and 10 digits
-        'reporter_phone' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'minLength' => array(
-                'rule' => array('minLength', 10),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'maxLength' => array(
-                'rule' => array('maxLength', 12),
-                'message' => 'Please provide a valid phone number',
+            'format' => array(
+                'rule' => '/^(0\d{9}|\+254\d{9})$/',
+                'message' => 'Please provide a valid phone number, e.g. 0724743788 or +254724743788',
             ),
         ),
     );
@@ -652,6 +655,49 @@ class Aefi extends AppModel
             return $proceed;
         }
         return false;
+    }
+
+    /**
+     * Ensures a "date of reporting" field (reporter_date or reporter_date_diff)
+     * is never entered as being before the date the AEFI reaction started, or
+     * before any of the vaccine administration dates listed for this report.
+     *
+     * $field is passed in by CakePHP as array($fieldName => $fieldValue).
+     */
+    public function notBeforeAdministrationOrReaction($field = null)
+    {
+        if (empty($field) || !is_array($field)) {
+            return true;
+        }
+
+        $reportingDateRaw = reset($field);
+        if (empty($reportingDateRaw)) {
+            // Leave blank/required checks to other rules (e.g. notBlank).
+            return true;
+        }
+
+        $reportingDate = date('Ymd', strtotime($reportingDateRaw));
+
+        if (!empty($this->data['Aefi']['date_aefi_started'])) {
+            $reactionStartDate = date('Ymd', strtotime($this->data['Aefi']['date_aefi_started']));
+            if ($reportingDate < $reactionStartDate) {
+                return false;
+            }
+        }
+
+        if (!empty($this->data['AefiListOfVaccine'])) {
+            foreach ($this->data['AefiListOfVaccine'] as $vaccine) {
+                if (empty($vaccine['vaccination_date'])) {
+                    continue;
+                }
+                $vaccinationDate = date('Ymd', strtotime($vaccine['vaccination_date']));
+                if ($reportingDate < $vaccinationDate) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public function seriousYes($field = null)
