@@ -493,9 +493,9 @@ class Aefi extends AppModel
                 'message'  => 'Please provide a valid email address'
             ),
         ),
-        // Accepts either a local Kenyan number e.g. 0724743788 (0 + 9 digits)
-        // or the same number with Kenya's country code e.g. +254724743788
-        // (+254 + 9 digits).
+        // Accepts either a local Kenyan number in the format 0XXXXXXXXX
+        // (0 + 9 digits), or the same number with Kenya's country code in
+        // the format +254XXXXXXXXX (+254 + 9 digits).
         'reporter_phone' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
@@ -504,7 +504,7 @@ class Aefi extends AppModel
             ),
             'format' => array(
                 'rule' => '/^(0\d{9}|\+254\d{9})$/',
-                'message' => 'Please provide a valid phone number, e.g. 0724743788 or +254724743788',
+                'message' => 'Please provide a valid phone number in the format 0XXXXXXXXX or +254XXXXXXXXX',
             ),
         ),
     );

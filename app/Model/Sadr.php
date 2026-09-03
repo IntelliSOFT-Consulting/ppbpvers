@@ -633,6 +633,18 @@ class Sadr extends AppModel
                 'required' => true,
                 'message'  => 'Please provide the date of submission of the report'
             ),
+            'notBeforeReactionOrDrugStart' => array(
+                'rule'     => 'notBeforeReactionOrDrugStart',
+                'required' => false,
+                'message'  => 'Date of reporting cannot be before the date of onset of the reaction or any of the drug start dates!!'
+            ),
+        ),
+        'reporter_date_diff' => array(
+            'notBeforeReactionOrDrugStart' => array(
+                'rule'     => 'notBeforeReactionOrDrugStart',
+                'required' => false,
+                'message'  => 'Date of reporting cannot be before the date of onset of the reaction or any of the drug start dates!!'
+            ),
         ),
         'reporter_email' => array(
             'notBlank' => array(
@@ -641,26 +653,18 @@ class Sadr extends AppModel
                 'message'  => 'Please provide a valid email address'
             ),
         ),
+        // Accepts either a local Kenyan number in the format 0XXXXXXXXX
+        // (0 + 9 digits), or the same number with Kenya's country code in
+        // the format +254XXXXXXXXX (+254 + 9 digits).
         'reporter_phone' => array(
             'notBlank' => array(
                 'rule'     => 'notBlank',
                 'required' => true,
                 'message'  => 'Please provide a valid phone number'
             ),
-        ),
-        //ensure reporter phone is numeric and 10 digits
-        'reporter_phone' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'minLength' => array(
-                'rule' => array('minLength', 10),
-                'message' => 'Please provide a valid phone number',
-            ),
-            'maxLength' => array(
-                'rule' => array('maxLength', 12),
-                'message' => 'Please provide a valid phone number',
+            'format' => array(
+                'rule' => '/^(0\d{9}|\+254\d{9})$/',
+                'message' => 'Please provide a valid phone number in the format 0XXXXXXXXX or +254XXXXXXXXX',
             ),
         ),
         'weight' => array(
@@ -715,6 +719,49 @@ class Sadr extends AppModel
 
 
 
+
+    /**
+     * Ensures a "date of reporting" field (reporter_date or reporter_date_diff)
+     * is never entered as being before the date of onset of the reaction, or
+     * before any of the drug start dates listed for this report.
+     *
+     * $field is passed in by CakePHP as array($fieldName => $fieldValue).
+     */
+    public function notBeforeReactionOrDrugStart($field = null)
+    {
+        if (empty($field) || !is_array($field)) {
+            return true;
+        }
+
+        $reportingDateRaw = reset($field);
+        if (empty($reportingDateRaw)) {
+            // Leave blank/required checks to other rules (e.g. notBlank).
+            return true;
+        }
+
+        $reportingDate = date('Ymd', strtotime($reportingDateRaw));
+
+        if (!empty($this->data['Sadr']['date_of_onset_of_reaction'])) {
+            $reactionDate = date('Ymd', strtotime($this->data['Sadr']['date_of_onset_of_reaction']));
+            if ($reportingDate < $reactionDate) {
+                return false;
+            }
+        }
+
+        if (!empty($this->data['SadrListOfDrug'])) {
+            foreach ($this->data['SadrListOfDrug'] as $drug) {
+                if (empty($drug['start_date'])) {
+                    continue;
+                }
+                $drugStartDate = date('Ymd', strtotime($drug['start_date']));
+                if ($reportingDate < $drugStartDate) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     public function formIdExists($field = null)
     {
