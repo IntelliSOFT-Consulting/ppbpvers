@@ -68,7 +68,7 @@ echo $this->Session->flash();
             );
             ?>
           </td>
-          <td colspan="2">
+          <td>
             <?php
             echo $this->Form->input(
               'start_date',
@@ -114,13 +114,13 @@ echo $this->Session->flash();
             ?>
           </td>
           <td>
+            <h5>Report Category</h5>
             <?php
-
-            ?>
-          </td>
-          <td>
-            <?php
-
+            echo $this->Form->input('report_sadr', array(
+              'options' => array('Side Effects' => 'Side Effects', 'Poor Quality Medicine' => 'Poor Quality Medicine'),
+              'legend' => false,
+              'type' => 'radio', 
+            ));
             ?>
           </td>
         </tr>
@@ -159,8 +159,13 @@ echo $this->Session->flash();
             ?>
           </td>
           <td>
+            <h5>Gender</h5>
             <?php
-
+            echo $this->Form->input('gender', array(
+              'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'),
+              'legend' => false,
+              'type' => 'radio'
+            ));
             ?>
           </td>
           <td>
@@ -185,13 +190,8 @@ echo $this->Session->flash();
             ?>
           </td>
           <td>
-            <h5>Gender</h5>
             <?php
-            echo $this->Form->input('gender', array(
-              'options' => array('Male' => 'Male', 'Female' => 'Female', 'Unknown' => 'Unknown'),
-              'legend' => false,
-              'type' => 'radio'
-            ));
+
             ?>
           </td>
         </tr>
@@ -245,15 +245,18 @@ echo $this->Session->flash();
           <?php
           if ($redir == 'manager') { ?>
             <h6>Feedback Status</h6>
-
           <?php
             echo $this->Form->input('has_review', [
-              'type' => 'checkbox',
-              'hiddenField' => false,
-              'label' => 'Show',
+              'type' => 'select',
+              'options' => [
+                '1' => 'Feedback Issued',
+                '0' => 'No Feedback',
+              ],
+              'empty' => 'All',
+              'label' => false,
+              'class' => 'input-xlarge',
             ]);
           } ?>
-
         </td>
         <td>
 
@@ -351,7 +354,7 @@ echo $this->Session->flash();
           <th><?php echo $this->Paginator->sort('reference_no'); ?></th>
           <th><?php echo $this->Paginator->sort('report_title'); ?></th>
           <th><?php echo $this->Paginator->sort('patient_name'); ?></th>
-          <?php if ($redir == 'manager' || $redir == 'reviewer') { ?><th><?php echo $this->Paginator->sort('vigiflow_ref'); ?></th> <?php } ?>
+          <?php if ($redir == 'reviewer') { ?><th><?php echo $this->Paginator->sort('vigiflow_ref'); ?></th> <?php } ?>
           <th><?php echo $this->Paginator->sort('created'); ?></th>
           <th class="actions"><?php echo __('Actions'); ?></th>
         </tr>
@@ -379,7 +382,7 @@ echo $this->Session->flash();
                 ?>&nbsp;
             </td>
             <td><?php echo h($padr['Padr']['patient_name']); ?>&nbsp;</td>
-            <?php if ($redir == 'manager' || $redir == 'reviewer') { ?>
+            <?php if ($redir == 'reviewer') { ?>
               <td><?php echo h($padr['Padr']['vigiflow_ref']);
                   echo "\n" . $padr['Padr']['vigiflow_date']; ?></td>
             <?php } ?>
@@ -397,7 +400,7 @@ echo $this->Session->flash();
                 echo "&nbsp;";
                 if ($redir == 'manager' || $redir == 'reviewer') echo $this->Form->postLink('<span class="label label-inverse tooltipper" data-toggle="tooltip" title="Download E2B file"> <i class="fa fa-etsy" aria-hidden="true"></i> 2 <i class="fa fa-bold" aria-hidden="true"></i> </span>', array('controller' => 'padrs', 'action' => 'download', $padr['Padr']['id'], 'ext' => 'xml', 'manager' => false), array('escape' => false), __('Download E2B?'));
                 echo "&nbsp;";
-                if (($redir == 'manager' || $redir == 'reviewer') && empty($padr['Padr']['vigiflow_ref']) && $padr['Padr']['copied'] == 2) echo $this->Html->link(
+                if ($redir == 'reviewer' && empty($padr['Padr']['vigiflow_ref']) && $padr['Padr']['copied'] == 2) echo $this->Html->link(
                   '<span class="label label-warning tooltipper" title="Send to vigiflow"><i class="fa fa-paper-plane-o" aria-hidden="true"></i> Vigiflow </span>',
                   array('controller' => 'padrs', 'action' => 'vigiflow', $padr['Padr']['id'], 'manager' => false),
                   array('escape' => false)

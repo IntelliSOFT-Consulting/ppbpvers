@@ -25,6 +25,8 @@ class Padr extends AppModel {
         'product_specify' => array('type' => 'like', 'encode' => true),
         'patient_name' => array('type' => 'like', 'encode' => true),
         'report_type' => array('type' => 'value'),
+        'report_sadr' => array('type' => 'value'),
+        'has_review' => array('type' => 'query', 'method' => 'findByHasReview', 'encode' => true),
 		'device' => array('type' => 'value'),
         'reaction_on' => array('type' => 'value'),
         'reporter' => array('type' => 'query', 'method' => 'reporterFilter', 'encode' => true),
@@ -49,6 +51,53 @@ class Padr extends AppModel {
                 'fields' => array('padr_id', 'padr_id')
                     )));
             return $cond;
+    }
+
+    public function findByHasReview($data = [])
+    {
+        $feedbackForeignKeys = $this->ExternalComment->find('list', array(
+            'fields' => array('ExternalComment.foreign_key', 'ExternalComment.foreign_key'),
+            'conditions' => array(
+                'ExternalComment.model' => 'Padr',
+                'ExternalComment.category' => 'external',
+            ),
+            'recursive' => -1,
+        ));
+        $feedbackForeignKeys = array_values(array_unique(array_map('intval', $feedbackForeignKeys)));
+
+        $visibleIds = array();
+        if (!empty($feedbackForeignKeys)) {
+            $visibleIds = $this->find('list', array(
+                'fields' => array('Padr.id', 'Padr.id'),
+                'conditions' => array(
+                    'OR' => array(
+                        'Padr.id' => $feedbackForeignKeys,
+                        array(
+                            'Padr.copied' => 2,
+                            'Padr.padr_id' => $feedbackForeignKeys,
+                        ),
+                    ),
+                ),
+                'recursive' => -1,
+            ));
+            $visibleIds = array_values(array_unique(array_map('intval', $visibleIds)));
+        }
+
+        $value = isset($data['has_review']) ? $data['has_review'] : null;
+
+        if ($value === '0' || $value === 0) {
+            // "No Feedback": everything except the visible ids resolved above.
+            if (empty($visibleIds)) {
+                return array(); // nobody has feedback at all -> no restriction, show everything
+            }
+            return array($this->alias . '.id NOT IN' => $visibleIds);
+        }
+
+        // "Feedback Issued" (checked box / '1' / anything else truthy).
+        if (empty($visibleIds)) {
+            return array($this->alias . '.id' => 0); // match nothing
+        }
+        return array($this->alias . '.id' => $visibleIds);
     }
 
     public function reporterFilter($data = array()) {
@@ -135,7 +184,13 @@ class Padr extends AppModel {
             'foreignKey' => 'foreign_key',
             'dependent' => true,
             'conditions' => array('Attachment.model' => 'Padr', 'Attachment.group' => 'attachment'),
-      	)
+      	),
+		'ExternalComment' => array(
+			'className' => 'Comment',
+			'foreignKey' => 'foreign_key',
+			'dependent' => true,
+			'conditions' => array('ExternalComment.model' => 'Padr', 'ExternalComment.category' => 'external'),
+		)
 	);
 
 	public $validate = array(
